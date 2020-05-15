@@ -1,4 +1,5 @@
 #include "Application.hpp"
+#include "ResourceManager.hpp"
 
 void core::Application::run()
 {
@@ -7,6 +8,9 @@ void core::Application::run()
 	LOG_INFO("Init Renderer");
 	auto& renderer = Renderer::getInstance();
 	auto& window = renderer.getWindow();
+
+	LOG_INFO("Init TextureManager");
+	auto& textureManager = ResourceManager<sf::Texture>::getInstance();
 
 	_clock.restart();
 	float frameStartTime;
