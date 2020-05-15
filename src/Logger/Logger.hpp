@@ -24,22 +24,20 @@ void LOG_INFO(Ts&& ... args)
 	infoPrint(std::forward<Ts>(args)...);
 }
 
-template<typename U, typename ...Ts>
-void LOG_WARNING(U&& param,  Ts&& ... args)
+template<typename ...Ts>
+void LOG_WARNING(Ts&& ... args)
 {
 	std::cout << "[LOG_WARNING]";
 	disTime();
-	std::cout << param;
-	varPrint(std::forward<Ts>(args)...);
+	infoPrint(std::forward<Ts>(args)...);
 }
 
-template<typename U, typename ...Ts>
-void LOG_ERROR(U&& param,  Ts&& ... args)
+template<typename ...Ts>
+void LOG_ERROR(Ts&& ... args)
 {
 	std::cout << "[LOG_ERROR]";
 	disTime();
-	std::cout << param;
-	varPrint(std::forward<Ts>(args)...);
+	infoPrint(std::forward<Ts>(args)...);
 }
 
 #define LOG_INFO(...) { LOG_INFO(__FILE__, __LINE__, __VA_ARGS__); }
