@@ -28,7 +28,8 @@ void core::Renderer::draw()
 	}
 }
 
-void core::Renderer::clear_no_active()
+
+void core::Renderer::clearNoActive()
 {
 	auto fun = [](const std::unique_ptr<base::Actor>& ptr)-> bool {
 		return !ptr->isActive();
@@ -49,8 +50,10 @@ void core::Renderer::clear_no_active()
 	_gui.erase(it3, _gui.end());
 }
 
+
 core::Renderer::Renderer()
 {
 	LOG_INFO("Creating window...");
 	_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1000, 600), "Age of War");
+	_window->setFramerateLimit(60);
 }

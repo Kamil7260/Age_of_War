@@ -15,7 +15,7 @@ namespace core {
 
 		~Renderer() = default;
 		
-		Renderer& getInstance() {
+		static Renderer& getInstance() {
 			static Renderer instance;
 			return instance;
 		}
@@ -27,7 +27,11 @@ namespace core {
 
 		void draw();
 
-		void clear_no_active();
+		void clearNoActive();
+
+		const std::unique_ptr<sf::RenderWindow>& getWindow() {
+			return _window;
+		};
 
 	private:
 		Renderer();
@@ -44,6 +48,7 @@ namespace core {
 	template<typename T>
 	void Renderer::addObject(base::object_type layer, base::team team, const std::function<void(const std::unique_ptr<T>& ptr)>& call)
 	{
+		clearNoActive();
 		switch (layer)
 		{
 		case base::object_type::actor:

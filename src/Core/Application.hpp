@@ -15,6 +15,9 @@ public:
 	}
 
 	float getTime() const { return _deltaTime; }
+	const sf::Clock& getClock() {
+		return _clock;
+	}
 
 	void run();
 
@@ -25,8 +28,9 @@ public:
 	Application& operator=(const Application&) = delete;
 	Application& operator=(Application&&) = delete;
 private:
-	Application() = default;
+	Application();
 	
+	sf::Clock _clock;
 	float _deltaTime;
 };
 
