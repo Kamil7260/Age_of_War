@@ -7,7 +7,7 @@
 
 void varPrint()
 {
-	std::cout << "\nat " << __FILE__ << " Line: " << __LINE__ << "\n";
+	std::cout << "\n\n";
 	return;
 }
 
