@@ -1,7 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <memory>
-
 #include "Renderer.hpp"
 
 namespace core {
@@ -13,7 +12,6 @@ public:
 		static Application app;
 		return app;
 	}
-
 	float getTime() const { return _deltaTime; }
 	const sf::Clock& getClock() {
 		return _clock;
@@ -22,16 +20,13 @@ public:
 	void run();
 
 	~Application() = default;
-
 	Application(Application&) = delete;
 	Application(Application&&) = delete;
 	Application& operator=(const Application&) = delete;
 	Application& operator=(Application&&) = delete;
 private:
-	Application();
-	
+	Application();	
 	sf::Clock _clock;
 	float _deltaTime;
 };
-
 }

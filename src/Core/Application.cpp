@@ -6,10 +6,11 @@ void core::Application::run()
 
 	LOG_INFO("Init Renderer");
 	auto& renderer = Renderer::getInstance();
-
 	auto& window = renderer.getWindow();
+
 	_clock.restart();
 	float frameStartTime;
+
 	while (window->isOpen())
 	{
 		frameStartTime = _clock.getElapsedTime().asSeconds();
@@ -23,18 +24,14 @@ void core::Application::run()
 			}
 		}
 		renderer.update();
-
 		window->clear();
 		renderer.draw();
 		window->display();
 		_deltaTime = _clock.getElapsedTime().asSeconds() - frameStartTime;
 	}
-
 	return;
-
 }
 
 core::Application::Application()
 	:_deltaTime(0.f)
-{
-}
+{}

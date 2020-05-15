@@ -4,13 +4,11 @@
 #include <iostream>
 #include <ctime>
 
-
 void varPrint()
 {
 	std::cout << "\n\n";
 	return;
 }
-
 
 void disTime()
 {
@@ -18,7 +16,6 @@ void disTime()
 	char _timeBuffer[16];
 	tm* obj = gmtime(&tme);
 	obj = localtime(&tme);
-
 	strftime(_timeBuffer, sizeof(_timeBuffer), "[%H:%M:%S] ", obj);
 	std::cout << _timeBuffer;
 }

@@ -28,7 +28,6 @@ void core::Renderer::draw()
 	}
 }
 
-
 void core::Renderer::clearNoActive()
 {
 	auto fun = [](const std::unique_ptr<base::Actor>& ptr)-> bool {
@@ -36,20 +35,14 @@ void core::Renderer::clearNoActive()
 	};
 
 	auto it1 = std::remove_if(_backGround.begin(), _backGround.end(), fun);
-	
 	_backGround.erase(it1, _backGround.end());
 
-
 	auto it2 = std::remove_if(_actor.begin(), _actor.end(), fun);
-
 	_actor.erase(it2, _actor.end());
 
-
 	auto it3 = std::remove_if(_gui.begin(), _gui.end(), fun);
-
 	_gui.erase(it3, _gui.end());
 }
-
 
 core::Renderer::Renderer()
 {
