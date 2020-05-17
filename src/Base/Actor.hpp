@@ -17,14 +17,14 @@ namespace base {
 	class Actor : public sf::Drawable {
 
 	public:
-		Actor() = default;
-		Actor(const Actor&) = default;
-		Actor(Actor&&) = default;
+		Actor();
+		Actor(const Actor&);
+		Actor(Actor&&) noexcept;
 
 		virtual ~Actor() = default;
 
-		Actor& operator=(const Actor&) = default;
-		Actor& operator=(Actor&&) = default;
+		Actor& operator=(const Actor&);
+		Actor& operator=(Actor&&) noexcept;
 
 		virtual void setPosition(const sf::Vector2f& pos) { _position = pos; }
 		virtual void setScale(const sf::Vector2f& sca) { _scale = sca; }
@@ -40,7 +40,7 @@ namespace base {
 		virtual void move(const sf::Vector2f& delta) { _position += delta; }
 
 		virtual void onCollision(std::unique_ptr<Actor>& collision) {};
-		virtual void onStart() { _isActive = true; };
+		virtual void onStart() {};
 		virtual void onUpdate() = 0;
 
 		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override = 0;
