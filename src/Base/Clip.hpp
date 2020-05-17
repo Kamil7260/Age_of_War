@@ -15,7 +15,7 @@ namespace base {
 
 		~Clip() = default;
 
-		virtual bool addFrame(const std::shared_ptr<sf::Texture>& tex);
+		virtual void addFrame(const std::shared_ptr<sf::Texture>& tex);
 		virtual bool update();
 
 		virtual bool isFinish() const { return _isFinish; };

@@ -42,7 +42,7 @@ base::Clip& base::Clip::operator=(Clip&& source) noexcept
 	return *this;
 }
 
-bool base::Clip::addFrame(const std::shared_ptr<sf::Texture>& tex)
+void base::Clip::addFrame(const std::shared_ptr<sf::Texture>& tex)
 {
 	_container.push_back(tex);
 }
