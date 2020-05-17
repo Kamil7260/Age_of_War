@@ -1,5 +1,25 @@
 #include "Renderer.hpp"
 
+void core::Renderer::addObject(std::unique_ptr<base::Actor> actor, base::object_type layer)
+{
+	clearNoActive();
+	switch (layer)
+	{
+	case base::object_type::actor:
+		actor->setType(layer);
+		_actor.push_back(std::move(actor));
+		break;
+	case base::object_type::background:
+		actor->setType(layer);
+		_backGround.push_back(std::move(actor));
+		break;
+	case base::object_type::gui:
+		actor->setType(layer);
+		_gui.push_back(std::move(actor));
+		break;
+	}
+}
+
 void core::Renderer::update()
 {
 	for (auto k = _actor.begin(); k != _actor.end(); ++k)
@@ -47,6 +67,6 @@ void core::Renderer::clearNoActive()
 core::Renderer::Renderer()
 {
 	LOG_INFO("Creating window...");
-	_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1000, 600), "Age of War");
+	_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 1080), "Age of War");
 	_window->setFramerateLimit(60);
 }

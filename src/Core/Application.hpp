@@ -2,7 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include "Renderer.hpp"
-
+#include "ClipManager.hpp"
 namespace core {
 
 class Application final {
@@ -19,14 +19,19 @@ public:
 
 	void run();
 
+
 	~Application() = default;
 	Application(Application&) = delete;
 	Application(Application&&) = delete;
 	Application& operator=(const Application&) = delete;
 	Application& operator=(Application&&) = delete;
 private:
+
+	void assetLoader();
+	
 	Application();	
 	sf::Clock _clock;
 	float _deltaTime;
+	std::unique_ptr<ClipManager> _clips;
 };
 }

@@ -20,8 +20,7 @@ namespace core {
 			return instance;
 		}
 
-		template<typename T>
-		void addObject(base::object_type layer, base::team team = base::team::none);
+		void addObject(std::unique_ptr<base::Actor> actor, base::object_type layer);
 
 		void update();
 
@@ -41,34 +40,5 @@ namespace core {
 		std::vector<std::unique_ptr<base::Actor>> _gui;
 		std::unique_ptr<sf::RenderWindow> _window;
 	};
-
-	template<typename T>
-	void Renderer::addObject(base::object_type layer, base::team team)
-	{
-		clearNoActive();
-		switch (layer)
-		{
-		case base::object_type::actor:
-			std::unique_ptr<base::Actor> ptr = std::make_unique<T>();
-			ptr->setType(layer);
-			ptr->setTeam(team);
-			ptr->onStart();
-			_actor.push_back(ptr.release());
-			break;
-		case base::object_type::background:
-			std::unique_ptr<base::Actor> ptr = std::make_unique<T>();
-			ptr.back->setType(layer);
-			ptr.back->setTeam(team);
-			ptr->onStart();
-			_backGround.push_back(ptr.release());
-			break;
-		case base::object_type::gui:
-			std::unique_ptr<base::Actor> ptr = std::make_unique<T>();
-			ptr.back->setType(layer);
-			ptr.back->setTeam(team);
-			ptr->onStart();
-			_gui.push_back(ptr.release());
-			break;
-		}
-	}
+		
 }
