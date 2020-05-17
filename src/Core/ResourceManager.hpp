@@ -12,7 +12,7 @@ namespace core {
 	class ResourceManager final {
 	public:
 		bool loadFromFile(const char* path);
-		const std::unique_ptr<T>& get(const char* path);
+		const std::shared_ptr<T>& get(const char* path);
 
 		bool remove(const char* path);
 
@@ -31,10 +31,10 @@ namespace core {
 
 		struct container {
 			std::string _path;
-			std::unique_ptr<T> _data;
+			std::shared_ptr<T> _data;
 		};
 
-		std::vector<std::unique_ptr<container>> _container;
+		std::vector<std::shared_ptr<container>> _container;
 	};
 
 	template<typename T>
@@ -47,7 +47,7 @@ namespace core {
 			return false;
 		}
 		else {
-			_container.push_back(std::make_unique<container>());
+			_container.push_back(std::shared_ptr<container>());
 			auto& k = _container.back();
 			k->_path = path;
 			k->_data = std::move(temp);
@@ -55,7 +55,7 @@ namespace core {
 	}
 
 	template<typename T>
-	inline const std::unique_ptr<T>& ResourceManager<T>::get(const char* path)
+	inline const std::shared_ptr<T>& ResourceManager<T>::get(const char* path)
 	{
 		for (auto k = _container.begin(); k != _container.end(); ++k)
 		{
