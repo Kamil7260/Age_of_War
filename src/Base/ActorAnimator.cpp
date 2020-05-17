@@ -65,8 +65,6 @@ void base::ActorAnimator::updateAnimator()
 {
 	if(_isRunning)
 		_isFinish = _currentClip->second->update();
-
-	onUpdate();
 }
 
 void base::ActorAnimator::draw(sf::RenderTarget& target, sf::RenderStates states) const

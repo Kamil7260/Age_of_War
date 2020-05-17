@@ -23,7 +23,7 @@ namespace base {
 
 		virtual void addClip(std::shared_ptr<Clip>& clip,const std::string& name);
 		
-		void updateAnimator();
+		virtual void updateAnimator();
 
 		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 

@@ -1,8 +1,8 @@
 #pragma once
-#include "../Base/Actor.hpp"
-#include "../Logger/Logger.hpp"
 #include <memory>
 #include <functional>
+#include "../Base/ActorAnimator.hpp"
+#include "../Logger/Logger.hpp"
 
 namespace core {
 
@@ -21,7 +21,7 @@ namespace core {
 		}
 
 		template<typename T>
-		void addObject(base::object_type layer, base::team team = base::team::none, const std::function<void(const std::unique_ptr<T>& ptr)>& call = nullptr);
+		void addObject(base::object_type layer, base::team team = base::team::none);
 
 		void update();
 
@@ -43,33 +43,30 @@ namespace core {
 	};
 
 	template<typename T>
-	void Renderer::addObject(base::object_type layer, base::team team, const std::function<void(const std::unique_ptr<T>& ptr)>& call)
+	void Renderer::addObject(base::object_type layer, base::team team)
 	{
 		clearNoActive();
 		switch (layer)
 		{
 		case base::object_type::actor:
 			std::unique_ptr<base::Actor> ptr = std::make_unique<T>();
-			ptr.back->setType(layer);
-			ptr.back->setTeam(team);
-			if(ptr != nullptr)
-				call(ptr);
+			ptr->setType(layer);
+			ptr->setTeam(team);
+			ptr->onStart();
 			_actor.push_back(ptr.release());
 			break;
 		case base::object_type::background:
 			std::unique_ptr<base::Actor> ptr = std::make_unique<T>();
 			ptr.back->setType(layer);
 			ptr.back->setTeam(team);
-			if (ptr != nullptr)
-				call(ptr);
+			ptr->onStart();
 			_backGround.push_back(ptr.release());
 			break;
 		case base::object_type::gui:
 			std::unique_ptr<base::Actor> ptr = std::make_unique<T>();
 			ptr.back->setType(layer);
 			ptr.back->setTeam(team);
-			if (ptr != nullptr)
-				call(ptr);
+			ptr->onStart();
 			_gui.push_back(ptr.release());
 			break;
 		}
