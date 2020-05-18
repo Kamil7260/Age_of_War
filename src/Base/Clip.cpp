@@ -56,17 +56,23 @@ bool base::Clip::update()
 		++_currentFrame;
 		if (_currentFrame == _container.end())
 		{
+			_currentFrame = _container.begin();
 			_isFinish = true;
-			return false;
+			return true;
 		}
 		_sprite->setTexture(*(*_currentFrame));
 	}
-	return true;
+	return false;
 }
 
 void base::Clip::setSprite(const std::shared_ptr<sf::Sprite>& sprite)
 {
 	_sprite = sprite;
+}
+
+void base::Clip::setSpeed(const float speed)
+{
+	_speed = speed;
 }
 
 void base::Clip::start()
