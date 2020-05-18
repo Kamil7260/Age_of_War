@@ -33,6 +33,8 @@ namespace base {
 
 		virtual void move(const sf::Vector2f& delta);
 
+		virtual void setAnimationSpeed(const float speed); 
+
 		virtual const std::string& getCurrentClipName() const { return _currentClip->first; }
 
 	protected:
@@ -43,7 +45,7 @@ namespace base {
 		std::shared_ptr<sf::Sprite> _sprite;
 		bool _isRunning;
 		bool _isFinish;
-
+		float _animationSpeed;
 	};
 
 }
