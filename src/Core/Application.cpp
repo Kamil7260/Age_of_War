@@ -51,6 +51,11 @@ void core::Application::run()
 	return;
 }
 
+const std::shared_ptr<base::Clip> core::Application::getClip(const char* name)
+{
+	return _clips->getClip(name);
+}
+
 void core::Application::assetLoader()
 {
 	auto &texture = ResourceManager<sf::Texture>::getInstance();
