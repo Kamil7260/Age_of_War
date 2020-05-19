@@ -4,6 +4,8 @@
 #include <string>
 #include <algorithm>
 
+#include <SFML/Graphics.hpp>
+
 #include "../Logger/Logger.hpp"
 
 namespace core {
@@ -12,6 +14,7 @@ namespace core {
 	class ResourceManager final {
 	public:
 		bool loadFromFile(const char* path);
+		bool loadFromFile(const char* path,const sf::IntRect& rect);
 		const std::shared_ptr<T> get(const char* path);
 
 		bool remove(const char* path);
@@ -42,6 +45,24 @@ namespace core {
 	{
 		std::shared_ptr<T> temp = std::make_shared<T>();
 		if (!temp->loadFromFile(path))
+		{
+			LOG_ERROR("Can not open file with path = ", path);
+			return false;
+		}
+		else {
+			_container.push_back(std::make_shared<container>());
+			auto& k = _container.back();
+			k->_path = path;
+			k->_data = std::move(temp);
+		}
+		return true;
+	}
+
+	template<typename T>
+	inline bool ResourceManager<T>::loadFromFile(const char* path, const sf::IntRect& rect)
+	{
+		std::shared_ptr<T> temp = std::make_shared<T>();
+		if (!temp->loadFromFile(path,rect))
 		{
 			LOG_ERROR("Can not open file with path = ", path);
 			return false;

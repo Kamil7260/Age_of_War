@@ -42,6 +42,7 @@ void core::Application::run()
 				return;
 			}
 		}
+		renderer.updateCollision();
 		renderer.update();
 		window->clear();
 		renderer.draw();
@@ -51,43 +52,66 @@ void core::Application::run()
 	return;
 }
 
-const std::shared_ptr<base::Clip> core::Application::getClip(const char* name)
+base::Clip core::Application::getClip(const char* name)
 {
-	return _clips->getClip(name);
+	return *_clips->getClip(name);
 }
 
 void core::Application::assetLoader()
 {
 	auto &texture = ResourceManager<sf::Texture>::getInstance();
 	std::string path;
+	std::unique_ptr<base::Clip> clip;
+	clip = std::make_unique<base::Clip>();
+	
 	for (int k = 1; k < 44; ++k)
 	{
 		path = "Assets/mobs/I/caveman/walk/";
 		path += std::to_string(k);
 		path += ".png";
 		texture.loadFromFile(path.c_str());
+		clip->addFrame(texture.get(path.c_str()));
 	}
+	_clips->addClip(std::move(clip), "caveman_walk");
+
+
+	clip = std::make_unique<base::Clip>();
+	clip->setOrigin(sf::Vector2f(-10.f, -0.5f));
 	for (int k = 1; k < 51; ++k)
 	{
 		path = "Assets/mobs/I/caveman/idle/";
 		path += std::to_string(k);
 		path += ".png";
 		texture.loadFromFile(path.c_str());
+		clip->addFrame(texture.get(path.c_str()));
 	}
+	_clips->addClip(std::move(clip), "caveman_idle");
+
+
+	clip = std::make_unique<base::Clip>();
+	clip->setOrigin(sf::Vector2f(30.f, -0.5f));
 	for (int k = 1; k < 25; ++k)
 	{
 		path = "Assets/mobs/I/caveman/die/";
 		path += std::to_string(k);
 		path += ".png";
 		texture.loadFromFile(path.c_str());
+		clip->addFrame(texture.get(path.c_str()));
 	}
+	_clips->addClip(std::move(clip), "caveman_die");
+
+	clip = std::make_unique<base::Clip>();
+	clip->setOrigin(sf::Vector2f(8.f, 25.f));
 	for (int k = 1; k < 41; ++k)
 	{
 		path = "Assets/mobs/I/caveman/attack/";
 		path += std::to_string(k);
 		path += ".png";
 		texture.loadFromFile(path.c_str());
+		clip->addFrame(texture.get(path.c_str()));
 	}
+	_clips->addClip(std::move(clip), "caveman_attack");
+
 	path = "Assets/background/1.png";
 	texture.loadFromFile(path.c_str());
 }

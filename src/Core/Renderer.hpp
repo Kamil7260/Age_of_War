@@ -32,11 +32,14 @@ namespace core {
 			return _window;
 		};
 
+		void updateCollision();
+
 	private:
 		Renderer();
 
 		std::vector<std::unique_ptr<base::Actor>> _backGround;
 		std::vector<std::unique_ptr<base::Actor>> _actor;
+		std::vector<std::unique_ptr<base::Actor>> _enemyActor;
 		std::vector<std::unique_ptr<base::Actor>> _gui;
 		std::unique_ptr<sf::RenderWindow> _window;
 	};

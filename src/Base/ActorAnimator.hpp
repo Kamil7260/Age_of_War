@@ -21,7 +21,7 @@ namespace base {
 		
 		virtual bool play(const char* key);
 
-		virtual void addClip(std::shared_ptr<Clip>& clip,const std::string& name);
+		virtual void addClip(Clip clip,const std::string& name);
 		
 		virtual void updateAnimator();
 
@@ -39,8 +39,8 @@ namespace base {
 
 	protected:
 
-		std::map<std::string, std::shared_ptr<Clip>> _container;
-		std::map<std::string, std::shared_ptr<Clip>>::iterator _currentClip;
+		std::map<std::string, Clip> _container;
+		std::map<std::string, Clip>::iterator _currentClip;
 
 		std::shared_ptr<sf::Sprite> _sprite;
 		bool _isRunning;

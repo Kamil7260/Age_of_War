@@ -2,20 +2,32 @@
 #include "../Core/Application.hpp"
 
 base::Clip::Clip(float speed)
-	: _isFinish(true), _speed(speed), _curTime(0.f)
+	: _isFinish(true), _speed(speed), _curTime(0.f), _origin(0.5f, 0.5f)
 {
 }
 
-base::Clip::Clip(Clip& source)
+base::Clip::Clip(const Clip& source)
 	: _isFinish(true), _speed(source._speed),
-	_curTime(source._curTime), _container(source._container)
+	_curTime(source._curTime),  _origin(source._origin)
 {
+	_container.reserve(source._container.size());
+	for (size_t k = 0; k < source._container.size(); ++k)
+	{
+		_container.push_back(source._container[k]);
+	}
+	_sprite = source._sprite;
 }
 
 base::Clip::Clip(Clip&& source) noexcept
 	:_isFinish(true), _speed(source._speed),
-	_curTime(source._curTime),_container(source._container)
+	_curTime(source._curTime), _origin(source._origin)
 {
+	_container.reserve(source._container.size());
+	for (size_t k = 0; k < source._container.size(); ++k)
+	{
+		_container.push_back(source._container[k]);
+	}
+	_sprite = source._sprite;
 	source._speed = 0.f;
 	source._curTime = 0.f;
 	source._container.clear();
@@ -26,7 +38,14 @@ base::Clip& base::Clip::operator=(Clip& source)
 	_isFinish = source._isFinish;
 	_speed = source._speed;
 	_curTime = source._curTime;
-	_container = source._container;
+	_container.clear();
+	_container.reserve(source._container.size());
+	_sprite = source._sprite;
+	for (size_t k = 0; k < source._container.size(); ++k)
+	{
+		_container.push_back(source._container[k]);
+	}
+	_origin = source._origin;
 	return *this;
 }
 
@@ -35,7 +54,14 @@ base::Clip& base::Clip::operator=(Clip&& source) noexcept
 	_isFinish = source._isFinish;
 	_speed = source._speed;
 	_curTime = source._curTime;
-	_container = source._container;
+	_container.clear();
+	_container.reserve(source._container.size());
+	_sprite = source._sprite;
+	for (size_t k = 0; k < source._container.size(); ++k)
+	{
+		_container.push_back(source._container[k]);
+	}
+	_origin = source._origin;
 	source._speed = 0.f;
 	source._curTime = 0.f;
 	source._container.clear();
@@ -65,6 +91,11 @@ bool base::Clip::update()
 	return false;
 }
 
+void base::Clip::setOrigin(const sf::Vector2f& origin)
+{
+	_origin = origin;
+}
+
 void base::Clip::setSprite(const std::shared_ptr<sf::Sprite>& sprite)
 {
 	_sprite = sprite;
@@ -79,6 +110,7 @@ void base::Clip::start()
 {
 	_isFinish = false;
 	_currentFrame = _container.begin();
-	_sprite->setTexture(*(*_currentFrame));
+	_sprite->setTexture(*(*_currentFrame),true);
 	_curTime = 0.f;
+	_sprite->setOrigin(_origin);
 }

@@ -26,6 +26,10 @@ void core::Renderer::update()
 	{
 		(*k)->onUpdate();
 	}
+	for (auto k = _enemyActor.begin(); k != _enemyActor.end(); ++k)
+	{
+		(*k)->onUpdate();
+	}
 	for (auto k = _gui.begin(); k != _gui.end(); ++k)
 	{
 		(*k)->onUpdate();
@@ -39,6 +43,10 @@ void core::Renderer::draw()
 		_window->draw((*(*k)));
 	}
 	for (auto k = _actor.begin(); k != _actor.end(); ++k)
+	{
+		_window->draw((*(*k)));
+	}
+	for (auto k = _enemyActor.begin(); k != _enemyActor.end(); ++k)
 	{
 		_window->draw((*(*k)));
 	}
@@ -60,8 +68,77 @@ void core::Renderer::clearNoActive()
 	auto it2 = std::remove_if(_actor.begin(), _actor.end(), fun);
 	_actor.erase(it2, _actor.end());
 
-	auto it3 = std::remove_if(_gui.begin(), _gui.end(), fun);
-	_gui.erase(it3, _gui.end());
+	auto it3 = std::remove_if(_enemyActor.begin(), _enemyActor.end(), fun);
+	_enemyActor.erase(it3, _enemyActor.end());
+
+	auto it4 = std::remove_if(_gui.begin(), _gui.end(), fun);
+	_gui.erase(it4, _gui.end());
+}
+
+void core::Renderer::updateCollision()
+{
+	if (!_actor.empty() && !_enemyActor.empty())
+	{
+		auto& left = _actor.back();
+		auto& right = _enemyActor.back();
+		auto leftCollider = left->getCollider();
+		auto rightCollider = right->getCollider();
+
+		if (left->getPosition().x + leftCollider.right > right->getPosition().x - rightCollider.left
+			&& left->getPosition().x - leftCollider.left < right->getPosition().x + rightCollider.right)
+		{
+			if (left->getPosition().y + leftCollider.up > right->getPosition().y - rightCollider.down
+				&& left->getPosition().y - leftCollider.down < right->getPosition().y + rightCollider.up)
+			{
+				left->onCollision(right);
+				right->onCollision(left);
+			}
+		}
+	}
+	if (!_actor.empty())
+	{
+		auto left = _actor.begin();
+		auto right = _actor.begin() + 1;
+		base::collider leftCollider;
+		base::collider rightCollider;
+		for (; right != _actor.end();++right,++left)
+		{
+			leftCollider = (*left)->getCollider();
+			rightCollider = (*right)->getCollider();
+			if ((*left)->getPosition().x + leftCollider.right > (*right)->getPosition().x - rightCollider.left
+				&& (*left)->getPosition().x - leftCollider.left < (*right)->getPosition().x + rightCollider.right)
+			{
+				if ((*left)->getPosition().y + leftCollider.up > (*right)->getPosition().y - rightCollider.down
+					&& (*left)->getPosition().y - leftCollider.down < (*right)->getPosition().y + rightCollider.up)
+				{
+					(*left)->onCollision(*right);
+					(*right)->onCollision(*left);
+				}
+			}
+		}
+	}
+	if (!_enemyActor.empty())
+	{
+		auto left = _enemyActor.begin();
+		auto right = _enemyActor.begin() + 1;
+		base::collider leftCollider;
+		base::collider rightCollider;
+		for (; right != _enemyActor.end(); ++right, ++left)
+		{
+			leftCollider = (*left)->getCollider();
+			rightCollider = (*right)->getCollider();
+			if ((*left)->getPosition().x + leftCollider.right > (*right)->getPosition().x - rightCollider.left
+				&& (*left)->getPosition().x - leftCollider.left < (*right)->getPosition().x + rightCollider.right)
+			{
+				if ((*left)->getPosition().y + leftCollider.up > (*right)->getPosition().y - rightCollider.down
+					&& (*left)->getPosition().y - leftCollider.down < (*right)->getPosition().y + rightCollider.up)
+				{
+					(*left)->onCollision(*right);
+					(*right)->onCollision(*left);
+				}
+			}
+		}
+	}
 }
 
 core::Renderer::Renderer()

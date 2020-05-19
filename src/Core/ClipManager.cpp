@@ -1,8 +1,8 @@
 #include "ClipManager.hpp"
 
-bool core::ClipManager::addClip(const std::shared_ptr<base::Clip>& clip, const std::string& name)
+bool core::ClipManager::addClip(std::unique_ptr<base::Clip> clip, const std::string& name)
 {
-	auto it = _container.insert(std::make_pair(name, clip));
+	auto it = _container.insert(std::make_pair(name, std::move(clip)));
 	if (!it.second)
 	{
 		LOG_ERROR("Clip with name : ", name, " already exist");
@@ -23,13 +23,13 @@ void core::ClipManager::removeClip(const std::string& name)
 	}
 }
 
-const std::shared_ptr<base::Clip> core::ClipManager::getClip(const std::string& name)
+const std::unique_ptr<base::Clip>& core::ClipManager::getClip(const std::string& name)
 {
 	auto it = _container.find(name);
 	if (it == _container.end())
 	{
 		LOG_ERROR("Clip with name : ", name, " does not exist");
-		return std::shared_ptr<base::Clip>(nullptr);
+		return std::unique_ptr<base::Clip>(nullptr);
 	}
 	return it->second;
 }

@@ -8,7 +8,7 @@ namespace base {
 	class Clip {
 	public:
 		Clip(float speed = 1.f);
-		Clip(Clip&);
+		Clip(const Clip&);
 		Clip(Clip&&) noexcept;
 		Clip& operator=(Clip&);
 		Clip& operator=(Clip&&) noexcept;
@@ -19,6 +19,8 @@ namespace base {
 		virtual bool update();
 
 		virtual bool isFinish() const { return _isFinish; };
+
+		virtual void setOrigin(const sf::Vector2f& origin);
 
 		virtual void setSprite(const std::shared_ptr<sf::Sprite>& sprite);
 
@@ -32,5 +34,6 @@ namespace base {
 		std::shared_ptr<sf::Sprite> _sprite;
 		float _speed;
 		float _curTime;
+		sf::Vector2f _origin;
 	};
 }

@@ -19,7 +19,7 @@ public:
 
 	void run();
 
-	const std::shared_ptr<base::Clip> getClip(const char* name);
+	base::Clip getClip(const char* name);
 
 	~Application() = default;
 	Application(Application&) = delete;

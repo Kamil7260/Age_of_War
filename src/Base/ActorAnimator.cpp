@@ -53,15 +53,15 @@ bool base::ActorAnimator::play(const char* key)
 		_isRunning = false;
 		return _isRunning;
 	}
-	_currentClip->second->setSpeed(_animationSpeed);
-	_currentClip->second->start();
+	_currentClip->second.setSpeed(_animationSpeed);
+	_currentClip->second.start();
 	_isRunning = true;
 	return _isRunning;
 }
 
-void base::ActorAnimator::addClip(std::shared_ptr<base::Clip>& clip, const std::string& name)
+void base::ActorAnimator::addClip(base::Clip clip, const std::string& name)
 {
-	clip->setSprite(_sprite);
+	clip.setSprite(_sprite);
 	_container.insert(std::make_pair(name, std::move(clip)));
 }
 
@@ -69,7 +69,7 @@ void base::ActorAnimator::updateAnimator()
 {
 	if (_isRunning)
 	{
-		_isFinish = _currentClip->second->update();
+		_isFinish = _currentClip->second.update();
 		if (_isFinish)
 			_isRunning = false;
 	}

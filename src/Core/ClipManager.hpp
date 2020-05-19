@@ -16,13 +16,13 @@ namespace core {
 		ClipManager& operator=(ClipManager&) = delete;
 		ClipManager& operator=(ClipManager&&) = delete;
 
-		bool addClip(const std::shared_ptr<base::Clip>& clip, const std::string& name);
+		bool addClip(std::unique_ptr<base::Clip> clip, const std::string& name);
 		void removeClip(const std::string& name);
 
-		const std::shared_ptr<base::Clip> getClip(const std::string& name);
+		const std::unique_ptr<base::Clip>& getClip(const std::string& name);
 
 	private:
-		std::map<std::string, std::shared_ptr<base::Clip>> _container;
+		std::map<std::string, std::unique_ptr<base::Clip>> _container;
 	};
 
 

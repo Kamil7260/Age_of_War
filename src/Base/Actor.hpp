@@ -14,6 +14,14 @@ namespace base {
 		none
 	};
 
+	struct collider {
+		float up;
+		float down;
+		float left;
+		float right;
+	};
+
+
 	class Actor : public sf::Drawable {
 
 	public:
@@ -40,6 +48,8 @@ namespace base {
 		virtual void move(const sf::Vector2f& delta) { _position += delta; }
 
 		virtual void onCollision(std::unique_ptr<Actor>& collision) {};
+		virtual const collider& getCollider() const final { return _myColider; }
+
 		virtual void onStart() {};
 		virtual void onUpdate() = 0;
 
@@ -49,6 +59,7 @@ namespace base {
 		virtual void remove() final { _isActive = false; }
 
 	protected:
+		collider _myColider;
 		bool _isActive;
 		object_type _type;
 		team _team;
