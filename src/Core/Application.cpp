@@ -3,7 +3,8 @@
 #include "ResourceManager.hpp"
 
 #include "../GameClass/Background.hpp"
-
+#include "../GameClass/Melee.hpp"
+#include "../GameClass/Player.hpp"
 
 void core::Application::run()
 {
@@ -25,9 +26,29 @@ void core::Application::run()
 	assetLoader();
 	
 	std::unique_ptr<BackGround> bcg = std::make_unique<BackGround>();
-	bcg->setPosition(sf::Vector2f(0.f, 0.f));
+	bcg->setPosition(sf::Vector2f(-50.f, 0.f));
 
 	renderer.addObject(std::move(bcg), base::object_type::background);
+
+	std::unique_ptr<Player> player = std::make_unique<Player>();
+	player->setPosition(sf::Vector2f(-180, 600));
+	renderer.addObject(std::move(player), base::object_type::actor);
+	
+	std::unique_ptr<Melee> man = std::make_unique<Melee>();
+	man->setAnimatorName("caveman");
+	man->setPosition(sf::Vector2f(830, 850));
+	core::Renderer::getInstance().addEnemyObject(std::move(man));
+
+
+	//std::unique_ptr<Caveman> man = std::make_unique<Caveman>();
+	//man->setPosition(sf::Vector2f(100.f, 100.f));
+
+	//renderer.addObject(std::move(man), base::object_type::actor);
+
+	//man = std::make_unique<Caveman>();
+	//man->setPosition(sf::Vector2f(200.f, 100.f));
+
+	//renderer.addObject(std::move(man), base::object_type::actor);
 
 	LOG_INFO("Main loop...");
 	while (window->isOpen())
@@ -52,7 +73,7 @@ void core::Application::run()
 	return;
 }
 
-base::Clip core::Application::getClip(const char* name)
+const base::Clip& core::Application::getClip(const char* name)
 {
 	return *_clips->getClip(name);
 }
@@ -72,11 +93,12 @@ void core::Application::assetLoader()
 		texture.loadFromFile(path.c_str());
 		clip->addFrame(texture.get(path.c_str()));
 	}
+	clip->setOrigin(sf::Vector2f(27.f,45.f ));
 	_clips->addClip(std::move(clip), "caveman_walk");
 
 
 	clip = std::make_unique<base::Clip>();
-	clip->setOrigin(sf::Vector2f(-10.f, -0.5f));
+	clip->setOrigin(sf::Vector2f(12.f, 45.f));
 	for (int k = 1; k < 51; ++k)
 	{
 		path = "Assets/mobs/I/caveman/idle/";
@@ -89,7 +111,7 @@ void core::Application::assetLoader()
 
 
 	clip = std::make_unique<base::Clip>();
-	clip->setOrigin(sf::Vector2f(30.f, -0.5f));
+	clip->setOrigin(sf::Vector2f(72.f, 45.f));
 	for (int k = 1; k < 25; ++k)
 	{
 		path = "Assets/mobs/I/caveman/die/";
@@ -101,7 +123,7 @@ void core::Application::assetLoader()
 	_clips->addClip(std::move(clip), "caveman_die");
 
 	clip = std::make_unique<base::Clip>();
-	clip->setOrigin(sf::Vector2f(8.f, 25.f));
+	clip->setOrigin(sf::Vector2f(39.f, 72.f));
 	for (int k = 1; k < 41; ++k)
 	{
 		path = "Assets/mobs/I/caveman/attack/";
@@ -114,6 +136,10 @@ void core::Application::assetLoader()
 
 	path = "Assets/background/1.png";
 	texture.loadFromFile(path.c_str());
+
+
+	texture.loadFromFile("Assets/base/1.png");
+
 }
 
 core::Application::Application()
