@@ -29,7 +29,7 @@ const std::unique_ptr<base::Clip>& core::ClipManager::getClip(const std::string&
 	if (it == _container.end())
 	{
 		LOG_ERROR("Clip with name : ", name, " does not exist");
-		return std::unique_ptr<base::Clip>(nullptr);
+		return _container.begin()->second;
 	}
 	return it->second;
 }
