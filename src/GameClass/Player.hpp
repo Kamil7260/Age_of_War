@@ -5,9 +5,9 @@ class Player : public base::Stronghold {
 public:
 	Player();
 	Player(const Player&) = delete;
-	Player(Player&&);
+	Player(Player&&) noexcept;
 	Player& operator=(const Player&) = delete;
-	Player& operator=(Player&&);
+	Player& operator=(Player&&) noexcept;
 
 	virtual void setPosition(const sf::Vector2f& pos) override;
 	virtual void setScale(const sf::Vector2f& sca) override;

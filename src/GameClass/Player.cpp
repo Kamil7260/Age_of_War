@@ -8,15 +8,18 @@ Player::Player()
 {
 	_timer = 0;
 	_sprite.setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/base/1.png"));
-	_myColider = { 2,2,2,2 };
+	_sprite.setOrigin(275.f, 170.f);
+	_myColider = { 111.f,111.f,111.f,111.f };
 }
 
-Player::Player(Player&&)
+Player::Player(Player&& source) noexcept
+	:_timer(source._timer)
 {
 }
 
-Player& Player::operator=(Player&&)
+Player& Player::operator=(Player&& source) noexcept
 {
+	_timer = source._timer;
 	return *this;
 }
 
