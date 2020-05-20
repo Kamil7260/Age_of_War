@@ -37,8 +37,8 @@ namespace base {
 		virtual void setPosition(const sf::Vector2f& pos) { _position = pos; }
 		virtual void setScale(const sf::Vector2f& sca) { _scale = sca; }
 
-		virtual void setType(const object_type& type) final { _type = type; }
-		virtual void setTeam(const team& tm) final { _team = tm; }
+		virtual void setType(const object_type& type)  { _type = type; }
+		virtual void setTeam(const team& tm)  { _team = tm; }
 
 		virtual const sf::Vector2f& getPosition() const { return _position; }
 		virtual const sf::Vector2f& getScale() const { return _scale; }
@@ -49,9 +49,12 @@ namespace base {
 
 		virtual void onCollision(std::unique_ptr<Actor>& collision) {};
 		virtual const collider& getCollider() const final { return _myColider; }
+		virtual void setCollider(const collider& source) { _myColider = source; }
 
 		virtual void onStart() {};
 		virtual void onUpdate() = 0;
+
+		virtual std::string getTag() const final { return _tag; }
 
 		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override = 0;
 
@@ -59,11 +62,12 @@ namespace base {
 		virtual void remove() final { _isActive = false; }
 
 	protected:
-		collider _myColider;
+		std::string _tag;
 		bool _isActive;
 		object_type _type;
 		team _team;
 		sf::Vector2f _position;
 		sf::Vector2f _scale;
+		collider _myColider;
 	};
 }
