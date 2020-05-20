@@ -3,21 +3,17 @@
 void core::Renderer::addObject(std::unique_ptr<base::Actor> actor, base::object_type layer)
 {
 	clearNoActive();
-	switch (layer)
-	{
-	case base::object_type::actor:
-		actor->setType(layer);
-		_actor.push_back(std::move(actor));
-		break;
-	case base::object_type::background:
-		actor->setType(layer);
-		_backGround.push_back(std::move(actor));
-		break;
-	case base::object_type::gui:
-		actor->setType(layer);
-		_gui.push_back(std::move(actor));
-		break;
-	}
+	actor->setType(layer);
+	actor->setTeam(base::team::player);
+	_queue.push_back(std::make_pair(std::move(actor), layer));
+}
+
+void core::Renderer::addEnemyObject(std::unique_ptr<base::Actor> actor)
+{
+	clearNoActive();
+	actor->setType(base::object_type::actor);
+	actor->setTeam(base::team::enemy);
+	_enemyQueue.push_back(std::move(actor));
 }
 
 void core::Renderer::update()
@@ -34,6 +30,7 @@ void core::Renderer::update()
 	{
 		(*k)->onUpdate();
 	}
+	insertQueue();
 }
 
 void core::Renderer::draw()
@@ -77,10 +74,12 @@ void core::Renderer::clearNoActive()
 
 void core::Renderer::updateCollision()
 {
-	if (!_actor.empty() && !_enemyActor.empty())
+	if (_actor.size() > 1 && _enemyActor.size() > 0)
 	{
-		auto& left = _actor.back();
-		auto& right = _enemyActor.back();
+		//@ TODO 
+		auto& left = *(_actor.begin()+1);
+		auto& right = *(_enemyActor.begin());
+		//
 		auto leftCollider = left->getCollider();
 		auto rightCollider = right->getCollider();
 
@@ -139,6 +138,32 @@ void core::Renderer::updateCollision()
 			}
 		}
 	}
+}
+
+void core::Renderer::insertQueue()
+{
+	for(auto it = _queue.begin(); it != _queue.end(); ++it)
+	{
+		switch (it->second)
+		{
+		case base::object_type::actor:
+			_actor.push_back(std::move(it->first));
+			break;
+		case base::object_type::background:
+			_backGround.push_back(std::move(it->first));
+			break;
+		case base::object_type::gui:
+			_gui.push_back(std::move(it->first));
+			break;
+		}
+	}
+	_queue.clear();
+
+	for (auto it = _enemyQueue.begin(); it != _enemyQueue.end(); ++it)
+	{
+		_enemyActor.push_back(std::move(*it));
+	}
+	_enemyQueue.clear();
 }
 
 core::Renderer::Renderer()

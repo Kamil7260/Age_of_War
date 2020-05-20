@@ -21,6 +21,7 @@ namespace core {
 		}
 
 		void addObject(std::unique_ptr<base::Actor> actor, base::object_type layer);
+		void addEnemyObject(std::unique_ptr<base::Actor> actor);
 
 		void update();
 
@@ -35,7 +36,13 @@ namespace core {
 		void updateCollision();
 
 	private:
+
+		void insertQueue();
+
 		Renderer();
+
+		std::vector<std::pair<std::unique_ptr<base::Actor>,base::object_type>> _queue;
+		std::vector<std::unique_ptr<base::Actor>> _enemyQueue;
 
 		std::vector<std::unique_ptr<base::Actor>> _backGround;
 		std::vector<std::unique_ptr<base::Actor>> _actor;
