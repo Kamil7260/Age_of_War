@@ -19,7 +19,7 @@ public:
 
 	void run();
 
-	base::Clip getClip(const char* name);
+	const base::Clip& getClip(const char* name);
 
 	~Application() = default;
 	Application(Application&) = delete;
