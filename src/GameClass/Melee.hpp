@@ -3,7 +3,7 @@
 
 class Melee : public base::Mob {
 public:
-	Melee(const base::collider& collider = { 1.f,1.f,1.f,1.f }, int hp = 100, int attack = 10, float speedAttack = 4.f, float speedMove = 5.f);
+	Melee(const base::collider& collider = { 1.f,1.f,1.f,1.f }, int hp = 40, int attack = 20, float speedAttack = 4.f, float speedMove = 5.f);
 	Melee(Melee&);
 	Melee(Melee&&) noexcept;
 
@@ -12,7 +12,9 @@ public:
 
 	void setAnimatorName(const char* name) override;
 
-	void onUpdate();
+	void onUpdate() override;
+
+	virtual void damage(int dmg) override;
 
 	void setPosition(const sf::Vector2f& pos) override;
 
@@ -28,4 +30,5 @@ private:
 
 	bool _touchEnemy;
 	bool _isCollided;
+	bool _enableAttack;
 };
