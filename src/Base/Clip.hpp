@@ -27,6 +27,8 @@ namespace base {
 		virtual void setSpeed(const float speed);
 
 		virtual void start();
+
+		virtual void setCallback(const std::function<void()>& callme);
 	protected:
 		bool _isFinish;
 		std::vector<std::shared_ptr<sf::Texture>> _container;
@@ -35,5 +37,6 @@ namespace base {
 		float _speed;
 		float _curTime;
 		sf::Vector2f _origin;
+		std::function<void()> _callback;
 	};
 }
