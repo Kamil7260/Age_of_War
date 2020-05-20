@@ -2,8 +2,8 @@
 
 #include "../Logger/Logger.hpp"
 
-base::ActorAnimator::ActorAnimator()
-	:_isRunning(false),_isFinish(true), _animationSpeed(0.f)
+base::ActorAnimator::ActorAnimator(float animationspeed)
+	:_isRunning(false),_isFinish(true), _animationSpeed(animationspeed)
 {
 	_sprite = std::make_shared<sf::Sprite>();
 }
@@ -53,6 +53,7 @@ bool base::ActorAnimator::play(const char* key)
 		_isRunning = false;
 		return _isRunning;
 	}
+	_currentClipName = key;
 	_currentClip->second.setSpeed(_animationSpeed);
 	_currentClip->second.start();
 	_isRunning = true;
@@ -83,16 +84,19 @@ void base::ActorAnimator::draw(sf::RenderTarget& target, sf::RenderStates states
 
 void base::ActorAnimator::setPosition(const sf::Vector2f& pos)
 {
+	_position = pos;
 	_sprite->setPosition(pos);
 }
 
 void base::ActorAnimator::setScale(const sf::Vector2f& sca)
 {
+	_scale = sca;
 	_sprite->setScale(sca);
 }
 
 void base::ActorAnimator::move(const sf::Vector2f& delta)
 {
+	_position += delta;
 	_sprite->move(delta);
 }
 

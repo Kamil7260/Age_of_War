@@ -10,7 +10,7 @@ namespace base {
 	class ActorAnimator : public Actor {
 	public:
 
-		ActorAnimator();
+		ActorAnimator(float animationspeed = 0.2f);
 		ActorAnimator(const ActorAnimator&);
 		ActorAnimator(ActorAnimator&&) noexcept;
 
@@ -37,6 +37,7 @@ namespace base {
 
 		virtual const std::string& getCurrentClipName() const { return _currentClip->first; }
 
+	
 	protected:
 
 		std::map<std::string, Clip> _container;
@@ -46,6 +47,8 @@ namespace base {
 		bool _isRunning;
 		bool _isFinish;
 		float _animationSpeed;
+
+		std::string _currentClipName;
 	};
 
 }
