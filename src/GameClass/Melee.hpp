@@ -3,7 +3,7 @@
 
 class Melee : public base::Mob {
 public:
-	Melee(const base::collider& collider = { 1.f,1.f,1.f,1.f }, int hp = 40, int attack = 20, float speedAttack = 4.f, float speedMove = 5.f);
+	Melee(const base::collider& collider = { 1.f,1.f,1.f,1.f }, int hp = 80, int attack = 20, float speedAttack = 1.f, float speedMove = 5.f);
 	Melee(Melee&);
 	Melee(Melee&&) noexcept;
 
@@ -22,6 +22,7 @@ public:
 
 private:
 	float _timer;
+	float _attackTimer;
 
 	std::string _attackClip;
 	std::string _idleClip;
@@ -31,4 +32,5 @@ private:
 	bool _touchEnemy;
 	bool _isCollided;
 	bool _enableAttack;
+	bool _died;
 };
