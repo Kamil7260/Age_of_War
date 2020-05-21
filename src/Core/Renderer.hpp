@@ -37,7 +37,13 @@ namespace core {
 
 	private:
 
+		std::unique_ptr<base::Actor>& getLastColliderActor(std::vector<std::unique_ptr<base::Actor>>& actor);
+
+		void eraseNoActive();
+
 		void insertQueue();
+
+		void collisionBetween(std::unique_ptr<base::Actor>& left, std::unique_ptr<base::Actor>& right) const ;
 
 		Renderer();
 
@@ -49,6 +55,8 @@ namespace core {
 		std::vector<std::unique_ptr<base::Actor>> _enemyActor;
 		std::vector<std::unique_ptr<base::Actor>> _gui;
 		std::unique_ptr<sf::RenderWindow> _window;
+
+		bool _shouldBeErase;
 	};
 		
 }

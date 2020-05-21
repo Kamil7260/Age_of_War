@@ -51,6 +51,8 @@ namespace base {
 		virtual const collider& getCollider() const final { return _myColider; }
 		virtual void setCollider(const collider& source) { _myColider = source; }
 
+		virtual bool isColliderActive() const { return false; }
+
 		virtual void onStart() {};
 		virtual void onUpdate() = 0;
 

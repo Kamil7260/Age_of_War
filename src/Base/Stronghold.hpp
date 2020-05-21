@@ -12,9 +12,11 @@ namespace base {
 		Stronghold& operator=(Stronghold&&) noexcept;
 
 		virtual void damage(int dmg);
-	protected:
 
+		virtual bool isColliderActive() const override { return _activeCollider; }
+	protected:
 		int _hp;
+		bool _activeCollider;
 
 	};
 
