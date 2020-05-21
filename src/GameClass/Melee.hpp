@@ -3,7 +3,7 @@
 
 class Melee : public base::Mob {
 public:
-	Melee(const base::collider& collider = { 1.f,1.f,1.f,1.f }, int hp = 80, int attack = 20, float speedAttack = 1.f, float speedMove = 5.f);
+	Melee(const base::collider& collider = { 1.f,1.f,1.f,1.f }, int hp = 80, int attack = 15,int maxAttack = 30, float speedAttack = 1.f, float speedMove = 5.f);
 	Melee(Melee&);
 	Melee(Melee&&) noexcept;
 

@@ -3,7 +3,7 @@
 namespace base {
 	class Mob : public ActorAnimator {
 	public:
-		Mob(int hp = 80, int attack = 20, float speedattack = 1.f,float speedmove = 5.f);
+		Mob(int hp = 80, int minattack = 15, int maxattack = 30, float speedattack = 1.f,float speedmove = 5.f);
 		Mob(const Mob&);
 		Mob(Mob&&) noexcept;
 		Mob& operator=(const Mob&);
@@ -17,6 +17,8 @@ namespace base {
 
 		virtual void setSpeedAttack(const float speed);
 
+		virtual void setAttack(const int min, const  int max);
+
 		virtual void setAnimatorName(const char* name) = 0;
 
 		virtual bool isColliderActive() const override {
@@ -26,6 +28,7 @@ namespace base {
 	protected:
 		int _hp;
 		int _attack;
+		int _maxAttack;
 		float _speedAttack;
 		float _speedMove;
 		bool _activeCollider;

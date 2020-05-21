@@ -1,13 +1,13 @@
 #include "Mob.hpp"
 
-base::Mob::Mob(int hp, int attack, float speedattack, float speedmove)
-	:_hp(hp),_attack(attack), _speedAttack(speedattack),_speedMove(speedmove), _activeCollider(true)
+base::Mob::Mob(int hp, int minattack, int maxattack, float speedattack, float speedmove)
+	:_hp(hp),_attack(minattack),_maxAttack(maxattack), _speedAttack(speedattack),_speedMove(speedmove), _activeCollider(true)
 {
 	_tag = "Mob";
 }
 
 base::Mob::Mob(const Mob& source)
-	:_hp(source._hp), _attack(source._attack),
+	:_hp(source._hp), _attack(source._attack), _maxAttack(source._maxAttack),
 	_speedAttack(source._speedAttack), _speedMove(source._speedMove),
 	_activeCollider(source._activeCollider)
 {
@@ -15,7 +15,7 @@ base::Mob::Mob(const Mob& source)
 }
 
 base::Mob::Mob(Mob&& source) noexcept
-	:_hp(source._hp), _attack(source._attack),
+	:_hp(source._hp), _attack(source._attack), _maxAttack(source._maxAttack),
 	_speedAttack(source._speedAttack), _speedMove(source._speedMove),
 	_activeCollider(source._activeCollider)
 {
@@ -30,6 +30,7 @@ base::Mob::Mob(Mob&& source) noexcept
 base::Mob& base::Mob::operator=(const Mob& source)
 {
 	_tag = "Mob";
+	_maxAttack = source._maxAttack;
 	_hp = source._hp;
 	_attack = source._attack;
 	_speedAttack = source._speedAttack;
@@ -42,6 +43,7 @@ base::Mob& base::Mob::operator=(Mob&& source) noexcept
 {
 	_tag = "Mob";
 	_hp = source._hp;
+	_maxAttack = source._maxAttack;
 	_attack = source._attack;
 	_speedAttack = source._speedAttack;
 	_speedMove = source._speedMove;
@@ -77,4 +79,10 @@ void base::Mob::setSpeedMove(const float speed)
 void base::Mob::setSpeedAttack(const float speed)
 {
 	_speedAttack = speed;
+}
+
+void base::Mob::setAttack(const int min, const int max)
+{
+	_attack = min;
+	_maxAttack = max;
 }

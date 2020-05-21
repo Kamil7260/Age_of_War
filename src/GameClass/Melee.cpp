@@ -1,7 +1,10 @@
+#include <random>
+
 #include "Melee.hpp"
 #include "../Core/Application.hpp"
-Melee::Melee(const base::collider& collider, int hp, int attack, float speedAttack, float speedMove)
-	:Mob(hp, attack, speedAttack, speedMove),_timer(0.f),_attackTimer(0.f), _touchEnemy(false), _isCollided(false), _enableAttack(true), _died(false)
+
+Melee::Melee(const base::collider& collider, int hp, int attack, int maxAttack, float speedAttack, float speedMove)
+	:Mob(hp, attack,maxAttack, speedAttack, speedMove),_timer(0.f),_attackTimer(0.f), _touchEnemy(false), _isCollided(false), _enableAttack(true), _died(false)
 {
 	_animationSpeed = 0.05f;
 	_myColider = { 10.f,10.f,25.f,25.f };
@@ -81,7 +84,7 @@ void Melee::setAnimatorName(const char* name)
 	d->second.setCallback([&]()->void {
 		_died = true;
 		_timer = 0.f;
-		_activeCollider = false;
+	//	_activeCollider = false;
 		});
 
 	_attackClip = name;
@@ -139,7 +142,7 @@ void Melee::damage(int dmg)
 	Mob::damage(dmg);
 	if (_hp <= 0)
 	{
-		_position = sf::Vector2f(0, 0);
+		_position = { 0.f,0.f };
 		_activeCollider = false;
 		if(_currentClipName != _dieClip)
 		play(_dieClip.c_str());
@@ -162,8 +165,13 @@ void Melee::onCollision(std::unique_ptr<base::Actor>& collision)
 		{
 			_attackTimer = 0.f;
 			_enableAttack = false;
+			if (_hp <= 0) return;
+			std::default_random_engine generator;
+			std::uniform_int_distribution<int> distribution(_attack,_maxAttack);
+			int attack_roll = distribution(generator);
+
 			auto ptr = static_cast<base::Mob*>(collision.get());
-			ptr->damage(_attack);
+			ptr->damage(attack_roll);
 			return;
 		}
 		if (_currentClipName != _attackClip && _hp>0)
