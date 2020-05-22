@@ -37,8 +37,14 @@ namespace core {
 
 		void updateCollision();
 
-	private:
+		void move(const sf::Vector2f& delta);
 
+		void setCamSpeed(const float speed) { _camSpeed = speed; }
+		void setCamScope(const sf::Vector2f& scope) { _scope = scope; }
+	private:
+		float _camSpeed;
+		sf::Vector2f _position;
+		sf::Vector2f _scope;
 		std::unique_ptr<base::Actor>& getLastColliderActor(std::vector<std::unique_ptr<base::Actor>>& actor);
 
 		void eraseNoActive();

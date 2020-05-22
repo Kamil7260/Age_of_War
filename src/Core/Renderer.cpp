@@ -147,6 +147,38 @@ void core::Renderer::updateCollision()
 	}
 }
 
+void core::Renderer::move(const sf::Vector2f& delta)
+{
+	if (delta.x > 0)
+	{
+		if (delta.x + _position.x > _scope.x)
+			return;
+	}
+	else {
+		if (delta.x + _position.x < -_scope.y)
+			return;
+	}
+	_position += delta;
+
+	for (auto it = _backGround.begin(); it != _backGround.end(); ++it)
+	{
+		(*it)->move(delta);
+	}
+	for (auto it = _actor.begin(); it != _actor.end(); ++it)
+	{
+		(*it)->move(delta);
+	}
+	for (auto it = _enemyActor.begin(); it != _enemyActor.end(); ++it)
+	{
+		(*it)->move(delta);
+	}
+	for (auto it = _queue.begin(); it != _queue.end(); ++it)
+	{
+		it->first->move(delta);
+	}
+
+}
+
 std::unique_ptr<base::Actor>& core::Renderer::getLastColliderActor(std::vector<std::unique_ptr<base::Actor>>& actor)
 {
 
@@ -232,4 +264,7 @@ core::Renderer::Renderer()
 	_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 1080), "Age of War");
 	_window->setFramerateLimit(60);
 	_placeHolder = nullptr;
+	_camSpeed = 0;
+	_scope = { 0.f,0.f };
+	_position = { 0.f,0.f };
 }

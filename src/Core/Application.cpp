@@ -13,6 +13,9 @@ void core::Application::run()
 	LOG_INFO("Init Renderer");
 	auto& renderer = Renderer::getInstance();
 	auto& window = renderer.getWindow();
+	float camSpeed = 400.f;
+	renderer.setCamSpeed(camSpeed);
+	renderer.setCamScope({0.f,1150.f});
 
 	LOG_INFO("Init TextureManager");
 	auto& textureManager = ResourceManager<sf::Texture>::getInstance();
@@ -65,6 +68,20 @@ void core::Application::run()
 		}
 		renderer.updateCollision();
 		renderer.update();
+
+		auto pos = sf::Mouse::getPosition(*window);
+		if (pos.y > window->getSize().y * 0.2f)
+		{
+			if (pos.x < window->getSize().x * 0.1f)
+			{
+				renderer.move(sf::Vector2f(camSpeed * _deltaTime, 0));
+			}
+			else if (pos.x > window->getSize().x * 0.9f)
+			{
+				renderer.move(sf::Vector2f(-camSpeed * _deltaTime, 0));
+			}
+		}
+
 		window->clear();
 		renderer.draw();
 		window->display();
