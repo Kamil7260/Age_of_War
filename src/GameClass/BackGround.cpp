@@ -4,13 +4,6 @@
 
 BackGround::BackGround()
 {
-	auto k = core::ResourceManager<sf::Texture>::getInstance().get("Assets/background/1.png");
-	if (k == nullptr) {
-		LOG_ERROR("Resource manager get(Assets/background/1.png) -> nullptr");
-	}
-	else {
-		_sprite.setTexture(*k);
-	}
 }
 
 void BackGround::setPosition(const sf::Vector2f& pos)

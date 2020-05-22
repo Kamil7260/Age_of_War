@@ -21,6 +21,8 @@ public:
 
 	virtual void onUpdate() override;
 
+	virtual void setTexture(const sf::Texture& tex) { _sprite.setTexture(tex); }
+
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 private:
