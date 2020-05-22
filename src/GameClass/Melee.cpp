@@ -6,9 +6,7 @@
 Melee::Melee(const base::collider& collider, int hp, int attack, int maxAttack, float speedAttack, float speedMove)
 	:Mob(hp, attack,maxAttack, speedAttack, speedMove),_timer(0.f),_attackTimer(0.f), _touchEnemy(false), _isCollided(false), _enableAttack(true), _died(false)
 {
-	_animationSpeed = 0.05f;
-	_myColider = { 10.f,10.f,25.f,25.f };
-	_speedMove = 25.f;
+	_myColider = collider;
 }
 
 Melee::Melee(Melee& source)
@@ -166,7 +164,8 @@ void Melee::onCollision(std::unique_ptr<base::Actor>& collision)
 			_attackTimer = 0.f;
 			_enableAttack = false;
 			if (_hp <= 0) return;
-			std::default_random_engine generator;
+			std::random_device mch;
+			std::default_random_engine generator(mch());
 			std::uniform_int_distribution<int> distribution(_attack,_maxAttack);
 			int attack_roll = distribution(generator);
 
@@ -186,19 +185,19 @@ void Melee::onCollision(std::unique_ptr<base::Actor>& collision)
 
 	if (_speedMove > 0)
 	{
-		if (collision->getPosition().x > _position.x)
+		if (collision->getPosition().x >= _position.x)
 		{
 			if(_currentClipName != _attackClip)
-			play("caveman_idle");
+			play(_idleClip.c_str());
 			_isCollided = true;
 		}
 		return;
 	}
 	else{
-		if (collision->getPosition().x < _position.x)
+		if (collision->getPosition().x <= _position.x)
 		{
 			if (_currentClipName != _attackClip)
-			play("caveman_idle");
+			play(_idleClip.c_str());
 			_isCollided = true;
 		}
 		return;
