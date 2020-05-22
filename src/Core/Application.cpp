@@ -20,6 +20,9 @@ void core::Application::run()
 	LOG_INFO("Init TextureManager");
 	auto& textureManager = ResourceManager<sf::Texture>::getInstance();
 
+	LOG_INFO("Init FontsManager");
+	auto& fontManager = ResourceManager<sf::Font>::getInstance();
+
 	LOG_INFO("Init ClipManager");
 	_clips = std::make_unique<ClipManager>();
 
@@ -27,21 +30,25 @@ void core::Application::run()
 	float frameStartTime;
 
 	assetLoader();
-	
 	std::unique_ptr<BackGround> bcg = std::make_unique<BackGround>();
 	bcg->setPosition(sf::Vector2f(-50.f, 0.f));
+	bcg->setScale(sf::Vector2f(1.f, 1.07f));
 
 	renderer.addObject(std::move(bcg), base::object_type::background);
 
 	std::unique_ptr<Player> player = std::make_unique<Player>();
-	player->setPosition(sf::Vector2f(-180, 600));
+	player->setPosition(sf::Vector2f(140, 870));
 	renderer.addObject(std::move(player), base::object_type::actor);
 	
-	std::unique_ptr<Melee> man = std::make_unique<Melee>();
-	man->setAnimatorName("caveman");
-	man->setPosition(sf::Vector2f(830, 850));
-	core::Renderer::getInstance().addEnemyObject(std::move(man));
+	//std::unique_ptr<Melee> man = std::make_unique<Melee>();
+	//man->setAnimatorName("caveman");
+	//man->setPosition(sf::Vector2f(830, 850));
+	//core::Renderer::getInstance().addEnemyObject(std::move(man));
 
+
+	std::unique_ptr<Enemy> enemy = std::make_unique<Enemy>();
+	enemy->setPosition(sf::Vector2f(2900, 870));
+	renderer.addEnemyObject(std::move(enemy));
 
 	//std::unique_ptr<Caveman> man = std::make_unique<Caveman>();
 	//man->setPosition(sf::Vector2f(100.f, 100.f));
@@ -53,6 +60,14 @@ void core::Application::run()
 
 	//renderer.addObject(std::move(man), base::object_type::actor);
 
+	float lastFpsTimeCheck = 0.f;
+	sf::Text fpsPlayer;
+	fpsPlayer.setCharacterSize(20);
+	fpsPlayer.setFont(*fontManager.get("Assets/fonts/3.ttf"));
+	fpsPlayer.setPosition(sf::Vector2f(10.f, 10.f));
+	fpsPlayer.setFillColor(sf::Color::Red);
+
+	fpsPlayer.setString("60");
 	LOG_INFO("Main loop...");
 	while (window->isOpen())
 	{
@@ -84,8 +99,18 @@ void core::Application::run()
 
 		window->clear();
 		renderer.draw();
+
+		window->draw(fpsPlayer);
+
 		window->display();
 		_deltaTime = _clock.getElapsedTime().asSeconds() - frameStartTime;
+		lastFpsTimeCheck += _deltaTime;
+		if (lastFpsTimeCheck > 0.2f)
+		{
+			int fps = 1.f / _deltaTime;
+			fpsPlayer.setString(std::to_string(fps));
+			lastFpsTimeCheck = 0.f;
+		}
 	}
 	return;
 }
@@ -98,6 +123,7 @@ const base::Clip& core::Application::getClip(const char* name)
 void core::Application::assetLoader()
 {
 	auto &texture = ResourceManager<sf::Texture>::getInstance();
+	auto& font = ResourceManager<sf::Font>::getInstance();
 	std::string path;
 	std::unique_ptr<base::Clip> clip;
 	clip = std::make_unique<base::Clip>();
