@@ -33,6 +33,8 @@ namespace core {
 			return _window;
 		};
 
+		std::unique_ptr<base::Actor>& isEnemyInRange(const sf::Vector2f& myPosition, const float myRange, const base::team& myTeam);
+
 		void updateCollision();
 
 	private:
@@ -56,6 +58,7 @@ namespace core {
 		std::vector<std::unique_ptr<base::Actor>> _gui;
 		std::unique_ptr<sf::RenderWindow> _window;
 
+		std::unique_ptr<base::Actor> _placeHolder;
 		bool _shouldBeErase;
 	};
 		

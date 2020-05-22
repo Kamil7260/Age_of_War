@@ -61,6 +61,67 @@ void core::Renderer::clearNoActive()
 	_shouldBeErase = true;
 }
 
+std::unique_ptr<base::Actor>& core::Renderer::isEnemyInRange(const sf::Vector2f& myPosition, const float myRange, const base::team& myTeam)
+{
+	if (myTeam == base::team::player)
+	{
+		if (_enemyActor.empty())
+			return _placeHolder;
+
+		if (_enemyActor.size() == 1)
+			return *_enemyActor.begin();
+
+		for (auto it = _enemyActor.begin() + 1; it != _enemyActor.end(); ++it)
+		{
+			if((*it)->isColliderActive())
+				if (myPosition.x + myRange > (*it)->getPosition().x)
+				{
+					if (myPosition.x < (*it)->getPosition().x)
+					{
+						return *it;
+					}
+				}
+		}
+		auto it = _enemyActor.begin();
+		if (myPosition.x + myRange > (*it)->getPosition().x)
+		{
+			if (myPosition.x < (*it)->getPosition().x)
+			{
+				return *it;
+			}
+		}
+	}
+	else if (myTeam == base::team::enemy)
+	{
+		if (_actor.empty())
+			return _placeHolder;
+
+		if (_actor.size() == 1)
+			return *_actor.begin();
+
+		for (auto it = _actor.begin() + 1; it != _actor.end(); ++it)
+		{
+			if ((*it)->isColliderActive())
+				if (myPosition.x - myRange < (*it)->getPosition().x)
+				{
+					if (myPosition.x > (*it)->getPosition().x)
+					{
+						return *it;
+					}
+				}
+		}
+		auto it = _actor.begin();
+		if (myPosition.x + myRange > (*it)->getPosition().x)
+		{
+			if (myPosition.x < (*it)->getPosition().x)
+			{
+				return *it;
+			}
+		}
+	}
+	return _placeHolder;
+}
+
 void core::Renderer::updateCollision()
 {
 	if(!_actor.empty() && !_enemyActor.empty())
@@ -153,11 +214,11 @@ void core::Renderer::collisionBetween(std::unique_ptr<base::Actor>& left, std::u
 	auto leftCollider = left->getCollider();
 	auto rightCollider = right->getCollider();
 
-	if (left->getPosition().x + leftCollider.right > right->getPosition().x - rightCollider.left
-		&& left->getPosition().x - leftCollider.left < right->getPosition().x + rightCollider.right)
+	if (left->getPosition().x + leftCollider.right >= right->getPosition().x - rightCollider.left
+		&& left->getPosition().x - leftCollider.left <= right->getPosition().x + rightCollider.right)
 	{
-		if (left->getPosition().y + leftCollider.up > right->getPosition().y - rightCollider.down
-			&& left->getPosition().y - leftCollider.down < right->getPosition().y + rightCollider.up)
+		if (left->getPosition().y + leftCollider.up >= right->getPosition().y - rightCollider.down
+			&& left->getPosition().y - leftCollider.down <= right->getPosition().y + rightCollider.up)
 		{
 			left->onCollision(right);
 			right->onCollision(left);
@@ -170,4 +231,5 @@ core::Renderer::Renderer()
 	LOG_INFO("Creating window...");
 	_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 1080), "Age of War");
 	_window->setFramerateLimit(60);
+	_placeHolder = nullptr;
 }
