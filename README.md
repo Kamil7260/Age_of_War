@@ -1,6 +1,8 @@
 Age_of_War
 
-Game project based on an old flash game - "**Age of War**".
+Game project based on an old flash game - "**Age of War**" by Max Games.
+<br/>
+Please check [MaxGames.com](https://www.maxgames.com/) for more cool games like this one.
 
 ---
 
@@ -14,6 +16,7 @@ Game project based on an old flash game - "**Age of War**".
 Project dependencies:
 
 - [SFML 2.5.1](https://www.sfml-dev.org/index.php)
+- [JSON](https://github.com/nlohmann/json)
     
  
 
