@@ -53,6 +53,8 @@ namespace core {
 
 		void collisionBetween(std::unique_ptr<base::Actor>& left, std::unique_ptr<base::Actor>& right) const ;
 
+		void onMouse(const std::unique_ptr<base::Actor>& source) const;
+
 		Renderer();
 
 		std::vector<std::pair<std::unique_ptr<base::Actor>,base::object_type>> _queue;
@@ -66,6 +68,7 @@ namespace core {
 
 		std::unique_ptr<base::Actor> _placeHolder;
 		bool _shouldBeErase;
+		sf::Vector2i _mousePosition;
 	};
 		
 }

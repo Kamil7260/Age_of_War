@@ -69,9 +69,17 @@ std::unique_ptr<base::Actor>& core::Renderer::isEnemyInRange(const sf::Vector2f&
 			return _placeHolder;
 
 		if (_enemyActor.size() == 1)
-			return *_enemyActor.begin();
-
-		for (auto it = _enemyActor.begin() + 1; it != _enemyActor.end(); ++it)
+		{
+			auto it = _enemyActor.begin();
+			if (myPosition.x + myRange > (*it)->getPosition().x)
+			{
+				if (myPosition.x < (*it)->getPosition().x)
+				{
+					return *it;
+				}
+			}
+		}
+		else for (auto it = _enemyActor.begin() + 1; it != _enemyActor.end(); ++it)
 		{
 			if((*it)->isColliderActive())
 				if (myPosition.x + myRange > (*it)->getPosition().x)
@@ -97,9 +105,17 @@ std::unique_ptr<base::Actor>& core::Renderer::isEnemyInRange(const sf::Vector2f&
 			return _placeHolder;
 
 		if (_actor.size() == 1)
-			return *_actor.begin();
-
-		for (auto it = _actor.begin() + 1; it != _actor.end(); ++it)
+		{
+			auto it = _actor.begin();
+			if (myPosition.x + myRange > (*it)->getPosition().x)
+			{
+				if (myPosition.x < (*it)->getPosition().x)
+				{
+					return *it;
+				}
+			}
+		}
+		else for (auto it = _actor.begin() + 1; it != _actor.end(); ++it)
 		{
 			if ((*it)->isColliderActive())
 				if (myPosition.x - myRange < (*it)->getPosition().x)
@@ -124,6 +140,8 @@ std::unique_ptr<base::Actor>& core::Renderer::isEnemyInRange(const sf::Vector2f&
 
 void core::Renderer::updateCollision()
 {
+	_mousePosition = sf::Mouse::getPosition(*_window);
+
 	if(!_actor.empty() && !_enemyActor.empty())
 	collisionBetween(getLastColliderActor(_actor), getLastColliderActor(_enemyActor));
 
@@ -134,6 +152,7 @@ void core::Renderer::updateCollision()
 		for (; right != _actor.end();++right,++left)
 		{
 			collisionBetween(*left, *right);
+			onMouse(*right);
 		}
 	}
 	if (!_enemyActor.empty())
@@ -143,7 +162,12 @@ void core::Renderer::updateCollision()
 		for (; right != _enemyActor.end(); ++right, ++left)
 		{
 			collisionBetween(*left, *right);
+			onMouse(*right);
 		}
+	}
+	for (auto k = _gui.begin(); k != _gui.end(); ++k)
+	{
+		onMouse((*k));
 	}
 }
 
@@ -254,6 +278,21 @@ void core::Renderer::collisionBetween(std::unique_ptr<base::Actor>& left, std::u
 		{
 			left->onCollision(right);
 			right->onCollision(left);
+		}
+	}
+}
+
+void core::Renderer::onMouse(const std::unique_ptr<base::Actor>& source) const
+{
+	auto& collider = source->getCollider();
+	auto& position = source->getPosition();
+	if (position.x + collider.right > _mousePosition.x &&
+		position.x - collider.left < _mousePosition.x)
+	{
+		if (position.y + collider.down > _mousePosition.y &&
+			position.y - collider.up < _mousePosition.y)
+		{
+			source->onMouseCollision(sf::Mouse::isButtonPressed(sf::Mouse::Left));
 		}
 	}
 }
