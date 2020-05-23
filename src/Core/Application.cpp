@@ -1,10 +1,11 @@
 #include <string>
+#include <fstream>
 #include "Application.hpp"
 #include "ResourceManager.hpp"
 
 #include "../GameClass/Background.hpp"
-#include "../GameClass/Melee.hpp"
 #include "../GameClass/Player.hpp"
+#include "../GameClass/Enemy.hpp"
 
 void core::Application::run()
 {
@@ -26,39 +27,54 @@ void core::Application::run()
 	LOG_INFO("Init ClipManager");
 	_clips = std::make_unique<ClipManager>();
 
+	LOG_INFO("Loading mobinfo json");
+	{
+		std::ifstream reader("Data/mobInfo.json");
+		if (!reader.good())
+		{
+			LOG_ERROR("Can not open mobinfo json file");
+			return;
+		}
+		reader >> _mobInfoJson;
+		reader.close();
+	}
+
 	_clock.restart();
 	float frameStartTime;
 
 	assetLoader();
-	std::unique_ptr<BackGround> bcg = std::make_unique<BackGround>();
-	bcg->setPosition(sf::Vector2f(-50.f, 0.f));
-	bcg->setScale(sf::Vector2f(1.f, 1.07f));
-
-	renderer.addObject(std::move(bcg), base::object_type::background);
+	{
+		auto k = core::ResourceManager<sf::Texture>::getInstance().get("Assets/background/1.png");
+		if (k == nullptr) {
+			LOG_ERROR("Resource manager get(Assets/background/1.png) -> nullptr");
+		}
+		else {
+			std::unique_ptr<BackGround> bcg = std::make_unique<BackGround>();
+			bcg->setPosition(sf::Vector2f(-50.f, 0.f));
+			bcg->setTexture(*k);
+			bcg->setScale(sf::Vector2f(1.f, 1.07f));
+			renderer.addObject(std::move(bcg), base::object_type::background);
+		}
+		k = core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/4.png");
+		if (k == nullptr) {
+			LOG_ERROR("Resource manager get(Assets/gui/4.png) -> nullptr");
+		}
+		else {
+			std::unique_ptr<BackGround> bcg = std::make_unique<BackGround>();
+			bcg = std::make_unique<BackGround>();
+			bcg->setTexture(*k);
+			bcg->setPosition(sf::Vector2f(200.f, 0.f));
+			renderer.addObject(std::move(bcg), base::object_type::gui);
+		}	
+	}
 
 	std::unique_ptr<Player> player = std::make_unique<Player>();
 	player->setPosition(sf::Vector2f(140, 870));
 	renderer.addObject(std::move(player), base::object_type::actor);
 	
-	//std::unique_ptr<Melee> man = std::make_unique<Melee>();
-	//man->setAnimatorName("caveman");
-	//man->setPosition(sf::Vector2f(830, 850));
-	//core::Renderer::getInstance().addEnemyObject(std::move(man));
-
-
 	std::unique_ptr<Enemy> enemy = std::make_unique<Enemy>();
 	enemy->setPosition(sf::Vector2f(2900, 870));
 	renderer.addEnemyObject(std::move(enemy));
-
-	//std::unique_ptr<Caveman> man = std::make_unique<Caveman>();
-	//man->setPosition(sf::Vector2f(100.f, 100.f));
-
-	//renderer.addObject(std::move(man), base::object_type::actor);
-
-	//man = std::make_unique<Caveman>();
-	//man->setPosition(sf::Vector2f(200.f, 100.f));
-
-	//renderer.addObject(std::move(man), base::object_type::actor);
 
 	float lastFpsTimeCheck = 0.f;
 	sf::Text fpsPlayer;
@@ -107,8 +123,7 @@ void core::Application::run()
 		lastFpsTimeCheck += _deltaTime;
 		if (lastFpsTimeCheck > 0.2f)
 		{
-			int fps = 1.f / _deltaTime;
-			fpsPlayer.setString(std::to_string(fps));
+			fpsPlayer.setString(std::to_string(static_cast<int>(1.f / _deltaTime)));
 			lastFpsTimeCheck = 0.f;
 		}
 	}

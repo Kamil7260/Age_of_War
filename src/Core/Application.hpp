@@ -1,8 +1,13 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <memory>
+#include <nlohmann/json.hpp>
+
 #include "Renderer.hpp"
 #include "ClipManager.hpp"
+
+using json = nlohmann::json;
+
 namespace core {
 
 class Application final {
@@ -21,6 +26,10 @@ public:
 
 	const base::Clip& getClip(const char* name);
 
+	const json& getMobInfo() const {
+		return _mobInfoJson;
+	}
+
 	~Application() = default;
 	Application(Application&) = delete;
 	Application(Application&&) = delete;
@@ -30,6 +39,7 @@ private:
 
 	void assetLoader();
 	
+	json _mobInfoJson;
 	Application();	
 	sf::Clock _clock;
 	float _deltaTime;
