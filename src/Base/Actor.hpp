@@ -25,7 +25,7 @@ namespace base {
 	class Actor : public sf::Drawable {
 
 	public:
-		Actor();
+		Actor(const base::collider& box = { 1.f,1.f,1.f,1.f });
 		Actor(const Actor&);
 		Actor(Actor&&) noexcept;
 
@@ -48,6 +48,7 @@ namespace base {
 		virtual void move(const sf::Vector2f& delta) { _position += delta; }
 
 		virtual void onCollision(std::unique_ptr<Actor>& collision) {};
+		virtual void onMouseCollision(bool isPressed)  {};
 		virtual const collider& getCollider() const final { return _myColider; }
 		virtual void setCollider(const collider& source) { _myColider = source; }
 

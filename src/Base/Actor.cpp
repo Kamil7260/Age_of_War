@@ -1,7 +1,7 @@
 #include "Actor.hpp"
 
-base::Actor::Actor()
-	:_isActive(true), _type(object_type::actor), _team(team::none), _myColider({1.f,1.f,1.f,1.f})
+base::Actor::Actor(const base::collider& box)
+	:_isActive(true), _type(object_type::actor), _team(team::none), _myColider(box)
 {
 }
 
