@@ -24,4 +24,6 @@ public:
 protected:
 	sf::Sprite _sprite;
 	std::function<void(bool)> _onClickEvent;
+	sf::RectangleShape _shadow;
+	bool _shadowDraw;
 };
