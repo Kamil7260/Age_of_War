@@ -203,6 +203,31 @@ void core::Renderer::move(const sf::Vector2f& delta)
 
 }
 
+std::unique_ptr<base::Actor>& core::Renderer::find(const std::string& tag)
+{
+	for (auto it = _gui.begin(); it != _gui.end(); ++it)
+	{
+		if ((*it)->getTag() == tag)
+			return *it;
+	}
+	for (auto it = _backGround.begin(); it != _backGround.end(); ++it)
+	{
+		if ((*it)->getTag() == tag)
+			return *it;
+	}
+	for (auto it = _actor.begin(); it != _actor.end(); ++it)
+	{
+		if ((*it)->getTag() == tag)
+			return *it;
+	}
+	for (auto it = _enemyActor.begin(); it != _enemyActor.end(); ++it)
+	{
+		if ((*it)->getTag() == tag)
+			return *it;
+	}
+	return _placeHolder;
+}
+
 std::unique_ptr<base::Actor>& core::Renderer::getLastColliderActor(std::vector<std::unique_ptr<base::Actor>>& actor)
 {
 

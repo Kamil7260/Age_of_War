@@ -39,6 +39,8 @@ namespace core {
 
 		void move(const sf::Vector2f& delta);
 
+		std::unique_ptr<base::Actor>& find(const std::string& tag);
+
 		void setCamSpeed(const float speed) { _camSpeed = speed; }
 		void setCamScope(const sf::Vector2f& scope) { _scope = scope; }
 	private:
