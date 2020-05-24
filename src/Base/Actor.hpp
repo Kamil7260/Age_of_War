@@ -58,6 +58,7 @@ namespace base {
 		virtual void onUpdate() = 0;
 
 		virtual std::string getTag() const final { return _tag; }
+		virtual void setTag(const std::string& tag) { _tag = tag; }
 
 		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override = 0;
 
