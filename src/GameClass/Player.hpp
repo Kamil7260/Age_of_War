@@ -40,11 +40,14 @@ public:
 	virtual bool loadFromJson(const std::string& type,const std::string& name, const unsigned int index);
 	virtual void spawnObject(const unsigned int type);
 	
+	virtual void addToQueue(const unsigned int type);
+
 private:
 	float _timer;
 	sf::Sprite _sprite;
 	bool _enableSpawn;
 	std::array<mobInfo, 3> _mobTemplate;
 	std::vector<std::pair<std::unique_ptr<base::Actor>, std::unique_ptr<base::Actor>>> _queue;
+	std::string _currentAge;
 };
 

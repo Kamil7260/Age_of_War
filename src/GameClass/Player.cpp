@@ -5,28 +5,31 @@
 #include "Melee.hpp"
 #include "Range.hpp"
 #include "Button.hpp"
+#include "QueueManager.hpp"
 
 Player::Player()
 	:_enableSpawn(true)
 {
+	_currentAge = 'I';
 	_timer = 0;
 	_sprite.setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/base/1.png"));
 	_sprite.setOrigin(275.f, 170.f);
 	_myColider = { 111.f,111.f,111.f,111.f };
 
+	auto manager = std::make_unique<QueueManager>();
+	manager->setPosition(sf::Vector2f(300.f, 150.f));
+	core::Renderer::getInstance().addObject(std::move(manager), base::object_type::gui);
 	loadFromJson("Melee", "caveman", 0);
 	loadFromJson("Range", "slingshoter", 1);
 	loadFromJson("Melee", "dino", 2);
 
 	auto button = std::make_unique<Button>(base::collider({ 0.f,68.f,0.f,68.f }));
 	button->setPosition(sf::Vector2f(300.f, 50.f));
-	button->setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/1.png"));
+	button->setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/I/1.png"));
 	button->setClickEvent([&](bool isPressed)->void {
 		if (isPressed && _enableSpawn)
 		{
-			_enableSpawn = false;
-			_timer = 0.f;
-			spawnObject(0);
+			addToQueue(0);
 		}
 		});
 
@@ -34,26 +37,22 @@ Player::Player()
 
 	 button = std::make_unique<Button>(base::collider({ 0.f,68.f,0.f,68.f }));
 	button->setPosition(sf::Vector2f(400.f, 50.f));
-	button->setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/2.png"));
+	button->setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/I/2.png"));
 	button->setClickEvent([&](bool isPressed)->void {
 		if (isPressed && _enableSpawn)
 		{
-			_enableSpawn = false;
-			_timer = 0.f;
-			spawnObject(1);
+			addToQueue(1);
 		}
 		});
 	core::Renderer::getInstance().addObject(std::move(button), base::object_type::gui);
 	
 	 button = std::make_unique<Button>(base::collider({ 0.f,68.f,0.f,68.f }));
 	button->setPosition(sf::Vector2f(500.f, 50.f));
-	button->setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/3.png"));
+	button->setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/I/3.png"));
 	button->setClickEvent([&](bool isPressed)->void {
 		if (isPressed && _enableSpawn)
 		{
-			_enableSpawn = false;
-			_timer = 0.f;
-			spawnObject(2);
+			addToQueue(2);
 		}
 		});
 	core::Renderer::getInstance().addObject(std::move(button), base::object_type::gui);
@@ -92,8 +91,11 @@ void Player::move(const sf::Vector2f& delta)
 void Player::onUpdate()
 {
 	_timer += core::Application::getInstance().getTime();
-	if (_timer >= 4.f)
-		_enableSpawn = true;
+	if (_timer >= 0.3f)
+	{
+		if(!sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			_enableSpawn = true;
+	}
 	
 }
 
@@ -222,4 +224,25 @@ void Player::spawnObject(const unsigned int type)
 	man->setAnimationSpeed(k.animationSpeed);
 	man->setPosition(sf::Vector2f(_position.x + 100, _position.y + 75));
 	core::Renderer::getInstance().addObject(std::move(man), base::object_type::actor);
+}
+
+void Player::addToQueue(const unsigned int type)
+{
+	_timer = 0.f;
+	_enableSpawn = false;
+	auto& manager = core::Renderer::getInstance().find("QueueManager");
+	if (manager != nullptr)
+	{
+		auto queue = static_cast<QueueManager*>(manager.get());
+		Ikon ikon;
+		ikon.setTimePoint(_mobTemplate.at(type).spawnTime);
+		std::string path = "Assets/gui/" + _currentAge + "/"+ std::to_string(type+1) + ".png";
+		ikon.setTexture(*core::ResourceManager<sf::Texture>::getInstance().get(path.c_str()));
+		queue->addIkon(ikon, [&,type]()->void {
+			spawnObject(type);
+			});
+	}
+	else {
+		LOG_ERROR("Can not find QueueManager");
+	}
 }
