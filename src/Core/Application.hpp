@@ -29,6 +29,9 @@ public:
 	const json& getMobInfo() const {
 		return _mobInfoJson;
 	}
+	const json& getCannonInfo() const {
+		return _cannonInfoJson;
+	}
 
 	~Application() = default;
 	Application(Application&) = delete;
@@ -40,6 +43,7 @@ private:
 	void assetLoader();
 	
 	json _mobInfoJson;
+	json _cannonInfoJson;
 	Application();	
 	sf::Clock _clock;
 	float _deltaTime;

@@ -39,6 +39,18 @@ void core::Application::run()
 		reader.close();
 	}
 
+	LOG_INFO("Loading cannonInfo json");
+	{
+		std::ifstream reader("Data/cannonsInfo.json");
+		if (!reader.good())
+		{
+			LOG_ERROR("Can not open cannonInfo json file");
+			return;
+		}
+		reader >> _cannonInfoJson;
+		reader.close();
+	}
+
 	_clock.restart();
 	float frameStartTime;
 
