@@ -41,6 +41,10 @@ namespace core {
 
 		std::unique_ptr<base::Actor>& find(const std::string& tag);
 
+		const sf::Vector2i getMousePosition() {
+			return sf::Mouse::getPosition(*_window);
+		}
+
 		void setCamSpeed(const float speed) { _camSpeed = speed; }
 		void setCamScope(const sf::Vector2f& scope) { _scope = scope; }
 	private:
@@ -57,13 +61,19 @@ namespace core {
 
 		void onMouse(const std::unique_ptr<base::Actor>& source) const;
 
+		void addBullet(std::unique_ptr<base::Actor>& actor);
+
 		Renderer();
 
 		std::vector<std::pair<std::unique_ptr<base::Actor>,base::object_type>> _queue;
 		std::vector<std::unique_ptr<base::Actor>> _enemyQueue;
+		std::vector<std::unique_ptr<base::Actor>> _bulletQueue;
 
 		std::vector<std::unique_ptr<base::Actor>> _backGround;
 		std::vector<std::unique_ptr<base::Actor>> _actor;
+		std::vector<std::unique_ptr<base::Actor>> _bulletActor;
+
+		std::vector<std::unique_ptr<base::Actor>> _enemyBulletActor;
 		std::vector<std::unique_ptr<base::Actor>> _enemyActor;
 		std::vector<std::unique_ptr<base::Actor>> _gui;
 		std::unique_ptr<sf::RenderWindow> _window;

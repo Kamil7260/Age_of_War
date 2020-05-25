@@ -288,6 +288,19 @@ void core::Renderer::insertQueue()
 		_enemyActor.push_back(std::move(*it));
 	}
 	_enemyQueue.clear();
+
+	for (auto it = _bulletQueue.begin(); it != _bulletQueue.end(); ++it)
+	{
+		if ((*it)->getTeam() == base::team::player)
+		{
+			_bulletActor.push_back(std::move(*it));
+		}
+		else if ((*it)->getTeam() == base::team::enemy)
+		{
+			_enemyBulletActor.push_back(std::move(*it));
+		}
+	}
+	_bulletQueue.clear();
 }
 
 void core::Renderer::collisionBetween(std::unique_ptr<base::Actor>& left, std::unique_ptr<base::Actor>& right) const
@@ -320,6 +333,11 @@ void core::Renderer::onMouse(const std::unique_ptr<base::Actor>& source) const
 			source->onMouseCollision(sf::Mouse::isButtonPressed(sf::Mouse::Left));
 		}
 	}
+}
+
+void core::Renderer::addBullet(std::unique_ptr<base::Actor>& actor)
+{
+	_bulletQueue.push_back(std::move(actor));
 }
 
 core::Renderer::Renderer()
