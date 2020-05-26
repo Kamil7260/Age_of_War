@@ -143,10 +143,22 @@ void base::Clip::start()
 	_sprite->setOrigin(_origin);
 }
 
+const sf::Vector2f& base::Clip::getOriginMask() const
+{
+	return _origin;
+}
+
 void base::Clip::setCallbackOnTime(const std::function<void()>& callme, const float time)
 {
 	_callbackOnTime = callme;
 	_onTime = time;
+}
+
+std::shared_ptr<sf::Texture> base::Clip::getMask() const
+{
+	if (_container.empty())
+		return nullptr;
+	return *_container.begin();
 }
 
 void base::Clip::setCallback(const std::function<void()>& callme)

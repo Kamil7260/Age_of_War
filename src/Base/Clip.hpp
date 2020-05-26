@@ -28,7 +28,11 @@ namespace base {
 
 		virtual void start();
 
+		virtual const sf::Vector2f& getOriginMask() const;
+
 		virtual void setCallbackOnTime(const std::function<void()>& callme, const float time);
+
+		virtual std::shared_ptr<sf::Texture> getMask() const;
 
 		virtual void setCallback(const std::function<void()>& callme);
 	protected:
