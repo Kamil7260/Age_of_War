@@ -27,6 +27,7 @@ QueueManager& QueueManager::operator=(QueueManager&& source) noexcept
 	source._queueContainer.clear();
 	_isEnd = source._isEnd;
 	_space = source._space;
+	return *this;
 }
 
 void QueueManager::addIkon(Ikon& ikon, const std::function<void()>& onEnd)

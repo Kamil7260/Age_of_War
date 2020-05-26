@@ -4,7 +4,7 @@
 
 class Bullet : public base::Actor {
 public:
-	Bullet(float speed = 1.f, const sf::Vector2f& dir = { 1.f,1.f });
+	Bullet(int minDMG = 5, int maxDMG = 20, float speed = 1.f, const sf::Vector2f& dir = { 1.f,1.f });
 	Bullet(const Bullet& source);
 	Bullet(Bullet&& source) noexcept;
 

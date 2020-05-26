@@ -1,4 +1,6 @@
 #pragma once
+#include <random>
+
 #include "../Base/Stronghold.hpp"
 
 class Enemy : public base::Stronghold {

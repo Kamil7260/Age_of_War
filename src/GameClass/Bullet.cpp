@@ -4,8 +4,8 @@
 #include "../Base/Mob.hpp"
 #include "../Core/Renderer.hpp"
 #include "../Core/Application.hpp"
-Bullet::Bullet(float speed, const sf::Vector2f& dir)
-	:_direction(dir), _speed(speed), _minDMG(5), _maxDMG(20)
+Bullet::Bullet(int minDMG, int maxDMG,float speed, const sf::Vector2f& dir)
+	:_direction(dir), _speed(speed), _minDMG(minDMG), _maxDMG(maxDMG)
 {
 	_myColider = { 0,30,0,30 };
 }
@@ -75,7 +75,6 @@ void Bullet::onCollision(std::unique_ptr<Actor>& collision)
 		int attack_roll = distribution(generator);
 
 		ptr->damage(attack_roll);
-
 		remove();
 		core::Renderer::getInstance().clearNoActive();
 	}
@@ -87,9 +86,10 @@ void Bullet::onUpdate()
 	k *= _speed;
 	move(sf::Vector2f(_direction.x * k, _direction.y * k));
 
-	if (_position.y > 900)
+	if (_position.y > 1000)
 	{
 		remove();
+		core::Renderer::getInstance().clearNoActive();
 	}
 }
 

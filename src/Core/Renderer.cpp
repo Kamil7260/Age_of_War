@@ -202,6 +202,7 @@ void core::Renderer::updateCollision()
 	{
 		for (auto it = _actor.begin(); it != _actor.end(); ++it)
 		{
+			if((*it)->isColliderActive())
 			if (collisionBetween(*k, *it))
 			{
 				(*k)->onCollision(*it);

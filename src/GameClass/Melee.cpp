@@ -82,7 +82,6 @@ void Melee::setAnimatorName(const char* name)
 	d->second.setCallback([&]()->void {
 		_died = true;
 		_timer = 0.f;
-	//	_activeCollider = false;
 		});
 
 	_attackClip = name;
