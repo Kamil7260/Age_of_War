@@ -28,6 +28,8 @@ namespace base {
 
 		virtual void start();
 
+		virtual void setCallbackOnTime(const std::function<void()>& callme, const float time);
+
 		virtual void setCallback(const std::function<void()>& callme);
 	protected:
 		bool _isFinish;
@@ -38,5 +40,8 @@ namespace base {
 		float _curTime;
 		sf::Vector2f _origin;
 		std::function<void()> _callback;
+		std::function<void()> _callbackOnTime;
+		float _onTime;
+		bool _onTimeCalled;
 	};
 }
