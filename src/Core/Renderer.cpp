@@ -28,7 +28,14 @@ void core::Renderer::update()
 	{
 		(*k)->onUpdate();
 	}
-
+	for (auto k = _bulletActor.begin(); k != _bulletActor.end(); ++k)
+	{
+		(*k)->onUpdate();
+	}
+	for (auto k = _enemyBulletActor.begin(); k != _enemyBulletActor.end(); ++k)
+	{
+		(*k)->onUpdate();
+	}
 
 	if (_shouldBeErase)
 		eraseNoActive();
@@ -51,6 +58,14 @@ void core::Renderer::draw()
 		_window->draw((*(*k)));
 	}
 	for (auto k = _gui.begin(); k != _gui.end(); ++k)
+	{
+		_window->draw((*(*k)));
+	}
+	for (auto k = _bulletActor.begin(); k != _bulletActor.end(); ++k)
+	{
+		_window->draw((*(*k)));
+	}
+	for (auto k = _enemyBulletActor.begin(); k != _enemyBulletActor.end(); ++k)
 	{
 		_window->draw((*(*k)));
 	}
@@ -169,6 +184,32 @@ void core::Renderer::updateCollision()
 	{
 		onMouse((*k));
 	}
+
+	for (auto k = _bulletActor.begin(); k != _bulletActor.end(); ++k)
+	{
+		for (auto it = _enemyActor.begin(); it != _enemyActor.end(); ++it)
+		{
+			if (collisionBetween(*k, *it))
+			{
+				(*k)->onCollision(*it);
+				(*it)->onCollision(*k);
+				break;
+			}
+		}
+	}
+
+	for (auto k = _enemyBulletActor.begin(); k != _enemyBulletActor.end(); ++k)
+	{
+		for (auto it = _actor.begin(); it != _actor.end(); ++it)
+		{
+			if (collisionBetween(*k, *it))
+			{
+				(*k)->onCollision(*it);
+				(*it)->onCollision(*k);
+				break;
+			}
+		}
+	}
 }
 
 void core::Renderer::move(const sf::Vector2f& delta)
@@ -200,7 +241,14 @@ void core::Renderer::move(const sf::Vector2f& delta)
 	{
 		it->first->move(delta);
 	}
-
+	for (auto it = _bulletActor.begin(); it != _bulletActor.end(); ++it)
+	{
+		(*it)->move(delta);
+	}
+	for (auto it = _enemyBulletActor.begin(); it != _enemyBulletActor.end(); ++it)
+	{
+		(*it)->move(delta);
+	}
 }
 
 std::unique_ptr<base::Actor>& core::Renderer::find(const std::string& tag)
@@ -249,18 +297,35 @@ void core::Renderer::eraseNoActive()
 		return !ptr->isActive();
 	};
 
-	auto it1 = std::remove_if(_backGround.begin(), _backGround.end(), fun);
-	_backGround.erase(it1, _backGround.end());
+	auto it = std::remove_if(_backGround.begin(), _backGround.end(), fun);
+	if(!_backGround.empty())
+	_backGround.erase(it, _backGround.end());
 
-	auto it2 = std::remove_if(_actor.begin(), _actor.end(), fun);
-	_actor.erase(it2, _actor.end());
-
-	auto it3 = std::remove_if(_enemyActor.begin(), _enemyActor.end(), fun);
-	_enemyActor.erase(it3, _enemyActor.end());
-
-	auto it4 = std::remove_if(_gui.begin(), _gui.end(), fun);
-	_gui.erase(it4, _gui.end());
-
+	if (!_actor.empty())
+	{
+		it = std::remove_if(_actor.begin(), _actor.end(), fun);
+		_actor.erase(it, _actor.end());
+	}
+	if (!_enemyActor.empty())
+	{
+		it = std::remove_if(_enemyActor.begin(), _enemyActor.end(), fun);
+		_enemyActor.erase(it, _enemyActor.end());
+	}
+	if (!_gui.empty())
+	{
+		it = std::remove_if(_gui.begin(), _gui.end(), fun);
+		_gui.erase(it, _gui.end());
+	}
+	if (!_bulletActor.empty())
+	{
+		it = std::remove_if(_bulletActor.begin(), _bulletActor.end(), fun);
+		_bulletActor.erase(it, _bulletActor.end());
+	}
+	if (!_enemyBulletActor.empty())
+	{
+		it = std::remove_if(_enemyBulletActor.begin(), _enemyBulletActor.end(), fun);
+		_enemyBulletActor.erase(it, _enemyBulletActor.end());
+	}
 	_shouldBeErase = false;
 }
 
@@ -303,7 +368,7 @@ void core::Renderer::insertQueue()
 	_bulletQueue.clear();
 }
 
-void core::Renderer::collisionBetween(std::unique_ptr<base::Actor>& left, std::unique_ptr<base::Actor>& right) const
+bool core::Renderer::collisionBetween(std::unique_ptr<base::Actor>& left, std::unique_ptr<base::Actor>& right) const
 {
 	auto leftCollider = left->getCollider();
 	auto rightCollider = right->getCollider();
@@ -311,13 +376,15 @@ void core::Renderer::collisionBetween(std::unique_ptr<base::Actor>& left, std::u
 	if (left->getPosition().x + leftCollider.right >= right->getPosition().x - rightCollider.left
 		&& left->getPosition().x - leftCollider.left <= right->getPosition().x + rightCollider.right)
 	{
-		if (left->getPosition().y + leftCollider.up >= right->getPosition().y - rightCollider.down
-			&& left->getPosition().y - leftCollider.down <= right->getPosition().y + rightCollider.up)
+		if (left->getPosition().y - leftCollider.up <= right->getPosition().y + rightCollider.down
+			&& left->getPosition().y + leftCollider.down >= right->getPosition().y - rightCollider.up)
 		{
 			left->onCollision(right);
 			right->onCollision(left);
+			return true;
 		}
 	}
+	return false;
 }
 
 void core::Renderer::onMouse(const std::unique_ptr<base::Actor>& source) const
@@ -335,7 +402,7 @@ void core::Renderer::onMouse(const std::unique_ptr<base::Actor>& source) const
 	}
 }
 
-void core::Renderer::addBullet(std::unique_ptr<base::Actor>& actor)
+void core::Renderer::addBullet(std::unique_ptr<base::Actor> actor)
 {
 	_bulletQueue.push_back(std::move(actor));
 }

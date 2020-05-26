@@ -22,6 +22,7 @@ namespace core {
 
 		void addObject(std::unique_ptr<base::Actor> actor, base::object_type layer);
 		void addEnemyObject(std::unique_ptr<base::Actor> actor);
+		void addBullet(std::unique_ptr<base::Actor> actor);
 
 		void update();
 
@@ -57,11 +58,10 @@ namespace core {
 
 		void insertQueue();
 
-		void collisionBetween(std::unique_ptr<base::Actor>& left, std::unique_ptr<base::Actor>& right) const ;
+		bool collisionBetween(std::unique_ptr<base::Actor>& left, std::unique_ptr<base::Actor>& right) const ;
 
 		void onMouse(const std::unique_ptr<base::Actor>& source) const;
 
-		void addBullet(std::unique_ptr<base::Actor>& actor);
 
 		Renderer();
 
