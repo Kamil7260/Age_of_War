@@ -25,10 +25,10 @@ Player::Player()
 	auto manager = std::make_unique<QueueManager>();
 	manager->setPosition(sf::Vector2f(300.f, 150.f));
 	core::Renderer::getInstance().addObject(std::move(manager), base::object_type::gui);
-	loadFromJson(0);
-	loadFromJson(1);
-	loadFromJson(2);
-	loadCannonFromJson("C1");
+	_mobTemplate.at(0) = base::loadUnitFromJson(0, _currentAge);
+	_mobTemplate.at(1) = base::loadUnitFromJson(1, _currentAge);
+	_mobTemplate.at(2) = base::loadUnitFromJson(2, _currentAge);
+	_cannonInfo = base::loadCannonFromJson(_currentAge, 1);
 
 	auto button = std::make_unique<Button>(base::collider({ 0.f,68.f,0.f,68.f }));
 	button->setPosition(sf::Vector2f(300.f, 50.f));
@@ -145,164 +145,6 @@ void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	}
 }
 
-bool Player::loadFromJson(const unsigned int index)
-{
-	auto& info = core::Application::getInstance().getMobInfo();
-
-	auto obj = info[_currentAge];
-	if (obj == nullptr)
-	{
-		LOG_ERROR("age : ", _currentAge, " does not exist in json");
-		return false;
-	}
-	obj = obj["T" + std::to_string(index)];
-	if (obj == nullptr)
-	{
-		LOG_ERROR("age : ", _currentAge, " -> ", index, " does not exist in json");
-		return false;
-	}
-	auto collider = obj["collider"];
-	base::collider c;
-	if (collider != nullptr)
-	{
-		c.up = collider.at(0);
-		c.down = collider.at(1);
-		c.left = collider.at(2);
-		c.right = collider.at(3);
-	}
-	else {
-		LOG_ERROR("age : ", _currentAge, " index -> ", index , "!= collider");
-		return false;
-	}
-	auto hp = obj["hp"];
-	if (hp == nullptr) {
-		
-		LOG_ERROR("age : ", _currentAge, " index -> ", index, "!= hp");
-		return false;
-	}
-	auto minAttack = obj["minDMG"];
-	auto maxAttack = obj["maxDMG"];
-	auto speedAttack = obj["speedAttack"];
-	if (maxAttack == nullptr || minAttack == nullptr || speedAttack == nullptr)
-	{
-		LOG_ERROR("age : ", _currentAge, " index -> ", index, "!= attack");
-		return false;
-	}
-	auto animationSpeed = obj["animationSpeed"];
-	if (animationSpeed == nullptr)
-	{
-		LOG_ERROR("age : ", _currentAge, " index -> ", index, "!= animationSpeed");
-		return false;
-	}
-	auto speedMove = obj["speedMove"];
-	if (speedMove == nullptr)
-	{
-		LOG_ERROR("age : ", _currentAge, " index -> ", index, "!= speedMove");
-		return false;
-	}
-
-	auto scale = obj["scale"];
-	if (scale == nullptr)
-	{
-		LOG_ERROR("age : ", _currentAge, " index -> ", index, "!= scale");
-		return false;
-	}
-
-	auto spawnTime = obj["spawnTime"];
-	if (spawnTime == nullptr)
-	{
-		LOG_ERROR("age : ", _currentAge, " index -> ", index, "!= spawnTime");
-		return false;
-	}
-	if (index == 1) {
-		auto range = obj["range"];
-		if (range == nullptr)
-		{
-			LOG_ERROR("age : ", _currentAge, " index -> ", index, "!= range");
-			return false;
-		}
-		auto& t = _mobTemplate.at(index);
-		t.animationSpeed = animationSpeed;
-		t.collider = c;
-		t.hp = hp;
-		t.maxDMG = maxAttack;
-		t.minDMG = minAttack;
-		t.range = range;
-		t.scale.x = scale.at(0);
-		t.scale.y = scale.at(1);
-		t.speedAttack = speedAttack;
-		t.speedMove = speedMove;
-		t.name = _currentAge + "T" + std::to_string(index);
-		t.spawnTime = spawnTime;
-	}
-	else {
-		auto& t = _mobTemplate.at(index);
-		t.animationSpeed = animationSpeed;
-		t.collider = c;
-		t.hp = hp;
-		t.maxDMG = maxAttack;
-		t.minDMG = minAttack;
-		t.scale.x = scale.at(0);
-		t.scale.y = scale.at(1);
-		t.speedAttack = speedAttack;
-		t.speedMove = speedMove;
-		t.name = _currentAge + "T" + std::to_string(index);
-		t.spawnTime = spawnTime;
-	}
-	return true;
-}
-
-bool Player::loadCannonFromJson(const std::string& name)
-{
-	auto& info = core::Application::getInstance().getCannonInfo();
-
-	auto obj = info[_currentAge][name];
-	if (obj == nullptr)
-	{
-		LOG_ERROR(name, " does not exist in json");
-		return false;
-	}
-
-	auto animationSpeed = obj["animationSpeed"];
-	if (animationSpeed == nullptr) {
-		LOG_ERROR("Can not get animation speed for cannon : ", name);
-		return false;
-	}
-	auto maxDMG = obj["maxDMG"];
-	if (maxDMG == nullptr) {
-		LOG_ERROR("Can not get max dmg for cannon : ", name);
-		return false;
-	}
-	auto minDMG = obj["minDMG"];
-	if (minDMG == nullptr) {
-		LOG_ERROR("Can not get min dmg for cannon : ", name);
-		return false;
-	}
-	auto range = obj["range"];
-	if (range == nullptr) {
-		LOG_ERROR("Can not get range for cannon : ", name);
-		return false;
-	}
-
-	auto reload = obj["reloadTime"];
-	if (range == nullptr) {
-		LOG_ERROR("Can not get reloadTime for cannon : ", name);
-		return false;
-	}
-	auto bulletSpeed = obj["bulletSpeed"];
-	if (range == nullptr) {
-		LOG_ERROR("Can not get bulletSpeed for cannon : ", name);
-		return false;
-	}
-
-	_cannonInfo.animationSpeed = animationSpeed;
-	_cannonInfo.maxDMG = maxDMG;
-	_cannonInfo.minDMG = minDMG;
-	_cannonInfo.range = range;
-	_cannonInfo.reloadTime = reload;
-	_cannonInfo.bulletSpeed = bulletSpeed;
-	return true;
-}
 
 void Player::spawnObject(const unsigned int type)
 {

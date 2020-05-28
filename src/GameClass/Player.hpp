@@ -1,27 +1,9 @@
 #pragma once
 #include <random>
-#include <array>
 
 #include "../Base/Stronghold.hpp"
 #include "Melee.hpp"
 #include "Cannon.hpp"
-
-
-struct mobInfo {
-	std::string name;
-	base::collider collider;
-	int hp;
-	int maxDMG;
-	int minDMG;
-	float speedAttack;
-	float animationSpeed;
-	float speedMove;
-	sf::Vector2f scale;
-	int range;
-	float spawnTime;
-	float reloadTime;
-	float bulletSpeed;
-};
 
 
 class Player : public base::Stronghold {
@@ -43,8 +25,6 @@ public:
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
-	virtual bool loadFromJson(const unsigned int index);
-	virtual bool loadCannonFromJson(const std::string& name);
 	virtual void spawnObject(const unsigned int type);
 	
 	virtual void addToQueue(const unsigned int type);
@@ -61,8 +41,6 @@ private:
 	float _timer;
 	sf::Sprite _sprite;
 	bool _enableSpawn;
-	std::array<mobInfo, 3> _mobTemplate;
-	mobInfo _cannonInfo;
 	std::vector<std::pair<std::unique_ptr<base::Actor>, std::unique_ptr<base::Actor>>> _queue;
 	std::string _currentAge;
 	sf::Sprite _cannonPlace;

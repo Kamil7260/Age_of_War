@@ -1,6 +1,6 @@
 #pragma once
-#include "Actor.hpp"
-
+#include <array>
+#include "JsonFunctions.hpp"
 namespace base {
 
 	class Stronghold : public Actor {
@@ -19,7 +19,8 @@ namespace base {
 	protected:
 		int _hp;
 		bool _activeCollider;
-
+		std::array<jsonInfo, 3> _mobTemplate;
+		jsonInfo _cannonInfo;
 	};
 
 }
