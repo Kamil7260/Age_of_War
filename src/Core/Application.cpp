@@ -138,11 +138,15 @@ void core::Application::run()
 			fpsPlayer.setString(std::to_string(static_cast<int>(1.f / _deltaTime)));
 			lastFpsTimeCheck = 0.f;
 		}
+
+		if (_deltaTime > 0.08f) {
+			_deltaTime = 0.08f;
+		}
 	}
 	return;
 }
 
-const base::Clip& core::Application::getClip(const char* name)
+const base::Clip& core::Application::getClip(const std::string& name)
 {
 	return *_clips->getClip(name);
 }
@@ -151,64 +155,71 @@ void core::Application::assetLoader()
 {
 	auto &texture = ResourceManager<sf::Texture>::getInstance();
 	auto& font = ResourceManager<sf::Font>::getInstance();
-	std::string path;
+	json clipInfo;
+	LOG_INFO("Loading clips from json");
+	{
+		std::ifstream reader("Data/clipLoader.json");
+		if (!reader.good())
+		{
+			LOG_ERROR("Can not open mobinfo json file");
+			return;
+		}
+		reader >> clipInfo;
+		reader.close();
+	}
 	std::unique_ptr<base::Clip> clip;
-	clip = std::make_unique<base::Clip>();
-	
-	for (int k = 1; k < 44; ++k)
+	int count;
+	std::string path;
+	std::string lpath;
+	sf::Vector2f origin;
+	std::string name;
+	json::value_type val;
+	for (auto it = clipInfo.begin(); it != clipInfo.end(); ++it)
 	{
-		path = "Assets/mobs/I/caveman/walk/";
-		path += std::to_string(k);
-		path += ".png";
-		texture.loadFromFile(path.c_str());
-		clip->addFrame(texture.get(path.c_str()));
+		name = (*it)["name"];
+		count = (*it)["count"];
+		path = (*it)["path"];
+		val =  (*it)["origin"];
+		origin.x = val.at(0);
+		origin.y = val.at(1);
+		clip = std::make_unique<base::Clip>();
+		clip->setOrigin(origin);
+		for (int k = 1; k <= count; ++k)
+		{
+			lpath = path;
+			lpath += std::to_string(k);
+			lpath += ".png";
+			texture.loadFromFile(lpath);
+			clip->addFrame(texture.get(lpath));
+		}
+		_clips->addClip(std::move(clip), name);
 	}
-	clip->setOrigin(sf::Vector2f(27.f,45.f ));
-	_clips->addClip(std::move(clip), "caveman_walk");
 
-
-	clip = std::make_unique<base::Clip>();
-	clip->setOrigin(sf::Vector2f(12.f, 45.f));
-	for (int k = 1; k < 51; ++k)
+	json assetInfo;
+	LOG_INFO("Loading assets from json");
 	{
-		path = "Assets/mobs/I/caveman/idle/";
-		path += std::to_string(k);
-		path += ".png";
-		texture.loadFromFile(path.c_str());
-		clip->addFrame(texture.get(path.c_str()));
+		std::ifstream reader("Data/assets.json");
+		if (!reader.good())
+		{
+			LOG_ERROR("Can not open assetInfo json file");
+			return;
+		}
+		reader >> assetInfo;
+		reader.close();
 	}
-	_clips->addClip(std::move(clip), "caveman_idle");
-
-
-	clip = std::make_unique<base::Clip>();
-	clip->setOrigin(sf::Vector2f(72.f, 45.f));
-	for (int k = 1; k < 25; ++k)
+	std::string type;
+	for (auto it = assetInfo.begin(); it != assetInfo.end(); ++it)
 	{
-		path = "Assets/mobs/I/caveman/die/";
-		path += std::to_string(k);
-		path += ".png";
-		texture.loadFromFile(path.c_str());
-		clip->addFrame(texture.get(path.c_str()));
+		type = (*it)["type"];
+		path = (*it)["path"];
+		
+		if (type == "Texture") {
+			texture.loadFromFile(path);
+		}
+		else if (type == "Font") {
+			font.loadFromFile(path);
+		}
 	}
-	_clips->addClip(std::move(clip), "caveman_die");
-
-	clip = std::make_unique<base::Clip>();
-	clip->setOrigin(sf::Vector2f(39.f, 72.f));
-	for (int k = 1; k < 41; ++k)
-	{
-		path = "Assets/mobs/I/caveman/attack/";
-		path += std::to_string(k);
-		path += ".png";
-		texture.loadFromFile(path.c_str());
-		clip->addFrame(texture.get(path.c_str()));
-	}
-	_clips->addClip(std::move(clip), "caveman_attack");
-
-	path = "Assets/background/1.png";
-	texture.loadFromFile(path.c_str());
-
-
-	texture.loadFromFile("Assets/base/1.png");
 
 }
 
