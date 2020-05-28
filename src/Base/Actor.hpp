@@ -26,13 +26,13 @@ namespace base {
 
 	public:
 		Actor(const base::collider& box = { 1.f,1.f,1.f,1.f });
-		Actor(const Actor&);
-		Actor(Actor&&) noexcept;
+		Actor(const Actor&) = default;
+		Actor(Actor&&) = default;
 
 		virtual ~Actor() = default;
 
-		Actor& operator=(const Actor&);
-		Actor& operator=(Actor&&) noexcept;
+		Actor& operator=(const Actor&) = default;
+		Actor& operator=(Actor&&) = default;
 
 		virtual void setPosition(const sf::Vector2f& pos) { _position = pos; }
 		virtual void setScale(const sf::Vector2f& sca) { _scale = sca; }

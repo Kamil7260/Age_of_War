@@ -8,42 +8,6 @@ base::ActorAnimator::ActorAnimator(float animationspeed)
 	_sprite = std::make_shared<sf::Sprite>();
 }
 
-base::ActorAnimator::ActorAnimator(const ActorAnimator& source)
-	:_isRunning(source._isRunning),_container(source._container), _currentClip(source._currentClip),_isFinish(source._isFinish), _animationSpeed(0.f)
-{
-	_sprite = std::make_shared<sf::Sprite>();
-}
-
-base::ActorAnimator::ActorAnimator(ActorAnimator&& source) noexcept
-	:_isRunning(source._isRunning), _container(source._container), _currentClip(source._currentClip),_isFinish(source._isFinish), _animationSpeed(0.f)
-{
-	_sprite = std::make_shared<sf::Sprite>();
-	source._container.clear();
-}
-
-base::ActorAnimator& base::ActorAnimator::operator=(const ActorAnimator& source)
-{
-	_isRunning = source._isRunning;
-	_isFinish = source._isFinish;
-	_container = source._container;
-	_sprite = std::make_shared<sf::Sprite>();
-	_currentClip = source._currentClip;
-	_animationSpeed = source._animationSpeed;
-	return *this;
-}
-
-base::ActorAnimator& base::ActorAnimator::operator=(ActorAnimator&& source) noexcept
-{
-	_isRunning = source._isRunning;
-	_isFinish = source._isFinish;
-	_sprite = std::make_shared<sf::Sprite>();
-	_container = source._container;
-	_currentClip = source._currentClip;
-	_animationSpeed = source._animationSpeed;
-	source._container.clear();
-	return *this;
-}
-
 bool base::ActorAnimator::play(const std::string& key)
 {
 	_currentClip = _container.find(key);

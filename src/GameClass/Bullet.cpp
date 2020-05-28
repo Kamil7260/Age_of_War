@@ -10,36 +10,6 @@ Bullet::Bullet(int minDMG, int maxDMG,float speed, const sf::Vector2f& dir)
 	_myColider = { 0,30,0,30 };
 }
 
-Bullet::Bullet(const Bullet& source)
-	: _sprite(source._sprite),_direction(source._direction), _speed(source._speed), _minDMG(source._minDMG), _maxDMG(source._maxDMG)
-{
-}
-
-Bullet::Bullet(Bullet&& source) noexcept
-	: _sprite(source._sprite), _direction(source._direction), _speed(source._speed), _minDMG(source._minDMG), _maxDMG(source._maxDMG)
-{
-}
-
-Bullet& Bullet::operator=(const Bullet& source)
-{
-	_minDMG = source._minDMG;
-	_maxDMG = source._maxDMG;
-	_sprite = source._sprite;
-	_direction = source._direction;
-	_speed = source._speed;
-	return *this;
-}
-
-Bullet& Bullet::operator=(Bullet&& source) noexcept
-{
-	_minDMG = source._minDMG;
-	_maxDMG = source._maxDMG;
-	_sprite = source._sprite;
-	_direction = source._direction;
-	_speed = source._speed;
-	return *this;
-}
-
 void Bullet::setTexture(const sf::Texture& tex)
 {
 	_sprite.setTexture(tex);

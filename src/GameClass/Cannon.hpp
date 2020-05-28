@@ -4,11 +4,13 @@
 class Cannon : public base::ActorAnimator {
 public:
 	Cannon(int maxDMG = 5, int minDMG = 10, int range = 100, float reloadTime = 3.f,float bulletspeed= 400.f);
-	Cannon(const Cannon& source);
-	Cannon(Cannon&& source) noexcept;
+	Cannon(const Cannon& source) = default;
+	Cannon(Cannon&& source) = default;
 
-	Cannon& operator=(const Cannon& source);
-	Cannon& operator=(Cannon&& source) noexcept;
+	Cannon& operator=(const Cannon& source) = default;
+	Cannon& operator=(Cannon&& source) = default;
+
+	virtual ~Cannon() = default;
 
 	virtual void onUpdate() override;
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;

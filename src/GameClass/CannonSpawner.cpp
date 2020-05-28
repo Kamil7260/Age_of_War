@@ -8,30 +8,6 @@ CannonSpawner::CannonSpawner()
 
 }
 
-CannonSpawner::CannonSpawner(const CannonSpawner& source)
-	: _spawnCallback(source._spawnCallback)
-{
-}
-
-CannonSpawner::CannonSpawner(CannonSpawner&& source) noexcept
-	: _spawnCallback(source._spawnCallback)
-{
-	source._spawnCallback = nullptr;
-}
-
-CannonSpawner& CannonSpawner::operator=(const CannonSpawner& source)
-{
-	_spawnCallback = source._spawnCallback;
-	return *this;
-}
-
-CannonSpawner& CannonSpawner::operator=(CannonSpawner&& source) noexcept
-{
-	_spawnCallback = source._spawnCallback;
-	source._spawnCallback = nullptr;
-	return *this;
-}
-
 void CannonSpawner::setTexture(const sf::Texture& tex)
 {
 	_sprite.setTexture(tex);

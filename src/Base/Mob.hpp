@@ -4,11 +4,13 @@ namespace base {
 	class Mob : public ActorAnimator {
 	public:
 		Mob(int hp = 80, int minattack = 15, int maxattack = 30, float speedattack = 1.f,float speedmove = 5.f);
-		Mob(const Mob&);
-		Mob(Mob&&) noexcept;
-		Mob& operator=(const Mob&);
-		Mob& operator=(Mob&&) noexcept;
+		Mob(const Mob&) = default;
+		Mob(Mob&&) = default;
+		Mob& operator=(const Mob&) = default;
+		Mob& operator=(Mob&&) = default;
 	
+		virtual ~Mob() = default;
+
 		virtual void damage(int dmg);
 
 		virtual void setTeam(const team& tm) override;

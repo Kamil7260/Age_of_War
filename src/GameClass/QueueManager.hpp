@@ -6,10 +6,12 @@ class QueueManager : public base::Actor {
 public:
 	QueueManager(int space = 80);
 	QueueManager(const QueueManager&) = delete;
-	QueueManager(QueueManager&&) noexcept;
+	QueueManager(QueueManager&&) = default;
 
 	QueueManager& operator=(const QueueManager&) = delete;
-	QueueManager& operator=(QueueManager&&) noexcept;
+	QueueManager& operator=(QueueManager&&) = default;
+
+	virtual ~QueueManager() = default;
 
 	virtual void addIkon(Ikon& ikon,const std::function<void()>& onEnd);
 

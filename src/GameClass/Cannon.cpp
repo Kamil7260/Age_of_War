@@ -11,44 +11,6 @@ Cannon::Cannon(int maxDMG, int minDMG, int range, float reloadTime,float bullets
 	_team = base::team::player;
 }
 
-Cannon::Cannon(const Cannon& source)
-	:_maxDMG(source._maxDMG), _minDMG(source._minDMG), _range(source._range), _reloadTime(source._reloadTime), _curTime(source._curTime),
-	_enableShot(source._enableShot), _bulletTex(source._bulletTex), _bulletSpeed(source._bulletSpeed)
-{
-}
-
-Cannon::Cannon(Cannon&& source) noexcept
-	:_maxDMG(source._maxDMG), _minDMG(source._minDMG), _range(source._range), _reloadTime(source._reloadTime), _curTime(source._curTime),
-	_enableShot(source._enableShot), _bulletTex(source._bulletTex), _bulletSpeed(source._bulletSpeed)
-{
-}
-
-Cannon& Cannon::operator=(const Cannon& source)
-{
-	_bulletSpeed = source._bulletSpeed;
-	_maxDMG = source._maxDMG;
-	_minDMG = source._minDMG;
-	_range = source._range;
-	_reloadTime = source._reloadTime;
-	_curTime = source._curTime;
-	_bulletTex = source._bulletTex;
-	_enableShot = source._enableShot;
-	return *this;
-}
-
-Cannon& Cannon::operator=(Cannon&& source) noexcept
-{
-	_bulletSpeed = source._bulletSpeed;
-	_maxDMG = source._maxDMG;
-	_minDMG = source._minDMG;
-	_range = source._range;
-	_reloadTime = source._reloadTime;
-	_curTime = source._curTime;
-	_bulletTex = source._bulletTex;
-	_enableShot = source._enableShot;
-	return *this;
-}
-
 void Cannon::onUpdate()
 {
 	updateAnimator();

@@ -8,11 +8,13 @@ public:
 
 	BackGround();
 
-	BackGround(BackGround&) = default;
+	BackGround(const BackGround&) = default;
 	BackGround(BackGround&&) = default;
 	
-	BackGround& operator=(BackGround&) = default;
+	BackGround& operator=(const BackGround&) = default;
 	BackGround& operator=(BackGround&&) = default;
+
+	virtual ~BackGround() = default;
 
 	virtual void setPosition(const sf::Vector2f& pos) override;
 	virtual void setScale(const sf::Vector2f& sca) override;

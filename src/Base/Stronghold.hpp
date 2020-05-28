@@ -7,9 +7,11 @@ namespace base {
 	public:
 		Stronghold();
 		Stronghold(const Stronghold&) = delete;
-		Stronghold(Stronghold&&) noexcept;
+		Stronghold(Stronghold&&) = default;
 		Stronghold& operator=(const Stronghold&) = delete;
-		Stronghold& operator=(Stronghold&&) noexcept;
+		Stronghold& operator=(Stronghold&&) = default;
+
+		virtual ~Stronghold() = default;
 
 		virtual void damage(int dmg);
 

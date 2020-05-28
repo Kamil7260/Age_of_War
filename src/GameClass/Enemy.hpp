@@ -7,9 +7,11 @@ class Enemy : public base::Stronghold {
 public:
 	Enemy();
 	Enemy(const Enemy&) = delete;
-	Enemy(Enemy&&) noexcept;
+	Enemy(Enemy&&) = default;
 	Enemy& operator=(const Enemy&) = delete;
-	Enemy& operator=(Enemy&&) noexcept;
+	Enemy& operator=(Enemy&&) = default;
+
+	virtual ~Enemy() = default;
 
 	virtual void setPosition(const sf::Vector2f& pos) override;
 	virtual void setScale(const sf::Vector2f& sca) override;

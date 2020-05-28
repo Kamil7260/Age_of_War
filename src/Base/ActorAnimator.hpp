@@ -11,13 +11,13 @@ namespace base {
 	public:
 
 		ActorAnimator(float animationspeed = 0.2f);
-		ActorAnimator(const ActorAnimator&);
-		ActorAnimator(ActorAnimator&&) noexcept;
+		ActorAnimator(const ActorAnimator&) = default;
+		ActorAnimator(ActorAnimator&&) = default;
 
-		ActorAnimator& operator=(const ActorAnimator&);
-		ActorAnimator& operator=(ActorAnimator&&) noexcept;
+		ActorAnimator& operator=(const ActorAnimator&) = default;
+		ActorAnimator& operator=(ActorAnimator&&) = default;
 
-		~ActorAnimator() = default;
+		virtual ~ActorAnimator() = default;
 		
 		virtual bool play(const std::string& key);
 

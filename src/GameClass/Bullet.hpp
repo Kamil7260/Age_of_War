@@ -5,11 +5,13 @@
 class Bullet : public base::Actor {
 public:
 	Bullet(int minDMG = 5, int maxDMG = 20, float speed = 1.f, const sf::Vector2f& dir = { 1.f,1.f });
-	Bullet(const Bullet& source);
-	Bullet(Bullet&& source) noexcept;
+	Bullet(const Bullet& source) = default;
+	Bullet(Bullet&& source) = default;
 
-	Bullet& operator=(const Bullet& source);
-	Bullet& operator=(Bullet&& source) noexcept;
+	Bullet& operator=(const Bullet& source) = default;
+	Bullet& operator=(Bullet&& source) = default;
+
+	virtual ~Bullet() = default;
 
 	virtual void setTexture(const sf::Texture& tex);
 	virtual void setPosition(const sf::Vector2f& pos) override;

@@ -4,11 +4,13 @@
 class Melee : public base::Mob {
 public:
 	Melee(const base::collider& collider = { 1.f,1.f,1.f,1.f }, int hp = 50, int attack = 20,int maxAttack = 25, float speedAttack = 1.f, float speedMove = 5.f);
-	Melee(Melee&);
-	Melee(Melee&&) noexcept;
+	Melee(const Melee&) = default;
+	Melee(Melee&&) = default;
 
-	Melee& operator=(Melee&);
-	Melee& operator=(Melee&&) noexcept;
+	Melee& operator=(const Melee&) = default;
+	Melee& operator=(Melee&&) = default;
+
+	virtual ~Melee() = default;
 
 	void setAnimatorName(const std::string& name) override;
 

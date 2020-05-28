@@ -9,62 +9,6 @@ Melee::Melee(const base::collider& collider, int hp, int attack, int maxAttack, 
 	_myColider = collider;
 }
 
-Melee::Melee(Melee& source)
-	:_timer(source._timer),_attackTimer(source._attackTimer), _attackClip(source._attackClip),
-	_idleClip(source._idleClip), _walkClip(source._walkClip),
-	_dieClip(source._dieClip), _touchEnemy(source._touchEnemy),
-	_isCollided(source._isCollided), _enableAttack(source._enableAttack),
-	_died(source._died)
-{
-}
-
-Melee::Melee(Melee&& source) noexcept
-	:_timer(source._timer),_attackTimer(source._attackTimer), _attackClip(source._attackClip),
-	_idleClip(source._idleClip), _walkClip(source._walkClip),
-	_dieClip(source._dieClip), _touchEnemy(source._touchEnemy),
-	_isCollided(source._isCollided), _enableAttack(source._enableAttack),
-	_died(source._died)
-{
-	_attackClip.clear();
-	 _idleClip.clear();
-	_walkClip.clear();
-	_dieClip.clear();
-}
-
-Melee& Melee::operator=(Melee& source)
-{
-	_attackTimer = source._attackTimer;
-	_timer = source._timer;
-	_attackClip = source._attackClip;
-	_idleClip = source._idleClip;
-	_walkClip = source._walkClip;
-	_dieClip = source._dieClip;
-	_touchEnemy = source._touchEnemy;
-	_isCollided = source._isCollided;
-	_enableAttack = source._enableAttack;
-	_died = source._died;
-	return *this;
-}
-
-Melee& Melee::operator=(Melee&& source) noexcept
-{
-	_timer = source._timer;
-	_attackTimer = source._attackTimer;
-	_attackClip = source._attackClip;
-	_idleClip = source._idleClip;
-	_walkClip = source._walkClip;
-	_dieClip = source._dieClip;
-	_touchEnemy = source._touchEnemy;
-	_isCollided = source._isCollided;
-	_enableAttack = source._enableAttack;
-	_died = source._died;
-	_attackClip.clear();
-	_idleClip.clear();
-	_walkClip.clear();
-	_dieClip.clear();
-	return *this;
-}
-
 void Melee::setAnimatorName(const std::string& name)
 {
 	_walkClip = name;

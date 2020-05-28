@@ -89,17 +89,6 @@ Player::Player()
 
 }
 
-Player::Player(Player&& source) noexcept
-	:_timer(source._timer),_enableSpawn(source._enableSpawn)
-{
-}
-
-Player& Player::operator=(Player&& source) noexcept
-{
-	_timer = source._timer;
-	return *this;
-}
-
 void Player::setPosition(const sf::Vector2f& pos)
 {
 	_position = pos;

@@ -10,64 +10,6 @@ Range::Range(const base::collider& collider, int hp, int attack, int maxAttack, 
 	_myColider = collider;
 }
 
-Range::Range(Range& source)
-	:_timer(source._timer), _attackTimer(source._attackTimer),_range(source._range), _attackClip(source._attackClip),
-	_idleClip(source._idleClip), _walkClip(source._walkClip),
-	_dieClip(source._dieClip), _touchEnemy(source._touchEnemy),
-	_isCollided(source._isCollided), _enableAttack(source._enableAttack),
-	_died(source._died),_inRange(source._inRange)
-{
-}
-
-Range::Range(Range&& source) noexcept
-	:_timer(source._timer), _attackTimer(source._attackTimer), _range(source._range), _attackClip(source._attackClip),
-	_idleClip(source._idleClip), _walkClip(source._walkClip),
-	_dieClip(source._dieClip), _touchEnemy(source._touchEnemy),
-	_isCollided(source._isCollided), _enableAttack(source._enableAttack),
-	_died(source._died), _inRange(source._inRange)
-{
-	_attackClip.clear();
-	_idleClip.clear();
-	_walkClip.clear();
-	_dieClip.clear();
-}
-
-Range& Range::operator=(Range& source)
-{
-	_attackTimer = source._attackTimer;
-	_timer = source._timer;
-	_attackClip = source._attackClip;
-	_idleClip = source._idleClip;
-	_walkClip = source._walkClip;
-	_dieClip = source._dieClip;
-	_touchEnemy = source._touchEnemy;
-	_isCollided = source._isCollided;
-	_enableAttack = source._enableAttack;
-	_range = source._range;
-	_died = source._died;
-	return *this;
-}
-
-Range& Range::operator=(Range&& source) noexcept
-{
-	_timer = source._timer;
-	_attackTimer = source._attackTimer;
-	_attackClip = source._attackClip;
-	_idleClip = source._idleClip;
-	_walkClip = source._walkClip;
-	_dieClip = source._dieClip;
-	_touchEnemy = source._touchEnemy;
-	_isCollided = source._isCollided;
-	_enableAttack = source._enableAttack;
-	_range = source._range;
-	_died = source._died;
-	_attackClip.clear();
-	_idleClip.clear();
-	_walkClip.clear();
-	_dieClip.clear();
-	return *this;
-}
-
 void Range::setAnimatorName(const std::string& name)
 {
 	_walkClip = name;

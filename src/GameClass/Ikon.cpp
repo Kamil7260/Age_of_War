@@ -9,41 +9,6 @@ Ikon::Ikon(float time)
 	_shadow.setFillColor(sf::Color(0, 0, 0, 120));
 }
 
-
-Ikon::Ikon(const Ikon& source)
-	: _sprite(source._sprite), _maxTime(source._maxTime), _timer(source._timer),_shadow(source._shadow), _onEnd(source._onEnd), _shadowSize(source._shadowSize)
-{
-}
-
-Ikon::Ikon(Ikon&& source) noexcept
-	: _sprite(source._sprite), _maxTime(source._maxTime), _timer(source._timer), _shadow(source._shadow), _onEnd(source._onEnd), _shadowSize(source._shadowSize)
-{
-	source._onEnd = nullptr;
-}
-
-Ikon& Ikon::operator=(const Ikon& source)
-{
-	_maxTime = source._maxTime;
-	_timer = source._timer;
-	_sprite = source._sprite;
-	_shadow = source._shadow;
-	_onEnd = source._onEnd;
-	_shadowSize = source._shadowSize;
-	return *this;
-}
-
-Ikon& Ikon::operator=(Ikon&& source) noexcept
-{
-	_maxTime = source._maxTime;
-	_timer = source._timer;
-	_sprite = source._sprite;
-	_shadow = source._shadow;
-	_onEnd = source._onEnd;
-	_shadowSize = source._shadowSize;
-	source._onEnd = nullptr;
-	return *this;
-}
-
 void Ikon::onUpdate()
 {
 	float delta = core::Application::getInstance().getTime();

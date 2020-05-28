@@ -5,13 +5,15 @@ class Button : public base::Actor
 {
 public:
 	Button(const base::collider& collider = {1.f,1.f,1.f,1.f});
-	Button(const Button&);
-	Button(Button&&) noexcept;
+	Button(const Button&) = default;
+	Button(Button&&) = default;
 
+	Button& operator=(const Button&) = default;
+	Button& operator=(Button&&) = default;
+
+	virtual ~Button() = default
+		;
 	virtual void setTexture(const sf::Texture& tex);
-	Button& operator=(const Button&);
-	Button& operator=(Button&&) noexcept;
-
 	virtual void onUpdate() override;
 	virtual void onMouseCollision(bool isPressed) override;
 	virtual void setPosition(const sf::Vector2f& pos) override;

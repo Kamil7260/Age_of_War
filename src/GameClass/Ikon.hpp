@@ -7,11 +7,13 @@ class Ikon: public base::Actor
 {
 public:
 	Ikon(float time = 2.f);
-	Ikon(const Ikon&);
-	Ikon(Ikon&&) noexcept;
+	Ikon(const Ikon&) = default;
+	Ikon(Ikon&&) = default;
 
-	Ikon& operator=(const Ikon&);
-	Ikon& operator=(Ikon&&) noexcept;
+	Ikon& operator=(const Ikon&) = default;
+	Ikon& operator=(Ikon&&) = default;
+
+	virtual ~Ikon() = default;
 
 	virtual void onUpdate() override;
 	virtual void setPosition(const sf::Vector2f& pos) override;

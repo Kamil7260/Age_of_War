@@ -16,6 +16,8 @@ namespace core {
 		ClipManager& operator=(ClipManager&) = delete;
 		ClipManager& operator=(ClipManager&&) = delete;
 
+		~ClipManager() = default;
+
 		bool addClip(std::unique_ptr<base::Clip> clip, const std::string& name);
 		void removeClip(const std::string& name);
 

@@ -6,30 +6,6 @@ QueueManager::QueueManager(int space)
 	_tag = "QueueManager";
 }
 
-
-QueueManager::QueueManager(QueueManager&& source) noexcept
-	:_isEnd(source._isEnd), _space(source._space)
-{
-	for (auto k : source._queueContainer)
-	{
-		_queueContainer.push_back(k);
-	}
-	source._queueContainer.clear();
-}
-
-
-QueueManager& QueueManager::operator=(QueueManager&& source) noexcept
-{
-	for (auto k : source._queueContainer)
-	{
-		_queueContainer.push_back(k);
-	}
-	source._queueContainer.clear();
-	_isEnd = source._isEnd;
-	_space = source._space;
-	return *this;
-}
-
 void QueueManager::addIkon(Ikon& ikon, const std::function<void()>& onEnd)
 {
 	ikon.setCallBackOnEnd([&]()->void {

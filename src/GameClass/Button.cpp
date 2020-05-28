@@ -7,40 +7,10 @@ Button::Button(const base::collider& collider)
 	_shadow.setFillColor(sf::Color(255, 255, 255, 60));
 }
 
-Button::Button(const Button& source)
-	:_sprite(source._sprite), _onClickEvent(source._onClickEvent),_shadow(source._shadow), _shadowDraw(source._shadowDraw)
-{
-}
-
-Button::Button(Button&& source) noexcept
-	:_sprite(source._sprite), _onClickEvent(source._onClickEvent), _shadow(source._shadow), _shadowDraw(source._shadowDraw)
-{
-	source._onClickEvent = nullptr;
-}
-
 void Button::setTexture(const sf::Texture& tex)
 {
 	_sprite.setTexture(tex);
 	_shadow.setSize(sf::Vector2f(tex.getSize()));
-}
-
-Button& Button::operator=(const Button& source)
-{
-	_onClickEvent = source._onClickEvent;
-	_sprite = source._sprite;
-	_shadow = source._shadow;
-	_shadowDraw = source._shadowDraw;
-	return *this;
-}
-
-Button& Button::operator=(Button&& source) noexcept
-{
-	_onClickEvent = source._onClickEvent;
-	_sprite = source._sprite;
-	_shadow = source._shadow;
-	_shadowDraw = source._shadowDraw;
-	source._onClickEvent = nullptr;
-	return *this;
 }
 
 void Button::onUpdate()

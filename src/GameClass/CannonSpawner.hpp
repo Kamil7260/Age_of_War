@@ -4,11 +4,13 @@
 class CannonSpawner : public base::Actor {
 public:
 	CannonSpawner();
-	CannonSpawner(const CannonSpawner& source);
-	CannonSpawner(CannonSpawner&& source) noexcept;
+	CannonSpawner(const CannonSpawner& source) = default;
+	CannonSpawner(CannonSpawner&& source) = default;
 
-	CannonSpawner& operator=(const CannonSpawner& source);
-	CannonSpawner& operator=(CannonSpawner&& source) noexcept;
+	CannonSpawner& operator=(const CannonSpawner& source) = default;
+	CannonSpawner& operator=(CannonSpawner&& source) = default;
+
+	virtual ~CannonSpawner() = default;
 
 	virtual void setTexture(const sf::Texture& tex);
 	virtual void move(const sf::Vector2f& delta) override;

@@ -8,12 +8,12 @@ namespace base {
 	class Clip {
 	public:
 		Clip(float speed = 1.f);
-		Clip(const Clip&);
-		Clip(Clip&&) noexcept;
-		Clip& operator=(Clip&);
-		Clip& operator=(Clip&&) noexcept;
+		Clip(const Clip&) = default;
+		Clip(Clip&&) = default;
+		Clip& operator=(Clip&) = default;
+		Clip& operator=(Clip&&) = default;
 
-		~Clip() = default;
+		virtual ~Clip() = default;
 
 		virtual void addFrame(const std::shared_ptr<sf::Texture>& tex);
 		virtual bool update();
