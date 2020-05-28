@@ -19,7 +19,7 @@ namespace base {
 
 		virtual void setAttack(const int min, const  int max);
 
-		virtual void setAnimatorName(const char* name) = 0;
+		virtual void setAnimatorName(const std::string& name) = 0;
 
 		virtual bool isColliderActive() const override {
 			return _activeCollider;

@@ -25,9 +25,9 @@ Player::Player()
 	auto manager = std::make_unique<QueueManager>();
 	manager->setPosition(sf::Vector2f(300.f, 150.f));
 	core::Renderer::getInstance().addObject(std::move(manager), base::object_type::gui);
-	loadFromJson("Melee", "caveman", 0);
-	loadFromJson("Range", "slingshoter", 1);
-	loadFromJson("Melee", "dino", 2);
+	loadFromJson(0);
+	loadFromJson(1);
+	loadFromJson(2);
 	loadCannonFromJson("C1");
 
 	auto button = std::make_unique<Button>(base::collider({ 0.f,68.f,0.f,68.f }));
@@ -156,14 +156,20 @@ void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	}
 }
 
-bool Player::loadFromJson(const std::string& type, const std::string& name,const unsigned int index)
+bool Player::loadFromJson(const unsigned int index)
 {
 	auto& info = core::Application::getInstance().getMobInfo();
 
-	auto obj = info[type][name];
+	auto obj = info[_currentAge];
 	if (obj == nullptr)
 	{
-		LOG_ERROR(name, " does not exist in json");
+		LOG_ERROR("age : ", _currentAge, " does not exist in json");
+		return false;
+	}
+	obj = obj["T" + std::to_string(index)];
+	if (obj == nullptr)
+	{
+		LOG_ERROR("age : ", _currentAge, " -> ", index, " does not exist in json");
 		return false;
 	}
 	auto collider = obj["collider"];
@@ -176,12 +182,13 @@ bool Player::loadFromJson(const std::string& type, const std::string& name,const
 		c.right = collider.at(3);
 	}
 	else {
-		LOG_ERROR("Can not get collider ", name, " from json");
+		LOG_ERROR("age : ", _currentAge, " index -> ", index , "!= collider");
 		return false;
 	}
 	auto hp = obj["hp"];
 	if (hp == nullptr) {
-		LOG_ERROR("Can not get hp ", name, " from json");
+		
+		LOG_ERROR("age : ", _currentAge, " index -> ", index, "!= hp");
 		return false;
 	}
 	auto minAttack = obj["minDMG"];
@@ -189,40 +196,40 @@ bool Player::loadFromJson(const std::string& type, const std::string& name,const
 	auto speedAttack = obj["speedAttack"];
 	if (maxAttack == nullptr || minAttack == nullptr || speedAttack == nullptr)
 	{
-		LOG_ERROR("Can not get attack ", name, " from json");
+		LOG_ERROR("age : ", _currentAge, " index -> ", index, "!= attack");
 		return false;
 	}
 	auto animationSpeed = obj["animationSpeed"];
 	if (animationSpeed == nullptr)
 	{
-		LOG_ERROR("Can not get animation speed from ", name, " json");
+		LOG_ERROR("age : ", _currentAge, " index -> ", index, "!= animationSpeed");
 		return false;
 	}
 	auto speedMove = obj["speedMove"];
 	if (speedMove == nullptr)
 	{
-		LOG_ERROR("Can not get speed move from ", name, " json");
+		LOG_ERROR("age : ", _currentAge, " index -> ", index, "!= speedMove");
 		return false;
 	}
 
 	auto scale = obj["scale"];
 	if (scale == nullptr)
 	{
-		LOG_ERROR("Can not get scale from ", name, " json");
+		LOG_ERROR("age : ", _currentAge, " index -> ", index, "!= scale");
 		return false;
 	}
 
 	auto spawnTime = obj["spawnTime"];
 	if (spawnTime == nullptr)
 	{
-		LOG_ERROR("Can not get spawn time from ", name, " json");
+		LOG_ERROR("age : ", _currentAge, " index -> ", index, "!= spawnTime");
 		return false;
 	}
-	if (type == "Range") {
+	if (index == 1) {
 		auto range = obj["range"];
 		if (range == nullptr)
 		{
-			LOG_ERROR("Can not get range from ", name, " json");
+			LOG_ERROR("age : ", _currentAge, " index -> ", index, "!= range");
 			return false;
 		}
 		auto& t = _mobTemplate.at(index);
@@ -236,7 +243,7 @@ bool Player::loadFromJson(const std::string& type, const std::string& name,const
 		t.scale.y = scale.at(1);
 		t.speedAttack = speedAttack;
 		t.speedMove = speedMove;
-		t.name = name;
+		t.name = _currentAge + "T" + std::to_string(index);
 		t.spawnTime = spawnTime;
 	}
 	else {
@@ -244,14 +251,14 @@ bool Player::loadFromJson(const std::string& type, const std::string& name,const
 		t.animationSpeed = animationSpeed;
 		t.collider = c;
 		t.hp = hp;
-t.maxDMG = maxAttack;
-t.minDMG = minAttack;
-t.scale.x = scale.at(0);
-t.scale.y = scale.at(1);
-t.speedAttack = speedAttack;
-t.speedMove = speedMove;
-t.name = name;
-t.spawnTime = spawnTime;
+		t.maxDMG = maxAttack;
+		t.minDMG = minAttack;
+		t.scale.x = scale.at(0);
+		t.scale.y = scale.at(1);
+		t.speedAttack = speedAttack;
+		t.speedMove = speedMove;
+		t.name = _currentAge + "T" + std::to_string(index);
+		t.spawnTime = spawnTime;
 	}
 	return true;
 }
@@ -315,7 +322,7 @@ void Player::spawnObject(const unsigned int type)
 		auto& k = _mobTemplate.at(type);
 		std::unique_ptr<Range> man = std::make_unique<Range>(k.collider, k.hp, k.minDMG, k.maxDMG, k.range, k.speedAttack, k.speedMove);
 		man->setScale(sf::Vector2f(k.scale.x, k.scale.y));
-		man->setAnimatorName(k.name.c_str());
+		man->setAnimatorName(k.name);
 		man->setAnimationSpeed(k.animationSpeed);
 		man->setPosition(sf::Vector2f(_position.x + 100, _position.y + 75));
 		core::Renderer::getInstance().addObject(std::move(man), base::object_type::actor);
@@ -324,7 +331,7 @@ void Player::spawnObject(const unsigned int type)
 	auto& k = _mobTemplate.at(type);
 	std::unique_ptr<Melee> man = std::make_unique<Melee>(k.collider, k.hp, k.minDMG, k.maxDMG, k.speedAttack, k.speedMove);
 	man->setScale(sf::Vector2f(k.scale.x, k.scale.y));
-	man->setAnimatorName(k.name.c_str());
+	man->setAnimatorName(k.name);
 	man->setAnimationSpeed(k.animationSpeed);
 	man->setPosition(sf::Vector2f(_position.x + 100, _position.y + 75));
 	core::Renderer::getInstance().addObject(std::move(man), base::object_type::actor);
@@ -341,7 +348,7 @@ void Player::addToQueue(const unsigned int type)
 		Ikon ikon;
 		ikon.setTimePoint(_mobTemplate.at(type).spawnTime);
 		std::string path = "Assets/gui/" + _currentAge + "/" + std::to_string(type + 1) + ".png";
-		ikon.setTexture(*core::ResourceManager<sf::Texture>::getInstance().get(path.c_str()));
+		ikon.setTexture(*core::ResourceManager<sf::Texture>::getInstance().get(path));
 		queue->addIkon(ikon, [&, type]()->void {
 			spawnObject(type);
 			});
@@ -363,13 +370,17 @@ void Player::spawnCannon(const int type)
 			{
 				std::string name = _currentAge + "C" + std::to_string(type);
 				_cannon = std::make_unique<Cannon>(_cannonInfo.maxDMG, _cannonInfo.minDMG, _cannonInfo.range,_cannonInfo.reloadTime,_cannonInfo.bulletSpeed);
-				auto clip = core::Application::getInstance().getClip(name.c_str());
-				_cannon->addClip(std::move(clip), name.c_str());
+				auto clip = core::Application::getInstance().getClip(name);
+				_cannon->addClip(std::move(clip), name);
 				name = "Assets/ammunition/" + _currentAge + "/C" + std::to_string(type) + ".png";
-				_cannon->setBulletTexture(core::ResourceManager<sf::Texture>::getInstance().get(name.c_str()));
+				_cannon->setBulletTexture(core::ResourceManager<sf::Texture>::getInstance().get(name));
 				_cannon->setAnimationSpeed(_cannonInfo.animationSpeed);
 				_cannon->setPosition(_cannonPlace.getPosition());
 			}
 		}
 	}
+}
+
+void Player::loadNextAge(const std::string& index)
+{
 }

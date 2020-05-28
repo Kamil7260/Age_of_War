@@ -65,19 +65,19 @@ Melee& Melee::operator=(Melee&& source) noexcept
 	return *this;
 }
 
-void Melee::setAnimatorName(const char* name)
+void Melee::setAnimatorName(const std::string& name)
 {
 	_walkClip = name;
 	_walkClip += "_walk";
-	addClip(core::Application::getInstance().getClip(_walkClip.c_str()), _walkClip);
+	addClip(core::Application::getInstance().getClip(_walkClip), _walkClip);
 
 	_idleClip = name;
 	_idleClip += "_idle";
-	addClip(core::Application::getInstance().getClip(_idleClip.c_str()), _idleClip);
+	addClip(core::Application::getInstance().getClip(_idleClip), _idleClip);
 
 	_dieClip = name;
 	_dieClip += "_die";
-	addClip(core::Application::getInstance().getClip(_dieClip.c_str()), _dieClip);
+	addClip(core::Application::getInstance().getClip(_dieClip), _dieClip);
 	auto d = _container.find(_dieClip);
 	d->second.setCallback([&]()->void {
 		_died = true;
@@ -86,7 +86,7 @@ void Melee::setAnimatorName(const char* name)
 
 	_attackClip = name;
 	_attackClip += "_attack";
-	addClip(core::Application::getInstance().getClip(_attackClip.c_str()), _attackClip);
+	addClip(core::Application::getInstance().getClip(_attackClip), _attackClip);
 	
 	auto k = _container.find(_attackClip);
 	k->second.setCallback([&]()->void {
@@ -110,15 +110,15 @@ void Melee::onUpdate()
 		{
 			if (!_isRunning || _currentClipName != _walkClip)
 			{
-				play(_walkClip.c_str());
+				play(_walkClip);
 			}
 			move(sf::Vector2f(_speedMove * delta, 0.f));
 		}
 		else if (!_isRunning) {
 			if (!_touchEnemy)
-				play(_idleClip.c_str());
+				play(_idleClip);
 			else {
-				play(_attackClip.c_str());
+				play(_attackClip);
 			}
 		}
 	}
@@ -142,7 +142,7 @@ void Melee::damage(int dmg)
 		_position = { 0.f,0.f };
 		_activeCollider = false;
 		if(_currentClipName != _dieClip)
-		play(_dieClip.c_str());
+		play(_dieClip);
 	}
 }
 
@@ -174,7 +174,7 @@ void Melee::onCollision(std::unique_ptr<base::Actor>& collision)
 		}
 		if (_currentClipName != _attackClip && _hp>0)
 		{
-			play(_attackClip.c_str());
+			play(_attackClip);
 			return;
 		}
 	}
@@ -187,7 +187,7 @@ void Melee::onCollision(std::unique_ptr<base::Actor>& collision)
 		if (collision->getPosition().x >= _position.x)
 		{
 			if(_currentClipName != _attackClip)
-			play(_idleClip.c_str());
+			play(_idleClip);
 			_isCollided = true;
 		}
 		return;
@@ -196,7 +196,7 @@ void Melee::onCollision(std::unique_ptr<base::Actor>& collision)
 		if (collision->getPosition().x <= _position.x)
 		{
 			if (_currentClipName != _attackClip)
-			play(_idleClip.c_str());
+			play(_idleClip);
 			_isCollided = true;
 		}
 		return;

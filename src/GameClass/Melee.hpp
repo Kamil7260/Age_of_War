@@ -10,7 +10,7 @@ public:
 	Melee& operator=(Melee&);
 	Melee& operator=(Melee&&) noexcept;
 
-	void setAnimatorName(const char* name) override;
+	void setAnimatorName(const std::string& name) override;
 
 	void onUpdate() override;
 

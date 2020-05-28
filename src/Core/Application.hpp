@@ -24,7 +24,7 @@ public:
 
 	void run();
 
-	const base::Clip& getClip(const char* name);
+	const base::Clip& getClip(const std::string& name);
 
 	const json& getMobInfo() const {
 		return _mobInfoJson;

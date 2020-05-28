@@ -41,7 +41,7 @@ public:
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
-	virtual bool loadFromJson(const std::string& type,const std::string& name, const unsigned int index);
+	virtual bool loadFromJson(const unsigned int index);
 	virtual bool loadCannonFromJson(const std::string& name);
 	virtual void spawnObject(const unsigned int type);
 	
@@ -52,6 +52,8 @@ public:
 	}
 
 	virtual void spawnCannon(const int type);
+
+	virtual void loadNextAge(const std::string& index);
 
 private:
 	float _timer;

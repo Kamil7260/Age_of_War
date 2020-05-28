@@ -19,7 +19,7 @@ namespace base {
 
 		~ActorAnimator() = default;
 		
-		virtual bool play(const char* key);
+		virtual bool play(const std::string& key);
 
 		virtual void addClip(Clip clip,const std::string& name);
 		
@@ -37,7 +37,6 @@ namespace base {
 
 		virtual const std::string& getCurrentClipName() const { return _currentClip->first; }
 
-	
 	protected:
 
 		std::map<std::string, Clip> _container;

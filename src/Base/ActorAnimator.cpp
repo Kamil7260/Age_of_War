@@ -44,7 +44,7 @@ base::ActorAnimator& base::ActorAnimator::operator=(ActorAnimator&& source) noex
 	return *this;
 }
 
-bool base::ActorAnimator::play(const char* key)
+bool base::ActorAnimator::play(const std::string& key)
 {
 	_currentClip = _container.find(key);
 	if (_currentClip == _container.end())

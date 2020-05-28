@@ -13,11 +13,11 @@ namespace core {
 	template<typename T>
 	class ResourceManager final {
 	public:
-		bool loadFromFile(const char* path);
-		bool loadFromFile(const char* path,const sf::IntRect& rect);
-		const std::shared_ptr<T> get(const char* path);
+		bool loadFromFile(const std::string& path);
+		bool loadFromFile(const std::string& path,const sf::IntRect& rect);
+		const std::shared_ptr<T> get(const std::string& path);
 
-		bool remove(const char* path);
+		bool remove(const std::string& path);
 
 		static ResourceManager& getInstance() {
 			static ResourceManager manager;
@@ -41,7 +41,7 @@ namespace core {
 	};
 
 	template<typename T>
-	inline bool ResourceManager<T>::loadFromFile(const char* path)
+	inline bool ResourceManager<T>::loadFromFile(const std::string& path)
 	{
 		std::shared_ptr<T> temp = std::make_shared<T>();
 		if (!temp->loadFromFile(path))
@@ -59,7 +59,7 @@ namespace core {
 	}
 
 	template<typename T>
-	inline bool ResourceManager<T>::loadFromFile(const char* path, const sf::IntRect& rect)
+	inline bool ResourceManager<T>::loadFromFile(const std::string& path, const sf::IntRect& rect)
 	{
 		std::shared_ptr<T> temp = std::make_shared<T>();
 		if (!temp->loadFromFile(path,rect))
@@ -77,7 +77,7 @@ namespace core {
 	}
 
 	template<typename T>
-	inline const std::shared_ptr<T> ResourceManager<T>::get(const char* path)
+	inline const std::shared_ptr<T> ResourceManager<T>::get(const std::string& path)
 	{
 		for (auto k = _container.begin(); k != _container.end(); ++k)
 		{
@@ -91,7 +91,7 @@ namespace core {
 	}
 
 	template<typename T>
-	inline bool ResourceManager<T>::remove(const char* path)
+	inline bool ResourceManager<T>::remove(const std::string& path)
 	{
 		for (auto it = _container.begin(); it != _container.end(); ++it)
 		{
