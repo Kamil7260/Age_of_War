@@ -3,7 +3,7 @@
 
 class Range : public base::Mob {
 public:
-	Range(const base::collider& collider = { 1.f,1.f,1.f,1.f }, int hp = 30, int attack = 10, int maxAttack = 15, int range = 250, float speedAttack = 1.f, float speedMove = 25.f);
+	Range(const base::collider& collider = { 1.f,1.f,1.f,1.f }, int hp = 30, int attack = 10, int maxAttack = 15, int range = 250, float speedAttack = 1.f, float speedMove = 25.f, int income = 0);
 	Range(const Range&) = default;
 	Range(Range&&) = default;
 

@@ -37,6 +37,10 @@ public:
 
 	virtual void loadNextAge(const std::string& index);
 
+	virtual void income(const int value) {
+		_coinCount += value;
+	}
+
 private:
 	float _timer;
 	sf::Sprite _sprite;
@@ -46,5 +50,7 @@ private:
 	sf::Sprite _cannonPlace;
 	bool _drawCannonPlaces;
 	std::unique_ptr<Cannon> _cannon;
+
+	int _coinCount;
 };
 

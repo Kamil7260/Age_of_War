@@ -7,10 +7,10 @@
 #include "Button.hpp"
 #include "QueueManager.hpp"
 #include "CannonSpawner.hpp"
-
+#include "CoinCounter.hpp"
 
 Player::Player()
-	:_enableSpawn(true), _drawCannonPlaces(false)
+	:_enableSpawn(true), _drawCannonPlaces(false),_coinCount(100)
 {
 	_cannon = nullptr;
 	_tag = "Player";
@@ -87,6 +87,12 @@ Player::Player()
 		});
 	core::Renderer::getInstance().addObject(std::move(button), base::object_type::gui);
 
+	std::unique_ptr<CoinCounter> coin = std::make_unique<CoinCounter>(&_coinCount);
+	coin->setPosition(sf::Vector2f(1600, 40));
+	coin->setFont(*core::ResourceManager<sf::Font>::getInstance().get("Assets/fonts/3.ttf"));
+	coin->setCharacterSize(20);
+	coin->setColor(sf::Color::Yellow);
+	core::Renderer::getInstance().addObject(std::move(coin), base::object_type::gui);
 }
 
 void Player::setPosition(const sf::Vector2f& pos)
@@ -151,7 +157,7 @@ void Player::spawnObject(const unsigned int type)
 	if (type == 1)
 	{
 		auto& k = _mobTemplate.at(type);
-		std::unique_ptr<Range> man = std::make_unique<Range>(k.collider, k.hp, k.minDMG, k.maxDMG, k.range, k.speedAttack, k.speedMove);
+		std::unique_ptr<Range> man = std::make_unique<Range>(k.collider, k.hp, k.minDMG, k.maxDMG, k.range, k.speedAttack, k.speedMove,k.income);
 		man->setScale(sf::Vector2f(k.scale.x, k.scale.y));
 		man->setAnimatorName(k.name);
 		man->setAnimationSpeed(k.animationSpeed);
@@ -160,7 +166,7 @@ void Player::spawnObject(const unsigned int type)
 		return;
 	}
 	auto& k = _mobTemplate.at(type);
-	std::unique_ptr<Melee> man = std::make_unique<Melee>(k.collider, k.hp, k.minDMG, k.maxDMG, k.speedAttack, k.speedMove);
+	std::unique_ptr<Melee> man = std::make_unique<Melee>(k.collider, k.hp, k.minDMG, k.maxDMG, k.speedAttack, k.speedMove, k.income);
 	man->setScale(sf::Vector2f(k.scale.x, k.scale.y));
 	man->setAnimatorName(k.name);
 	man->setAnimationSpeed(k.animationSpeed);
@@ -170,6 +176,11 @@ void Player::spawnObject(const unsigned int type)
 
 void Player::addToQueue(const unsigned int type)
 {
+	if (_mobTemplate.at(0).price > _coinCount)
+		return;
+
+	_coinCount -= _mobTemplate.at(0).price;
+
 	_timer = 0.f;
 	_enableSpawn = false;
 	auto& manager = core::Renderer::getInstance().find("QueueManager");

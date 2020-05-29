@@ -3,7 +3,7 @@
 namespace base {
 	class Mob : public ActorAnimator {
 	public:
-		Mob(int hp = 80, int minattack = 15, int maxattack = 30, float speedattack = 1.f,float speedmove = 5.f);
+		Mob(int hp = 80, int minattack = 15, int maxattack = 30, float speedattack = 1.f,float speedmove = 5.f, int income = 0);
 		Mob(const Mob&) = default;
 		Mob(Mob&&) = default;
 		Mob& operator=(const Mob&) = default;
@@ -34,6 +34,7 @@ namespace base {
 		float _speedAttack;
 		float _speedMove;
 		bool _activeCollider;
+		int _income;
 	};
 
 }

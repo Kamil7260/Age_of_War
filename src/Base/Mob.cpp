@@ -1,7 +1,7 @@
 #include "Mob.hpp"
 
-base::Mob::Mob(int hp, int minattack, int maxattack, float speedattack, float speedmove)
-	:_hp(hp),_attack(minattack),_maxAttack(maxattack), _speedAttack(speedattack),_speedMove(speedmove), _activeCollider(true)
+base::Mob::Mob(int hp, int minattack, int maxattack, float speedattack, float speedmove, int income)
+	:_hp(hp),_attack(minattack),_maxAttack(maxattack), _speedAttack(speedattack),_speedMove(speedmove), _activeCollider(true),_income(income)
 {
 	_tag = "Mob";
 }

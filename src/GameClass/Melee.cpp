@@ -2,9 +2,11 @@
 
 #include "Melee.hpp"
 #include "../Core/Application.hpp"
+#include "../Core/ResourceManager.hpp"
+#include "TextDisplay.hpp"
 
-Melee::Melee(const base::collider& collider, int hp, int attack, int maxAttack, float speedAttack, float speedMove)
-	:Mob(hp, attack,maxAttack, speedAttack, speedMove),_timer(0.f),_attackTimer(0.f), _touchEnemy(false), _isCollided(false), _enableAttack(true), _died(false)
+Melee::Melee(const base::collider& collider, int hp, int attack, int maxAttack, float speedAttack, float speedMove, int income)
+	:Mob(hp, attack,maxAttack, speedAttack, speedMove, income),_timer(0.f),_attackTimer(0.f), _touchEnemy(false), _isCollided(false), _enableAttack(true), _died(false)
 {
 	_myColider = collider;
 }
@@ -83,6 +85,18 @@ void Melee::damage(int dmg)
 	Mob::damage(dmg);
 	if (_hp <= 0)
 	{
+		if (_team != base::team::player)
+		{
+			auto ptr = std::make_unique<TextDisplay>(2.5f, 70.f);
+			ptr->setPosition(_position);
+			ptr->setCharacterSize(20);
+			ptr->setFont(*core::ResourceManager<sf::Font>::getInstance().get("Assets/fonts/3.ttf"));
+			ptr->setIncome(_income);
+			ptr->setColor(sf::Color::Yellow);
+			ptr->setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/other/5.png"));
+			core::Renderer::getInstance().addObject(std::move(ptr), base::object_type::gui);
+		}
+
 		_position = { 0.f,0.f };
 		_activeCollider = false;
 		if(_currentClipName != _dieClip)
