@@ -1,0 +1,44 @@
+{
+  "I": {
+    "T0": {
+      "collider": [ 60, 40, 25, 25 ],
+      "hp": 50,
+      "maxDMG": 25,
+      "minDMG": 20,
+      "speedAttack": 1,
+      "animationSpeed": 0.02,
+      "speedMove": 40,
+      "scale": [ 1, 1 ],
+      "spawnTime": 3,
+      "price": 15,
+      "income": 20
+    },
+    "T1": {
+      "collider": [ 60, 40, 25, 25 ],
+      "hp": 50,
+      "maxDMG": 25,
+      "minDMG": 20,
+      "speedAttack": 1,
+      "range": 250,
+      "animationSpeed": 0.02,
+      "speedMove": 40,
+      "scale": [ 1, 1 ],
+      "spawnTime": 3,
+      "price": 15,
+      "income": 20
+    },
+    "T2": {
+      "collider": [ 60, 40, 80, 80 ],
+      "hp": 50,
+      "maxDMG": 25,
+      "minDMG": 20,
+      "speedAttack": 1,
+      "animationSpeed": 0.02,
+      "speedMove": 40,
+      "scale": [ 0.9, 0.9 ],
+      "spawnTime": 10,
+      "price": 15,
+      "income": 20
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "I": {
+    "C1": {
+      "animationSpeed": 0.02,
+      "maxDMG": 20,
+      "minDMG": 10,
+      "range": 800,
+      "reloadTime": 2,
+      "bulletSpeed": 400,
+      "price": 200
+    }
+  }
+}
