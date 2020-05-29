@@ -1,7 +1,7 @@
 #include "Button.hpp"
 
 Button::Button(const base::collider& collider)
-	:Actor(collider), _onClickEvent(nullptr),_shadowDraw(false)
+	:Actor(collider), _onClickEvent(nullptr),_shadowDraw(false), _isCollided(false)
 {
 	_shadow.setFillColor(sf::Color::White);
 	_shadow.setFillColor(sf::Color(255, 255, 255, 60));
@@ -18,11 +18,20 @@ void Button::onUpdate()
 	if(!_shadowDraw)
 		_shadow.setFillColor(sf::Color(255, 255, 255, 0));
 	_shadowDraw = false;
+
+	if (_isCollided)
+	{
+		_drawBox = true;
+	}
+	else _drawBox = false;
+	_isCollided = false;
 }
 
 void Button::onMouseCollision(bool isPressed)
 {
+	_isCollided = true;
 	_shadowDraw = true;
+
 	if (_onClickEvent != nullptr)
 	{
 		_onClickEvent(isPressed);
@@ -57,10 +66,19 @@ void Button::move(const sf::Vector2f& delta)
 	_position += delta;
 }
 
+Info& Button::getInfo()
+{
+	return _infoBox;
+}
+
 void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	target.draw(_sprite, states);
 	target.draw(_shadow, states);
+	if (_drawBox)
+	{
+		_infoBox.draw(target,states);
+	}
 }
 
 void Button::setClickEvent(const std::function<void(bool)>& func)
