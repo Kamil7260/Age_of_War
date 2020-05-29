@@ -3,6 +3,8 @@
 
 #include "../Base/Stronghold.hpp"
 
+#include "../Base/JsonFunctions.hpp"
+
 class Enemy : public base::Stronghold {
 public:
 	Enemy();
@@ -25,4 +27,6 @@ public:
 private:
 	float _timer;
 	sf::Sprite _sprite;
+	std::array<base::jsonInfo, 3> _mobTemplate;
+	std::string _currentAge;
 };
