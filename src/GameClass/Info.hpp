@@ -33,7 +33,7 @@ public:
 	void addValue(T* target, const std::string& description);
 
 	void refresh();
-
+	void clear();
 protected:
 
 	class type {

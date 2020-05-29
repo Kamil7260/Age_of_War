@@ -9,7 +9,7 @@ Enemy::Enemy()
 {
 	_currentAge = "I";
 	_team = base::team::enemy;
-	_sprite.setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/base/1.png"));
+	_sprite.setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/base/I.png"));
 	setScale(sf::Vector2f(-1.f, 1.f));
 	_sprite.setOrigin(275.f, 170.f);
 	_myColider = { 131.f,131.f,131.f,131.f };

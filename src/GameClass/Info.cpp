@@ -59,3 +59,8 @@ void Info::refresh()
 	}
 	_text.setString(text);
 }
+
+void Info::clear()
+{
+	_container.clear();
+}

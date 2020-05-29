@@ -35,7 +35,7 @@ public:
 
 	virtual void spawnCannon(const int type);
 
-	virtual void loadNextAge(const std::string& index);
+	virtual void loadNextAge();
 
 	virtual void income(const int value) {
 		_coinCount += value;

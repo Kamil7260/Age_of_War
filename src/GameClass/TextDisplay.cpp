@@ -77,8 +77,6 @@ void TextDisplay::setIncome(const int income)
 	_text.setString(std::to_string(_income));
 }
 
-
-
 void TextDisplay::setFont(const sf::Font& font)
 {
 	_text.setFont(font);
