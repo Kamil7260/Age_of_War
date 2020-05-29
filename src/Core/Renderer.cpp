@@ -7,6 +7,22 @@ void core::Renderer::addObject(std::unique_ptr<base::Actor> actor, base::object_
 	_queue.push_back(std::make_pair(std::move(actor), layer));
 }
 
+void core::Renderer::forceAddObject(std::unique_ptr<base::Actor> actor, base::object_type layer)
+{
+	switch (layer)
+	{
+	case base::object_type::actor:
+		_actor.push_back(std::move(actor));
+		break;
+	case base::object_type::background:
+		_backGround.push_back(std::move(actor));
+		break;
+	case base::object_type::gui:
+		_gui.push_back(std::move(actor));
+		break;
+	}
+}
+
 void core::Renderer::addEnemyObject(std::unique_ptr<base::Actor> actor)
 {
 	actor->setType(base::object_type::actor);
@@ -275,6 +291,47 @@ std::unique_ptr<base::Actor>& core::Renderer::find(const std::string& tag)
 			return *it;
 	}
 	return _placeHolder;
+}
+
+std::unique_ptr<base::Actor> core::Renderer::findAndRemove(const std::string& tag)
+{
+	for (auto it = _gui.begin(); it != _gui.end(); ++it)
+	{
+		if ((*it)->getTag() == tag)
+		{
+			auto result = std::move(*it);
+			_gui.erase(it);
+			return std::move(result);
+		}
+	}
+	for (auto it = _backGround.begin(); it != _backGround.end(); ++it)
+	{
+		if ((*it)->getTag() == tag)
+		{
+			auto result = std::move(*it);
+			_backGround.erase(it);
+			return std::move(result);
+		}
+	}
+	for (auto it = _actor.begin(); it != _actor.end(); ++it)
+	{
+		if ((*it)->getTag() == tag)
+		{
+			auto result = std::move(*it);
+			_actor.erase(it);
+			return std::move(result);
+		}
+	}
+	for (auto it = _enemyActor.begin(); it != _enemyActor.end(); ++it)
+	{
+		if ((*it)->getTag() == tag)
+		{
+			auto result = std::move(*it);
+			_enemyActor.erase(it);
+			return std::move(result);
+		}
+	}
+	return nullptr;
 }
 
 std::unique_ptr<base::Actor>& core::Renderer::getLastColliderActor(std::vector<std::unique_ptr<base::Actor>>& actor)

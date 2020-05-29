@@ -21,6 +21,7 @@ namespace core {
 		}
 
 		void addObject(std::unique_ptr<base::Actor> actor, base::object_type layer);
+		void forceAddObject(std::unique_ptr<base::Actor> actor, base::object_type layer);
 		void addEnemyObject(std::unique_ptr<base::Actor> actor);
 		void addBullet(std::unique_ptr<base::Actor> actor);
 
@@ -41,6 +42,7 @@ namespace core {
 		void move(const sf::Vector2f& delta);
 
 		std::unique_ptr<base::Actor>& find(const std::string& tag);
+		std::unique_ptr<base::Actor> findAndRemove(const std::string& tag);
 
 		const sf::Vector2i getMousePosition() {
 			return sf::Mouse::getPosition(*_window);
