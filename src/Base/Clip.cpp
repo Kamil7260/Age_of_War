@@ -2,7 +2,8 @@
 #include "../Core/Application.hpp"
 
 base::Clip::Clip(float speed)
-	: _isFinish(true), _speed(speed), _curTime(0.f), _origin(0.5f, 0.5f), _callback(nullptr), _callbackOnTime(nullptr), _onTime(0.f), _onTimeCalled(false)
+	: _isFinish(true), _speed(speed), _curTime(0.f), _origin(0.5f, 0.5f), _callback(nullptr), _callbackOnTime(nullptr),
+	_onTime(0.f), _onTimeCalled(false), _onTimeCounter(0.f)
 {
 }
 
@@ -15,9 +16,10 @@ bool base::Clip::update()
 {
 	auto delta = core::Application::getInstance().getTime();
 	_curTime += delta;
-	if (_onTime > 0.f)
+	 
+	if (_onTimeCounter > 0.f)
 	{
-		_onTime -= delta;
+		_onTimeCounter -= delta;
 	}
 	else if(!_onTimeCalled) {
 		if (_callbackOnTime != nullptr) {
@@ -64,7 +66,7 @@ void base::Clip::start()
 	_currentFrame = _container.begin();
 	_sprite->setTexture(*(*_currentFrame),true);
 	_curTime = 0.f;
-	_onTime = 0.f;
+	_onTimeCounter = _onTime;
 	_sprite->setOrigin(_origin);
 }
 

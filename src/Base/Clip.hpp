@@ -46,6 +46,7 @@ namespace base {
 		std::function<void()> _callback;
 		std::function<void()> _callbackOnTime;
 		float _onTime;
+		float _onTimeCounter;
 		bool _onTimeCalled;
 	};
 }
