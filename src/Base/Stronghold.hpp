@@ -19,8 +19,8 @@ namespace base {
 	protected:
 		int _hp;
 		bool _activeCollider;
-		std::array<jsonInfo, 3> _mobTemplate;
-		jsonInfo _cannonInfo;
+		std::array<unitInfo, 3> _mobTemplate;
+		std::array<cannonInfo,3> _cannonTemplate;
 	};
 
 }

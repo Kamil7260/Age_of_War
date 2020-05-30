@@ -5,8 +5,9 @@
 #include "../Core/Application.hpp"
 #include "Bullet.hpp"
 
-Cannon::Cannon(int maxDMG, int minDMG, int range, float reloadTime,float bulletspeed)
-	:_maxDMG(maxDMG), _minDMG(minDMG), _range(range), _reloadTime(reloadTime), _curTime(0.f), _enableShot(true), _bulletSpeed(bulletspeed)
+Cannon::Cannon(int maxDMG, int minDMG, int range, float reloadTime,float bulletspeed, const float deltaBulletPos, const float fireSpeed)
+	:_maxDMG(maxDMG), _minDMG(minDMG), _range(range), _reloadTime(reloadTime), _curTime(0.f), _enableShot(true),
+	_bulletSpeed(bulletspeed), _rangeSpawn(deltaBulletPos), _longRange(false), _fireSpeed(fireSpeed)
 {
 	_team = base::team::player;
 }
@@ -24,7 +25,7 @@ void Cannon::onUpdate()
 			_curTime += core::Application::getInstance().getTime();
 			if (_curTime > _reloadTime)
 			{
-				play("IC1");
+				play(_currentClipName);
 				_curTime = 0.f;
 			}
 		}
@@ -49,16 +50,37 @@ void Cannon::addClip(base::Clip clip, const std::string& name)
 	_sprite->setTexture(*clip.getMask());
 	_sprite->setOrigin(clip.getOriginMask());
 	clip.setSprite(_sprite);
+	_currentClipName = name;
 	clip.setCallbackOnTime([&]()->void {
 		_enableShot = true;
-		auto x = std::cos(_sprite->getRotation() * 3.14f / 180.f);
-		auto y = std::sin(_sprite->getRotation() * 3.14f / 180.f);
+
+		auto r = _sprite->getRotation();
+		auto x = std::cos(r * 3.14f / 180.f);
+		auto y = std::sin(r * 3.14f / 180.f);
+		if (_longRange) {
+			y += 0.05f;
+			x -= 0.05f;
+		}
 		std::unique_ptr<Bullet> bullet = std::make_unique<Bullet>(_minDMG,_maxDMG,_bulletSpeed, sf::Vector2f(x,y));
-		bullet->setPosition(_position);
+
+		if (_longRange)
+		{
+			r+=110;
+			r = 180 - r;
+			x = std::cos(r * 3.14f / 180.f) * _rangeSpawn;
+			y = std::sin(r * 3.14f / 180.f) * _rangeSpawn;
+			_bulletSpawnPoint = { _position.x - x, _position.y - y };
+		}
+		else {
+			x = 0.f;
+			y = 0.f;
+		}
+
+		bullet->setPosition(_bulletSpawnPoint);
 		bullet->setTexture(*_bulletTex);
 		bullet->setTeam(_team);
 		core::Renderer::getInstance().addBullet(std::move(bullet));
-		}, 3.f);
+		}, _fireSpeed);
 	_container.insert(std::make_pair(name, std::move(clip)));
 }
 
@@ -69,5 +91,15 @@ void Cannon::correctDirection(std::unique_ptr<base::Actor>& target)
 	float z = k.x - _position.x;
 	z = std::sqrt(y * y + z * z);
 	float val =  std::acos(y/z) * 180.f / 3.14f;
-	_sprite->setRotation(-(90-val));
+	if (_longRange)
+	{
+		auto angle = -(90 - val);
+		if(angle>15)
+			_sprite->setRotation(15);
+		else {
+			_sprite->setRotation(angle);
+		}
+		return;
+	}
+	_sprite->setRotation(-(90 - val));
 }

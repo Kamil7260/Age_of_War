@@ -158,6 +158,9 @@ void Range::setPosition(const sf::Vector2f& pos)
 
 void Range::onCollision(std::unique_ptr<base::Actor>& collision)
 {
+	if (collision->getTag() == "Bullet")
+		return;
+
 	if (collision->getTeam() != _team)
 	{
 		_touchEnemy = true;

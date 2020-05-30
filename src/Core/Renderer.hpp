@@ -61,6 +61,7 @@ namespace core {
 		void insertQueue();
 
 		bool collisionBetween(std::unique_ptr<base::Actor>& left, std::unique_ptr<base::Actor>& right) const ;
+		std::vector<std::unique_ptr<base::Actor>>::iterator& getNextActiveCollider(std::vector<std::unique_ptr<base::Actor>>::iterator& current, const std::vector<std::unique_ptr<base::Actor>>::iterator& last);
 
 		void onMouse(const std::unique_ptr<base::Actor>& source) const;
 

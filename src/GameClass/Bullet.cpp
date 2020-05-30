@@ -8,6 +8,7 @@ Bullet::Bullet(int minDMG, int maxDMG,float speed, const sf::Vector2f& dir)
 	:_direction(dir), _speed(speed), _minDMG(minDMG), _maxDMG(maxDMG)
 {
 	_myColider = { 0,30,0,30 };
+	_tag = "Bullet";
 }
 
 void Bullet::setTexture(const sf::Texture& tex)

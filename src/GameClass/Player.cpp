@@ -45,6 +45,13 @@ Player::Player()
 	button->setTag("Button");
 	core::Renderer::getInstance().forceAddObject(std::move(button), base::object_type::gui);
 
+	button = std::make_unique<Button>(base::collider({ 0.f,68.f,0.f,68.f }));
+	button->setTag("Button");
+	core::Renderer::getInstance().forceAddObject(std::move(button), base::object_type::gui);
+
+	button = std::make_unique<Button>(base::collider({ 0.f,68.f,0.f,68.f }));
+	button->setTag("Button");
+	core::Renderer::getInstance().forceAddObject(std::move(button), base::object_type::gui);
 	loadNextAge();
 
 	std::unique_ptr<CoinCounter> coin = std::make_unique<CoinCounter>(&_coinCount);
@@ -168,7 +175,7 @@ void Player::spawnCannon(const int type)
 {
 	if (_cannon == nullptr)
 	{
-		if (_cannonInfo.price > _coinCount)
+		if (_cannonTemplate.at(type).price > _coinCount)
 			return;
 
 		auto pos = _cannonPlace.getPosition();
@@ -177,15 +184,18 @@ void Player::spawnCannon(const int type)
 		{
 			if (pos.y - 30 < mPos.y && pos.y + 30.f > mPos.y)
 			{
+				auto& k = _cannonTemplate.at(type);
 				std::string name = _currentAge + "C" + std::to_string(type);
-				_cannon = std::make_unique<Cannon>(_cannonInfo.maxDMG, _cannonInfo.minDMG, _cannonInfo.range,_cannonInfo.reloadTime,_cannonInfo.bulletSpeed);
+				_cannon = std::make_unique<Cannon>(k.maxDMG, k.minDMG, k.range,k.reloadTime,k.bulletSpeed,k.bulletPosition,k.fireSpeed);
+				if (k.long_range)
+					_cannon->longRange();
 				auto clip = core::Application::getInstance().getClip(name);
 				_cannon->addClip(std::move(clip), name);
 				name = "Assets/ammunition/" + _currentAge + "/C" + std::to_string(type) + ".png";
 				_cannon->setBulletTexture(core::ResourceManager<sf::Texture>::getInstance().get(name));
-				_cannon->setAnimationSpeed(_cannonInfo.animationSpeed);
+				_cannon->setAnimationSpeed(k.animationSpeed);
 				_cannon->setPosition(_cannonPlace.getPosition());
-				_coinCount -= _cannonInfo.price;
+				_coinCount -= k.price;
 			}
 		}
 	}
@@ -201,9 +211,9 @@ void Player::loadNextAge()
 	_mobTemplate.at(0) = base::loadUnitFromJson(0, _currentAge);
 	_mobTemplate.at(1) = base::loadUnitFromJson(1, _currentAge);
 	_mobTemplate.at(2) = base::loadUnitFromJson(2, _currentAge);
-	_cannonInfo = base::loadCannonFromJson(_currentAge, 1);
-	
-
+	_cannonTemplate.at(0) = base::loadCannonFromJson(_currentAge, 0);
+	_cannonTemplate.at(1) = base::loadCannonFromJson(_currentAge, 1);
+	_cannonTemplate.at(2) = base::loadCannonFromJson(_currentAge, 2);
 	auto bt0 = core::Renderer::getInstance().findAndRemove("Button");
 	bt0->setPosition(sf::Vector2f(300.f, 50.f));
 	{
@@ -216,7 +226,7 @@ void Player::loadNextAge()
 		info.setFont(*font);
 		info.setColor(sf::Color::Yellow);
 		info.setCharacterSize(20);
-		info.addValue(" ", "Caveman");
+		info.addValue(" ", _mobTemplate.at(0).displayName);
 		info.addValue(&_mobTemplate.at(0).hp, "Hp : ");
 		info.addValue(&_mobTemplate.at(0).minDMG, "Base dmg : ");
 		info.addValue(&_mobTemplate.at(0).maxDMG, "Critical dmg : ");
@@ -243,7 +253,7 @@ void Player::loadNextAge()
 		info.setFont(*font);
 		info.setColor(sf::Color::Yellow);
 		info.setCharacterSize(20);
-		info.addValue(" ", "Slingshoter");
+		info.addValue(" ", _mobTemplate.at(1).displayName);
 		info.addValue(&_mobTemplate.at(1).hp, "Hp : ");
 		info.addValue(&_mobTemplate.at(1).minDMG, "Base dmg : ");
 		info.addValue(&_mobTemplate.at(1).maxDMG, "Critical dmg : ");
@@ -272,7 +282,7 @@ void Player::loadNextAge()
 		info.setFont(*font);
 		info.setColor(sf::Color::Yellow);
 		info.setCharacterSize(20);
-		info.addValue(" ", "Dino");
+		info.addValue(" ", _mobTemplate.at(2).displayName);
 		info.addValue(&_mobTemplate.at(2).hp, "Hp : ");
 		info.addValue(&_mobTemplate.at(2).minDMG, "Base dmg : ");
 		info.addValue(&_mobTemplate.at(2).maxDMG, "Critical dmg : ");
@@ -292,18 +302,19 @@ void Player::loadNextAge()
 	{
 		auto ptr = static_cast<Button*>(bt3.get());
 		auto& info = ptr->getInfo();
+		auto& k = _cannonTemplate.at(0);
 		info.clear();
 		info.setPosition(sf::Vector2f(0.f, 300.f));
 		info.setTexture(*infoBlock);
 		info.setFont(*font);
 		info.setColor(sf::Color::Yellow);
 		info.setCharacterSize(20);
-		info.addValue(" ", "Automatic slingshot");
-		info.addValue(&_cannonInfo.minDMG, "Base dmg : ");
-		info.addValue(&_cannonInfo.maxDMG, "Critical dmg : ");
-		info.addValue(&_cannonInfo.range, "Range : ");
-		info.addValue(&_cannonInfo.reloadTime, "Reload : ");
-		info.addValue(&_cannonInfo.price, "Price : ");
+		info.addValue(" ", k.displayName);
+		info.addValue(&k.minDMG, "Base dmg : ");
+		info.addValue(&k.maxDMG, "Critical dmg : ");
+		info.addValue(&k.range, "Range : ");
+		info.addValue(&k.reloadTime, "Reload : ");
+		info.addValue(&k.price, "Price : ");
 
 		info.refresh();
 		ptr->setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/" + _currentAge + "/4.png"));
@@ -318,7 +329,7 @@ void Player::loadNextAge()
 					if (k != nullptr)
 					{
 						auto ptr = static_cast<Player*>(k.get());
-						ptr->spawnCannon(1);
+						ptr->spawnCannon(0);
 					}
 					});
 				ptr->setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/"+_currentAge + "/4.png"));
@@ -326,8 +337,93 @@ void Player::loadNextAge()
 			}
 			});
 	}
+
+	auto bt4 = core::Renderer::getInstance().findAndRemove("Button");
+	bt4->setPosition(sf::Vector2f(800.f, 50.f));
+	{
+		auto ptr = static_cast<Button*>(bt4.get());
+		auto& info = ptr->getInfo();
+		auto& k = _cannonTemplate.at(1);
+		info.clear();
+		info.setPosition(sf::Vector2f(0.f, 300.f));
+		info.setTexture(*infoBlock);
+		info.setFont(*font);
+		info.setColor(sf::Color::Yellow);
+		info.setCharacterSize(20);
+		info.addValue(" ", k.displayName);
+		info.addValue(&k.minDMG, "Base dmg : ");
+		info.addValue(&k.maxDMG, "Critical dmg : ");
+		info.addValue(&k.range, "Range : ");
+		info.addValue(&k.reloadTime, "Reload : ");
+		info.addValue(&k.price, "Price : ");
+
+		info.refresh();
+		ptr->setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/" + _currentAge + "/5.png"));
+		ptr->setClickEvent([&](bool isPressed)->void {
+			if (_enableSpawn && isPressed)
+			{
+				_drawCannonPlaces = true;
+				_enableSpawn = false;
+				std::unique_ptr<CannonSpawner> ptr = std::make_unique<CannonSpawner>();
+				ptr->setCallbackOnRelease([]()->void {
+					auto& k = core::Renderer::getInstance().find("Player");
+					if (k != nullptr)
+					{
+						auto ptr = static_cast<Player*>(k.get());
+						ptr->spawnCannon(1);
+					}
+					});
+				ptr->setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/" + _currentAge + "/5.png"));
+				core::Renderer::getInstance().addObject(std::move(ptr), base::object_type::gui);
+			}
+			});
+	}
+
+	auto bt5 = core::Renderer::getInstance().findAndRemove("Button");
+	bt5->setPosition(sf::Vector2f(900.f, 50.f));
+	{
+		auto ptr = static_cast<Button*>(bt5.get());
+		auto& info = ptr->getInfo();
+		auto& k = _cannonTemplate.at(2);
+		info.clear();
+		info.setPosition(sf::Vector2f(0.f, 300.f));
+		info.setTexture(*infoBlock);
+		info.setFont(*font);
+		info.setColor(sf::Color::Yellow);
+		info.setCharacterSize(20);
+		info.addValue(" ", k.displayName);
+		info.addValue(&k.minDMG, "Base dmg : ");
+		info.addValue(&k.maxDMG, "Critical dmg : ");
+		info.addValue(&k.range, "Range : ");
+		info.addValue(&k.reloadTime, "Reload : ");
+		info.addValue(&k.price, "Price : ");
+
+		info.refresh();
+		ptr->setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/" + _currentAge + "/6.png"));
+		ptr->setClickEvent([&](bool isPressed)->void {
+			if (_enableSpawn && isPressed)
+			{
+				_drawCannonPlaces = true;
+				_enableSpawn = false;
+				std::unique_ptr<CannonSpawner> ptr = std::make_unique<CannonSpawner>();
+				ptr->setCallbackOnRelease([]()->void {
+					auto& k = core::Renderer::getInstance().find("Player");
+					if (k != nullptr)
+					{
+						auto ptr = static_cast<Player*>(k.get());
+						ptr->spawnCannon(2);
+					}
+					});
+				ptr->setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/" + _currentAge + "/6.png"));
+				core::Renderer::getInstance().addObject(std::move(ptr), base::object_type::gui);
+			}
+			});
+	}
+
 	core::Renderer::getInstance().addObject(std::move(bt0), base::object_type::gui);
 	core::Renderer::getInstance().addObject(std::move(bt1), base::object_type::gui);
 	core::Renderer::getInstance().addObject(std::move(bt2), base::object_type::gui);
 	core::Renderer::getInstance().addObject(std::move(bt3), base::object_type::gui);
+	core::Renderer::getInstance().addObject(std::move(bt4), base::object_type::gui);
+	core::Renderer::getInstance().addObject(std::move(bt5), base::object_type::gui);
 }

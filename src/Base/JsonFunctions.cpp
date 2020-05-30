@@ -2,13 +2,13 @@
 #include "../Core/Application.hpp"
 #include "../Logger/Logger.hpp"
 
-const base::jsonInfo base::loadUnitFromJson(const unsigned int type, const std::string& age)
+const base::unitInfo base::loadUnitFromJson(const unsigned int type, const std::string& age)
 {
 	auto& info = core::Application::getInstance().getMobInfo();
 
 	auto obj = info[age];
 
-	base::jsonInfo mob;
+	base::unitInfo mob;
 	mob.name = age + "T" + std::to_string(type);
 	if (obj == nullptr)
 	{
@@ -103,16 +103,22 @@ const base::jsonInfo base::loadUnitFromJson(const unsigned int type, const std::
 		LOG_ERROR("age : ", age, " index -> ", type, "!= price");
 		return mob;
 	}
-	mob.price = price;
+	auto displayName = obj["name"];
+	if (displayName == nullptr)
+	{
+		LOG_ERROR("age : ", age, " index -> ", type, "!= displayName");
+		return mob;
+	}
+	mob.displayName = displayName;
 	return mob;
 }
 
-const base::jsonInfo base::loadCannonFromJson(const std::string& age, const unsigned int type)
+const base::cannonInfo base::loadCannonFromJson(const std::string& age, const unsigned int type)
 {
 	auto& info = core::Application::getInstance().getCannonInfo();
 
 	auto obj = info[age];
-	base::jsonInfo mob;
+	base::cannonInfo mob;
 	mob.name = age + "C" + std::to_string(type);
 
 	if (obj == nullptr)
@@ -175,5 +181,35 @@ const base::jsonInfo base::loadCannonFromJson(const std::string& age, const unsi
 		return mob;
 	}
 	mob.price = price;
+	auto displayName = obj["name"];
+	if (displayName == nullptr)
+	{
+		LOG_ERROR("age : ", age, " index -> ", type, "!= displayName");
+		return mob;
+	}
+	mob.displayName = displayName;
+
+	auto bulletSpawn = obj["bulletSpawn"];
+	if (bulletSpawn == nullptr)
+	{
+		LOG_ERROR("age : ", age, " index -> ", type, "!= bulletSpawn");
+		return mob;
+	}
+	mob.bulletPosition = bulletSpawn;
+
+	auto long_range = obj["long_range"];
+	if (long_range == nullptr) {
+		LOG_ERROR("age : ", age, " index -> ", type, "!= long_range");
+		return mob;
+	}
+	mob.long_range = long_range;
+
+	auto firespeed = obj["firespeed"];
+	if (firespeed == nullptr) {
+		LOG_ERROR("age : ", age, " index -> ", type, "!= firespeed");
+		return mob;
+	}
+	mob.fireSpeed = firespeed;
+
 	return mob;
 }

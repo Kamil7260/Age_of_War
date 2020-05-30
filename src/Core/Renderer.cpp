@@ -180,20 +180,44 @@ void core::Renderer::updateCollision()
 	{
 		auto left = _actor.begin();
 		auto right = _actor.begin() + 1;
-		for (; right != _actor.end();++right,++left)
+		if (right != _actor.end())
 		{
 			collisionBetween(*left, *right);
 			onMouse(*right);
+			left = getNextActiveCollider(left, _actor.end());
+			right = getNextActiveCollider(right, _actor.end());
+			if (left == right && right != _actor.end()) {
+				right = getNextActiveCollider(right, _actor.end());
+			}
+			for (; right != _actor.end();)
+			{
+				collisionBetween(*left, *right);
+				onMouse(*right);
+				left = getNextActiveCollider(left, _actor.end());
+				right = getNextActiveCollider(right, _actor.end());
+			}
 		}
 	}
 	if (!_enemyActor.empty())
 	{
 		auto left = _enemyActor.begin();
 		auto right = _enemyActor.begin() + 1;
-		for (; right != _enemyActor.end(); ++right, ++left)
+		if (right != _enemyActor.end())
 		{
 			collisionBetween(*left, *right);
 			onMouse(*right);
+			left = getNextActiveCollider(left, _enemyActor.end());
+			right = getNextActiveCollider(right, _enemyActor.end());
+			if (left == right && right != _enemyActor.end()) {
+				right = getNextActiveCollider(right, _enemyActor.end());
+			}
+			for (; right != _enemyActor.end();)
+			{
+				collisionBetween(*left, *right);
+				onMouse(*right);
+				left = getNextActiveCollider(left, _enemyActor.end());
+				right = getNextActiveCollider(right, _enemyActor.end());
+			}
 		}
 	}
 	for (auto k = _gui.begin(); k != _gui.end(); ++k)
@@ -443,6 +467,19 @@ bool core::Renderer::collisionBetween(std::unique_ptr<base::Actor>& left, std::u
 		}
 	}
 	return false;
+}
+
+std::vector<std::unique_ptr<base::Actor>>::iterator& core::Renderer::getNextActiveCollider(std::vector<std::unique_ptr<base::Actor>>::iterator& current, const std::vector<std::unique_ptr<base::Actor>>::iterator& last)
+{
+	++current;
+	for (current; current != last; ++current)
+	{
+		if ((*current)->isColliderActive())
+		{
+			return current;
+		}
+	}
+	return current;
 }
 
 void core::Renderer::onMouse(const std::unique_ptr<base::Actor>& source) const
