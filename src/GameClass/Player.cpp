@@ -14,7 +14,7 @@ Player::Player()
 {
 	_cannon = nullptr;
 	_tag = "Player";
-	_currentAge = 'I';
+	_currentAge = "I";
 	_timer = 0;
 	_sprite.setOrigin(275.f, 170.f);
 	_myColider = { 111.f,111.f,111.f,111.f };
@@ -93,6 +93,7 @@ void Player::onUpdate()
 	{
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::K))
 		{
+			_currentAge = "II";
 			loadNextAge();
 		}
 		if (!sf::Mouse::isButtonPressed(sf::Mouse::Left))
@@ -215,7 +216,14 @@ void Player::loadNextAge()
 	_cannonTemplate.at(1) = base::loadCannonFromJson(_currentAge, 1);
 	_cannonTemplate.at(2) = base::loadCannonFromJson(_currentAge, 2);
 	auto bt0 = core::Renderer::getInstance().findAndRemove("Button");
+	if (bt0 == nullptr)
+	{
+		bt0 = std::make_unique<Button>(base::collider({ 0.f,68.f,0.f,68.f }));
+		bt0->setTag("Button");
+	}
+	auto texture = core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/" + _currentAge + "/1.png");
 	bt0->setPosition(sf::Vector2f(300.f, 50.f));
+	if(texture != nullptr)
 	{
 		auto ptr = static_cast<Button*>(bt0.get());
 
@@ -234,15 +242,22 @@ void Player::loadNextAge()
 		info.addValue(&_mobTemplate.at(0).price, "Price : ");
 
 		info.refresh();
-		ptr->setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/"+ _currentAge + "/1.png"));
+		ptr->setTexture(*texture);
 		ptr->setClickEvent([&](bool isPressed)->void {
 			if (isPressed && _enableSpawn)
 			{
 				addToQueue(0);
 			}
 			});
+		core::Renderer::getInstance().addObject(std::move(bt0), base::object_type::gui);
 	}
 	auto bt1 = core::Renderer::getInstance().findAndRemove("Button");
+	if (bt1 == nullptr)
+	{
+		bt1 = std::make_unique<Button>(base::collider({ 0.f,68.f,0.f,68.f }));
+		bt1->setTag("Button");
+	}
+	texture = core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/" + _currentAge + "/2.png");
 	bt1->setPosition(sf::Vector2f(400.f, 50.f));
 	{
 		auto ptr = static_cast<Button*>(bt1.get());
@@ -262,16 +277,24 @@ void Player::loadNextAge()
 		info.addValue(&_mobTemplate.at(1).price, "Price : ");
 
 		info.refresh();
-		ptr->setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/" + _currentAge + "/2.png"));
+		ptr->setTexture(*texture);
 		ptr->setClickEvent([&](bool isPressed)->void {
 			if (isPressed && _enableSpawn)
 			{
 				addToQueue(1);
 			}
 			});
+		core::Renderer::getInstance().addObject(std::move(bt1), base::object_type::gui);
 	}
 	auto bt2 = core::Renderer::getInstance().findAndRemove("Button");
+	if (bt2 == nullptr)
+	{
+		bt2 = std::make_unique<Button>(base::collider({ 0.f,68.f,0.f,68.f }));
+		bt2->setTag("Button");
+	}
+	texture = core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/" + _currentAge + "/3.png");
 	bt2->setPosition(sf::Vector2f(500.f, 50.f));
+	if(texture != nullptr)
 	{
 		auto ptr = static_cast<Button*>(bt2.get());
 		
@@ -289,16 +312,24 @@ void Player::loadNextAge()
 		info.addValue(&_mobTemplate.at(2).spawnTime, "Recruitment time : ");
 		info.addValue(&_mobTemplate.at(2).price, "Price : ");
 		info.refresh();
-		ptr->setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/" + _currentAge + "/3.png"));
+		ptr->setTexture(*texture);
 		ptr->setClickEvent([&](bool isPressed)->void {
 			if (isPressed && _enableSpawn)
 			{
 				addToQueue(2);
 			}
 			});
+		core::Renderer::getInstance().addObject(std::move(bt2), base::object_type::gui);
 	}
 	auto bt3 = core::Renderer::getInstance().findAndRemove("Button");
+	if (bt3 == nullptr)
+	{
+		bt3 = std::make_unique<Button>(base::collider({ 0.f,68.f,0.f,68.f }));
+		bt3->setTag("Button");
+	}
+	texture = core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/" + _currentAge + "/4.png");
 	bt3->setPosition(sf::Vector2f(700.f, 50.f));
+	if(texture!=nullptr)
 	{
 		auto ptr = static_cast<Button*>(bt3.get());
 		auto& info = ptr->getInfo();
@@ -317,14 +348,14 @@ void Player::loadNextAge()
 		info.addValue(&k.price, "Price : ");
 
 		info.refresh();
-		ptr->setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/" + _currentAge + "/4.png"));
-		ptr->setClickEvent([&](bool isPressed)->void {
+		ptr->setTexture(*texture);
+		ptr->setClickEvent([&,texture](bool isPressed)->void {
 			if (_enableSpawn && isPressed)
 			{
 				_drawCannonPlaces = true;
 				_enableSpawn = false;
 				std::unique_ptr<CannonSpawner> ptr = std::make_unique<CannonSpawner>();
-				ptr->setCallbackOnRelease([]()->void {
+				ptr->setCallbackOnRelease([&, texture]()->void {
 					auto& k = core::Renderer::getInstance().find("Player");
 					if (k != nullptr)
 					{
@@ -332,14 +363,22 @@ void Player::loadNextAge()
 						ptr->spawnCannon(0);
 					}
 					});
-				ptr->setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/"+_currentAge + "/4.png"));
+				ptr->setTexture(*texture);
 				core::Renderer::getInstance().addObject(std::move(ptr), base::object_type::gui);
 			}
 			});
+		core::Renderer::getInstance().addObject(std::move(bt3), base::object_type::gui);
 	}
 
 	auto bt4 = core::Renderer::getInstance().findAndRemove("Button");
+	if (bt4 == nullptr)
+	{
+		bt4 = std::make_unique<Button>(base::collider({ 0.f,68.f,0.f,68.f }));
+		bt4->setTag("Button");
+	}
+	texture = core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/" + _currentAge + "/5.png");
 	bt4->setPosition(sf::Vector2f(800.f, 50.f));
+	if(texture != nullptr)
 	{
 		auto ptr = static_cast<Button*>(bt4.get());
 		auto& info = ptr->getInfo();
@@ -358,14 +397,14 @@ void Player::loadNextAge()
 		info.addValue(&k.price, "Price : ");
 
 		info.refresh();
-		ptr->setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/" + _currentAge + "/5.png"));
-		ptr->setClickEvent([&](bool isPressed)->void {
+		ptr->setTexture(*texture);
+		ptr->setClickEvent([&,texture](bool isPressed)->void {
 			if (_enableSpawn && isPressed)
 			{
 				_drawCannonPlaces = true;
 				_enableSpawn = false;
 				std::unique_ptr<CannonSpawner> ptr = std::make_unique<CannonSpawner>();
-				ptr->setCallbackOnRelease([]()->void {
+				ptr->setCallbackOnRelease([&, texture]()->void {
 					auto& k = core::Renderer::getInstance().find("Player");
 					if (k != nullptr)
 					{
@@ -373,14 +412,22 @@ void Player::loadNextAge()
 						ptr->spawnCannon(1);
 					}
 					});
-				ptr->setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/" + _currentAge + "/5.png"));
+				ptr->setTexture(*texture);
 				core::Renderer::getInstance().addObject(std::move(ptr), base::object_type::gui);
 			}
 			});
+		core::Renderer::getInstance().addObject(std::move(bt4), base::object_type::gui);
 	}
 
 	auto bt5 = core::Renderer::getInstance().findAndRemove("Button");
+	if (bt5 == nullptr)
+	{
+		bt5 = std::make_unique<Button>(base::collider({ 0.f,68.f,0.f,68.f }));
+		bt5->setTag("Button");
+	}
+	texture = core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/" + _currentAge + "/6.png");
 	bt5->setPosition(sf::Vector2f(900.f, 50.f));
+	if(texture != nullptr)
 	{
 		auto ptr = static_cast<Button*>(bt5.get());
 		auto& info = ptr->getInfo();
@@ -399,14 +446,14 @@ void Player::loadNextAge()
 		info.addValue(&k.price, "Price : ");
 
 		info.refresh();
-		ptr->setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/" + _currentAge + "/6.png"));
-		ptr->setClickEvent([&](bool isPressed)->void {
+		ptr->setTexture(*texture);
+		ptr->setClickEvent([&,texture](bool isPressed)->void {
 			if (_enableSpawn && isPressed)
 			{
 				_drawCannonPlaces = true;
 				_enableSpawn = false;
 				std::unique_ptr<CannonSpawner> ptr = std::make_unique<CannonSpawner>();
-				ptr->setCallbackOnRelease([]()->void {
+				ptr->setCallbackOnRelease([&, texture]()->void {
 					auto& k = core::Renderer::getInstance().find("Player");
 					if (k != nullptr)
 					{
@@ -414,16 +461,10 @@ void Player::loadNextAge()
 						ptr->spawnCannon(2);
 					}
 					});
-				ptr->setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/" + _currentAge + "/6.png"));
+				ptr->setTexture(*texture);
 				core::Renderer::getInstance().addObject(std::move(ptr), base::object_type::gui);
 			}
 			});
+		core::Renderer::getInstance().addObject(std::move(bt5), base::object_type::gui);
 	}
-
-	core::Renderer::getInstance().addObject(std::move(bt0), base::object_type::gui);
-	core::Renderer::getInstance().addObject(std::move(bt1), base::object_type::gui);
-	core::Renderer::getInstance().addObject(std::move(bt2), base::object_type::gui);
-	core::Renderer::getInstance().addObject(std::move(bt3), base::object_type::gui);
-	core::Renderer::getInstance().addObject(std::move(bt4), base::object_type::gui);
-	core::Renderer::getInstance().addObject(std::move(bt5), base::object_type::gui);
 }

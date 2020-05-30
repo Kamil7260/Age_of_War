@@ -65,7 +65,7 @@ void Cannon::addClip(base::Clip clip, const std::string& name)
 
 		if (_longRange)
 		{
-			r+=110;
+			r+=100;
 			r = 180 - r;
 			x = std::cos(r * 3.14f / 180.f) * _rangeSpawn;
 			y = std::sin(r * 3.14f / 180.f) * _rangeSpawn;
