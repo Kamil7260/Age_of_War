@@ -23,10 +23,14 @@ public:
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
+	virtual void setCallbackOnMouseRelease(const std::function<void()>& func);
 	virtual void setClickEvent(const std::function<void(bool)>& func);
 protected:
 	sf::Sprite _sprite;
 	std::function<void(bool)> _onClickEvent;
+	std::function<void()> _onReleaseEvent;
+	bool _isReleaseCalled;
+
 	sf::RectangleShape _shadow;
 	bool _shadowDraw;
 	Info _infoBox;

@@ -62,20 +62,19 @@ void Cannon::addClip(base::Clip clip, const std::string& name)
 			x -= 0.05f;
 		}
 		std::unique_ptr<Bullet> bullet = std::make_unique<Bullet>(_minDMG,_maxDMG,_bulletSpeed, sf::Vector2f(x,y));
-
+		bullet->setRotation(static_cast<int>(_sprite->getRotation()));
 		if (_longRange)
 		{
 			r+=100;
 			r = 180 - r;
 			x = std::cos(r * 3.14f / 180.f) * _rangeSpawn;
 			y = std::sin(r * 3.14f / 180.f) * _rangeSpawn;
-			_bulletSpawnPoint = { _position.x - x, _position.y - y };
 		}
 		else {
 			x = 0.f;
 			y = 0.f;
 		}
-
+		_bulletSpawnPoint = { _position.x - x, _position.y - y };
 		bullet->setPosition(_bulletSpawnPoint);
 		bullet->setTexture(*_bulletTex);
 		bullet->setTeam(_team);

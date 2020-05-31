@@ -65,6 +65,9 @@ namespace base {
 		virtual bool isActive() const final { return _isActive; }
 		virtual void remove() final { _isActive = false; }
 
+		virtual void setRotation(const int rot) {
+			_rotation = rot;
+		}
 	protected:
 		std::string _tag;
 		bool _isActive;
@@ -73,5 +76,6 @@ namespace base {
 		sf::Vector2f _position;
 		sf::Vector2f _scale;
 		collider _myColider;
+		int _rotation;
 	};
 }

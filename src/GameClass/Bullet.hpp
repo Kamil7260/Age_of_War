@@ -20,7 +20,11 @@ public:
 	virtual void onCollision(std::unique_ptr<Actor>& collision) override;
 	virtual void onUpdate() override;
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
-
+	
+	virtual void setRotation(const int rot) override {
+		_rotation = rot;
+		_sprite.setRotation(static_cast<float>(rot));
+	}
 protected:
 	sf::Sprite _sprite;
 	sf::Vector2f _direction;
