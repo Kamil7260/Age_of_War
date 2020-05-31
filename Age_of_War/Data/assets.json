@@ -1,0 +1,242 @@
+[
+  {
+    "type": "Texture",
+    "path": "Assets/base/6.png"
+  },
+  {
+    "type": "Font",
+    "path": "Assets/fonts/1.ttf"
+  },
+  {
+    "type": "Font",
+    "path": "Assets/fonts/2.ttf"
+  },
+  {
+    "type": "Font",
+    "path": "Assets/fonts/3.ttf"
+  },
+  {
+    "type": "Font",
+    "path": "Assets/fonts/4.ttf"
+  },
+  {
+    "type": "Font",
+    "path": "Assets/fonts/5.ttf"
+  },
+  {
+    "type": "Font",
+    "path": "Assets/fonts/6.ttf"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/ammunition/I/C0.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/background/1.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/base/I.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/base/II.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/base/III.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/base/IV.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/base/V.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/I/1.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/I/2.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/I/3.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/4.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/I/4.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/I/5.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/I/6.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/5.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/ammunition/I/C1.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/ammunition/I/C2.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/II/1.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/II/2.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/II/3.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/II/4.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/II/5.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/ammunition/II/C0.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/ammunition/II/C1.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/III/1.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/III/2.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/III/3.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/III/4.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/III/5.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/III/6.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/ammunition/III/C0.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/ammunition/III/C1.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/ammunition/III/C2.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/ammunition/IV/C0.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/ammunition/IV/C1.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/ammunition/IV/C2.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/ammunition/V/C0.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/ammunition/V/C1.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/ammunition/V/C2.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/IV/1.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/IV/2.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/IV/3.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/IV/4.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/IV/5.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/IV/6.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/V/1.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/V/2.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/V/3.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/V/4.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/V/5.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/V/6.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/1.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/2.png"
+  }
+]

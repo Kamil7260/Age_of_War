@@ -1,0 +1,516 @@
+[
+  {
+    "name": "IT0_walk",
+    "count": 43,
+    "path": "Assets/mobs/I/T0/walk/",
+    "origin": [ 27, 45 ]
+  },
+
+  {
+    "name": "IT0_idle",
+    "count": 50,
+    "path": "Assets/mobs/I/T0/idle/",
+    "origin": [ 12, 45 ]
+  },
+
+  {
+    "name": "IT0_die",
+    "count": 24,
+    "path": "Assets/mobs/I/T0/die/",
+    "origin": [ 72, 45 ]
+  },
+  {
+    "name": "IT0_attack",
+    "count": 40,
+    "path": "Assets/mobs/I/T0/attack/",
+    "origin": [ 39, 72 ]
+  },
+  {
+    "name": "IT1_attack",
+    "count": 40,
+    "path": "Assets/mobs/I/T1/attack/",
+    "origin": [ 25, 60 ]
+  },
+  {
+    "name": "IT1_die",
+    "count": 23,
+    "path": "Assets/mobs/I/T1/die/",
+    "origin": [ 75, 40 ]
+  },
+  {
+    "name": "IT1_idle",
+    "count": 50,
+    "path": "Assets/mobs/I/T1/idle/",
+    "origin": [ 15, 40 ]
+  },
+  {
+    "name": "IT1_idleshot",
+    "count": 32,
+    "path": "Assets/mobs/I/T1/idleshot/",
+    "origin": [ 15, 40 ]
+  },
+  {
+    "name": "IT1_walk",
+    "count": 43,
+    "path": "Assets/mobs/I/T1/walk/",
+    "origin": [ 30, 40 ]
+  },
+
+  {
+    "name": "IT1_walkshot",
+    "count": 43,
+    "path": "Assets/mobs/I/T1/walkshot/",
+    "origin": [ 30, 40 ]
+  },
+  {
+    "name": "IT2_attack",
+    "count": 45,
+    "path": "Assets/mobs/I/T2/attack/",
+    "origin": [ 75, 85 ]
+  },
+
+  {
+    "name": "IT2_die",
+    "count": 50,
+    "path": "Assets/mobs/I/T2/die/",
+    "origin": [ 170, 95 ]
+  },
+  {
+    "name": "IT2_idle",
+    "count": 48,
+    "path": "Assets/mobs/I/T2/idle/",
+    "origin": [ 75, 90 ]
+  },
+  {
+    "name": "IT2_walk",
+    "count": 40,
+    "path": "Assets/mobs/I/T2/walk/",
+    "origin": [ 75, 85 ]
+  },
+  {
+    "name": "IC0",
+    "count": 32,
+    "path": "Assets/cannons/I/C0/",
+    "origin": [ 35, 15 ]
+  },
+  {
+    "name": "IC1",
+    "count": 10,
+    "path": "Assets/cannons/I/C1/",
+    "origin": [ 36, 36 ]
+  },
+  {
+    "name": "IC2",
+    "count": 55,
+    "path": "Assets/cannons/I/C2/",
+    "origin": [ 90, 90 ]
+  },
+  {
+    "name": "coin",
+    "count": 9,
+    "path": "Assets/other/",
+    "origin": [ 16, 16 ]
+  },
+  {
+    "name": "IIT0_attack",
+    "count": 48,
+    "path": "Assets/mobs/II/T0/attack/",
+    "origin": [ 50, 110 ]
+  },
+  {
+    "name": "IIT0_die",
+    "count": 22,
+    "path": "Assets/mobs/II/T0/die/",
+    "origin": [ 30, 50 ]
+  },
+  {
+    "name": "IIT0_idle",
+    "count": 28,
+    "path": "Assets/mobs/II/T0/idle/",
+    "origin": [ 25, 50 ]
+  },
+  {
+    "name": "IIT0_walk",
+    "count": 20,
+    "path": "Assets/mobs/II/T0/walk/",
+    "origin": [ 25, 50 ]
+  },
+  {
+    "name": "IIT1_attack",
+    "count": 99,
+    "path": "Assets/mobs/II/T1/attack/",
+    "origin": [ 35, 80 ]
+  },
+  {
+    "name": "IIT1_die",
+    "count": 44,
+    "path": "Assets/mobs/II/T1/die/",
+    "origin": [ 15, 45 ]
+  },
+  {
+    "name": "IIT1_idle",
+    "count": 55,
+    "path": "Assets/mobs/II/T1/idle/",
+    "origin": [ 15, 45 ]
+  },
+  {
+    "name": "IIT1_idleshot",
+    "count": 40,
+    "path": "Assets/mobs/II/T1/shot/",
+    "origin": [ 15, 50 ]
+  },
+  {
+    "name": "IIT1_walk",
+    "count": 40,
+    "path": "Assets/mobs/II/T1/walk/",
+    "origin": [ 25, 50 ]
+  },
+  {
+    "name": "IIT1_walkshot",
+    "count": 40,
+    "path": "Assets/mobs/II/T1/walkshot/",
+    "origin": [ 25, 50 ]
+  },
+  {
+    "name": "IIT2_attack",
+    "count": 52,
+    "path": "Assets/mobs/II/T2/attack/",
+    "origin": [ 70, 75 ]
+  },
+  {
+    "name": "IIT2_die",
+    "count": 22,
+    "path": "Assets/mobs/II/T2/die/",
+    "origin": [ 75, 80 ]
+  },
+  {
+    "name": "IIT2_idle",
+    "count": 120,
+    "path": "Assets/mobs/II/T2/idle/",
+    "origin": [ 65, 80 ]
+  },
+  {
+    "name": "IIT2_walk",
+    "count": 40,
+    "path": "Assets/mobs/II/T2/walk/",
+    "origin": [ 65, 80 ]
+  },
+  {
+    "name": "IIC1",
+    "count": 99,
+    "path": "Assets/cannons/II/C1/",
+    "origin": [ 70, 65 ]
+  },
+  {
+    "name": "IIC0",
+    "count": 99,
+    "path": "Assets/cannons/II/C0/",
+    "origin": [ 70, 65 ]
+  },
+  {
+    "name": "IIIT0_attack",
+    "count": 84,
+    "path": "Assets/mobs/III/T0/attack/",
+    "origin": [ 35, 120 ]
+  },
+  {
+    "name": "IIIT0_idle",
+    "count": 125,
+    "path": "Assets/mobs/III/T0/idle/",
+    "origin": [ 35, 65 ]
+  },
+  {
+    "name": "IIIT0_walk",
+    "count": 47,
+    "path": "Assets/mobs/III/T0/walk/",
+    "origin": [ 35, 60 ]
+  },
+  {
+    "name": "IIIT0_die",
+    "count": 35,
+    "path": "Assets/mobs/III/T0/die/",
+    "origin": [ 90, 80 ]
+  },
+  {
+    "name": "IIIT1_die",
+    "count": 49,
+    "path": "Assets/mobs/III/T1/die/",
+    "origin": [ 60, 70 ]
+  },
+  {
+    "name": "IIIT1_idle",
+    "count": 85,
+    "path": "Assets/mobs/III/T1/idle/",
+    "origin": [ 25, 65 ]
+  },
+  {
+    "name": "IIIT1_idleshot",
+    "count": 46,
+    "path": "Assets/mobs/III/T1/shot/",
+    "origin": [ 25, 65 ]
+  },
+  {
+    "name": "IIIT1_attack",
+    "count": 46,
+    "path": "Assets/mobs/III/T1/attack/",
+    "origin": [ 25, 65 ]
+  },
+  {
+    "name": "IIIT1_walk",
+    "count": 47,
+    "path": "Assets/mobs/III/T1/walk/",
+    "origin": [ 30, 70 ]
+  },
+  {
+    "name": "IIIT1_walkshot",
+    "count": 48,
+    "path": "Assets/mobs/III/T1/walkshot/",
+    "origin": [ 30, 70 ]
+  },
+  {
+    "name": "IIIT2_die",
+    "count": 42,
+    "path": "Assets/mobs/III/T2/die/",
+    "origin": [ 65, 55 ]
+  },
+  {
+    "name": "IIIT2_idle",
+    "count": 110,
+    "path": "Assets/mobs/III/T2/idle/",
+    "origin": [ 20, 70 ]
+  },
+  {
+    "name": "IIIT2_attack",
+    "count": 78,
+    "path": "Assets/mobs/III/T2/attack/",
+    "origin": [ 30, 65 ]
+  },
+  {
+    "name": "IIIT2_walk",
+    "count": 48,
+    "path": "Assets/mobs/III/T2/walk/",
+    "origin": [ 30, 65 ]
+  },
+  {
+    "name": "IIIC0",
+    "count": 45,
+    "path": "Assets/cannons/III/C0/",
+    "origin": [ 20, 14 ]
+  },
+  {
+    "name": "IIIC1",
+    "count": 80,
+    "path": "Assets/cannons/III/C1/",
+    "origin": [ 30, 14 ]
+  },
+  {
+    "name": "IIIC2",
+    "count": 80,
+    "path": "Assets/cannons/III/C2/",
+    "origin": [ 30, 14 ]
+  },
+  {
+    "name": "IVC0",
+    "count": 45,
+    "path": "Assets/cannons/IV/C0/",
+    "origin": [ 20, 25 ]
+  },
+  {
+    "name": "IVC1",
+    "count": 40,
+    "path": "Assets/cannons/IV/C1/",
+    "origin": [ 26, 26 ]
+  },
+  {
+    "name": "IVC2",
+    "count": 20,
+    "path": "Assets/cannons/IV/C2/",
+    "origin": [ 20, 25 ]
+  },
+  {
+    "name": "IVT0_attack",
+    "count": 30,
+    "path": "Assets/mobs/IV/T0/attack/",
+    "origin": [ 60, 60 ]
+  },
+  {
+    "name": "IVT0_die",
+    "count": 28,
+    "path": "Assets/mobs/IV/T0/die/",
+    "origin": [ 40, 55 ]
+  },
+  {
+    "name": "IVT0_idle",
+    "count": 129,
+    "path": "Assets/mobs/IV/T0/idle/",
+    "origin": [ 35, 55 ]
+  },
+  {
+    "name": "IVT0_walk",
+    "count": 49,
+    "path": "Assets/mobs/IV/T0/walk/",
+    "origin": [ 40, 55 ]
+  },
+  {
+    "name": "IVT1_attack",
+    "count": 21,
+    "path": "Assets/mobs/IV/T1/attack/",
+    "origin": [ 20, 55 ]
+  },
+  {
+    "name": "IVT1_die",
+    "count": 21,
+    "path": "Assets/mobs/IV/T1/die/",
+    "origin": [ 40, 55 ]
+  },
+  {
+    "name": "IVT1_idle",
+    "count": 94,
+    "path": "Assets/mobs/IV/T1/idle/",
+    "origin": [ 20, 55 ]
+  },
+  {
+    "name": "IVT1_idleshot",
+    "count": 21,
+    "path": "Assets/mobs/IV/T1/shot/",
+    "origin": [ 20, 55 ]
+  },
+  {
+    "name": "IVT1_walk",
+    "count": 47,
+    "path": "Assets/mobs/IV/T1/walk/",
+    "origin": [ 40, 55 ]
+  },
+  {
+    "name": "IVT1_walkshot",
+    "count": 48,
+    "path": "Assets/mobs/IV/T1/walkshot/",
+    "origin": [ 40, 50 ]
+  },
+  {
+    "name": "IVT2_die",
+    "count": 31,
+    "path": "Assets/mobs/IV/T2/die/",
+    "origin": [ 130, 240 ]
+  },
+  {
+    "name": "IVT2_idle",
+    "count": 1,
+    "path": "Assets/mobs/IV/T2/idle/",
+    "origin": [ 140, 45 ]
+  },
+  {
+    "name": "IVT2_attack",
+    "count": 63,
+    "path": "Assets/mobs/IV/T2/attack/",
+    "origin": [ 135, 60 ]
+  },
+  {
+    "name": "IVT2_walk",
+    "count": 10,
+    "path": "Assets/mobs/IV/T2/walk/",
+    "origin": [ 135, 45 ]
+  },
+  {
+    "name": "VC0",
+    "count": 40,
+    "path": "Assets/cannons/V/C0/",
+    "origin": [ 26, 26 ]
+  },
+  {
+    "name": "VC1",
+    "count": 3,
+    "path": "Assets/cannons/V/C1/",
+    "origin": [ 10, 25 ]
+  },
+  {
+    "name": "VC2",
+    "count": 3,
+    "path": "Assets/cannons/V/C2/",
+    "origin": [ 20, 30 ]
+  },
+  {
+    "name": "VT0_attack",
+    "count": 37,
+    "path": "Assets/mobs/V/T0/attack/",
+    "origin": [ 85, 125 ]
+  },
+  {
+    "name": "VT0_die",
+    "count": 40,
+    "path": "Assets/mobs/V/T0/die/",
+    "origin": [ 115, 95 ]
+  },
+  {
+    "name": "VT0_idle",
+    "count": 58,
+    "path": "Assets/mobs/V/T0/idle/",
+    "origin": [ 95, 95 ]
+  },
+  {
+    "name": "VT0_walk",
+    "count": 47,
+    "path": "Assets/mobs/V/T0/walk/",
+    "origin": [ 105, 95 ]
+  },
+  {
+    "name": "VT1_attack",
+    "count": 30,
+    "path": "Assets/mobs/V/T1/attack/",
+    "origin": [ 50, 95 ]
+  },
+  {
+    "name": "VT1_die",
+    "count": 49,
+    "path": "Assets/mobs/V/T1/die/",
+    "origin": [ 85, 65 ]
+  },
+  {
+    "name": "VT1_idle",
+    "count": 94,
+    "path": "Assets/mobs/V/T1/idle/",
+    "origin": [ 30, 65 ]
+  },
+  {
+    "name": "VT1_idleshot",
+    "count": 14,
+    "path": "Assets/mobs/V/T1/idleshot/",
+    "origin": [ 30, 65 ]
+  },
+  {
+    "name": "VT1_walk",
+    "count": 34,
+    "path": "Assets/mobs/V/T1/walk/",
+    "origin": [ 45, 65 ]
+  },
+  {
+    "name": "VT1_walkshot",
+    "count": 38,
+    "path": "Assets/mobs/V/T1/walkshot/",
+    "origin": [ 45, 65 ]
+  },
+  {
+    "name": "VT2_attack",
+    "count": 90,
+    "path": "Assets/mobs/V/T2/attack/",
+    "origin": [ 120, 130 ]
+  },
+  {
+    "name": "VT2_die",
+    "count": 31,
+    "path": "Assets/mobs/V/T2/die/",
+    "origin": [ 200, 280 ]
+  },
+  {
+    "name": "VT2_idle",
+    "count": 28,
+    "path": "Assets/mobs/V/T2/die/",
+    "origin": [ 115, 75 ]
+  },
+  {
+    "name": "VT2_walk",
+    "count": 28,
+    "path": "Assets/mobs/V/T2/walk/",
+    "origin": [ 115, 75 ]
+  }
+]

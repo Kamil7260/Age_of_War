@@ -1,0 +1,195 @@
+{
+  "I": {
+    "C0": {
+      "name": "Automatic slingshot",
+      "animationSpeed": 0.02,
+      "maxDMG": 20,
+      "minDMG": 10,
+      "range": 800,
+      "reloadTime": 2,
+      "bulletSpeed": 400,
+      "price": 200,
+      "bulletSpawn": 0,
+      "long_range": false,
+      "firespeed": 2.5
+    },
+    "C1": {
+      "name": "Egg thrower",
+      "animationSpeed": 0.02,
+      "maxDMG": 20,
+      "minDMG": 10,
+      "range": 800,
+      "reloadTime": 0.5,
+      "bulletSpeed": 400,
+      "price": 200,
+      "bulletSpawn": 0,
+      "long_range": false,
+      "firespeed": 2.5
+    },
+    "C2": {
+      "name": "Stone thrower",
+      "animationSpeed": 0.02,
+      "maxDMG": 10,
+      "minDMG": 4,
+      "range": 1600,
+      "reloadTime": 0.5,
+      "bulletSpeed": 400,
+      "price": 50,
+      "bulletSpawn": 100,
+      "long_range": true,
+      "firespeed": 0.2
+    }
+
+  },
+  "II": {
+    "C0": {
+      "name": "Catapult",
+      "animationSpeed": 0.02,
+      "maxDMG": 20,
+      "minDMG": 10,
+      "range": 800,
+      "reloadTime": 2,
+      "bulletSpeed": 400,
+      "price": 50,
+      "bulletSpawn": 70,
+      "long_range": true,
+      "firespeed": 0.5
+    },
+    "C1": {
+      "name": "Catapult2",
+      "animationSpeed": 0.02,
+      "maxDMG": 20,
+      "minDMG": 10,
+      "range": 800,
+      "reloadTime": 2,
+      "bulletSpeed": 400,
+      "price": 50,
+      "bulletSpawn": 70,
+      "long_range": true,
+      "firespeed": 0.5
+    }
+  },
+  "III": {
+    "C0": {
+      "name": "Cannon",
+      "animationSpeed": 0.02,
+      "maxDMG": 20,
+      "minDMG": 10,
+      "range": 800,
+      "reloadTime": 2,
+      "bulletSpeed": 400,
+      "price": 50,
+      "bulletSpawn": 70,
+      "long_range": false,
+      "firespeed": 0.5
+    },
+    "C1": {
+      "name": "Ripper",
+      "animationSpeed": 0.02,
+      "maxDMG": 20,
+      "minDMG": 10,
+      "range": 800,
+      "reloadTime": 2,
+      "bulletSpeed": 400,
+      "price": 50,
+      "bulletSpawn": 70,
+      "long_range": false,
+      "firespeed": 0.5
+    },
+    "C2": {
+      "name": "Elite cannon",
+      "animationSpeed": 0.02,
+      "maxDMG": 20,
+      "minDMG": 10,
+      "range": 800,
+      "reloadTime": 2,
+      "bulletSpeed": 400,
+      "price": 50,
+      "bulletSpawn": 70,
+      "long_range": false,
+      "firespeed": 0.5
+    }
+  },
+  "IV": {
+    "C0": {
+      "name": "Carbine",
+      "animationSpeed": 0.02,
+      "maxDMG": 20,
+      "minDMG": 10,
+      "range": 800,
+      "reloadTime": 2,
+      "bulletSpeed": 400,
+      "price": 50,
+      "bulletSpawn": 70,
+      "long_range": false,
+      "firespeed": 0.5
+    },
+    "C1": {
+      "name": "Launcher",
+      "animationSpeed": 0.02,
+      "maxDMG": 20,
+      "minDMG": 10,
+      "range": 800,
+      "reloadTime": 2,
+      "bulletSpeed": 400,
+      "price": 50,
+      "bulletSpawn": 70,
+      "long_range": false,
+      "firespeed": 0.5
+    },
+    "C2": {
+      "name": "Elite Carbine",
+      "animationSpeed": 0.02,
+      "maxDMG": 20,
+      "minDMG": 10,
+      "range": 800,
+      "reloadTime": 2,
+      "bulletSpeed": 400,
+      "price": 50,
+      "bulletSpawn": 70,
+      "long_range": false,
+      "firespeed": 0.5
+    }
+  },
+  "V": {
+    "C0": {
+      "name": "Laser1",
+      "animationSpeed": 0.2,
+      "maxDMG": 20,
+      "minDMG": 10,
+      "range": 800,
+      "reloadTime": 2,
+      "bulletSpeed": 400,
+      "price": 50,
+      "bulletSpawn": 70,
+      "long_range": false,
+      "firespeed": 0.2
+    },
+    "C1": {
+      "name": "Laser2",
+      "animationSpeed": 0.2,
+      "maxDMG": 20,
+      "minDMG": 10,
+      "range": 800,
+      "reloadTime": 2,
+      "bulletSpeed": 400,
+      "price": 50,
+      "bulletSpawn": 70,
+      "long_range": false,
+      "firespeed": 0.2
+    },
+    "C2": {
+      "name": "Laser3",
+      "animationSpeed": 0.2,
+      "maxDMG": 20,
+      "minDMG": 10,
+      "range": 800,
+      "reloadTime": 2,
+      "bulletSpeed": 400,
+      "price": 50,
+      "bulletSpawn": 70,
+      "long_range": false,
+      "firespeed": 0.2
+    }
+  }
+}
