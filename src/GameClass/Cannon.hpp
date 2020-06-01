@@ -3,7 +3,7 @@
 
 class Cannon : public base::ActorAnimator {
 public:
-	Cannon(int maxDMG = 5, int minDMG = 10, int range = 100, float reloadTime = 3.f, float bulletspeed = 400.f, const float deltaBulletPos = 0, const float fireSpeed = 2.f);
+	Cannon(int maxDMG = 5, int minDMG = 10, int range = 100, float reloadTime = 3.f, float bulletspeed = 400.f, const float deltaBulletPos = 0, const float fireSpeed = 2.f, const int sellPrice = 20);
 	Cannon(const Cannon& source) = default;
 	Cannon(Cannon&& source) = default;
 
@@ -24,6 +24,11 @@ public:
 	virtual void longRange() {
 		_longRange = true;
 	};
+
+	virtual int getSellPrice() const {
+		return _sellPrice;
+	}
+
 protected:
 	int _maxDMG;
 	int _minDMG;
@@ -37,4 +42,5 @@ protected:
 	float _rangeSpawn;
 	bool _longRange;
 	float _fireSpeed;
+	int _sellPrice;
 };

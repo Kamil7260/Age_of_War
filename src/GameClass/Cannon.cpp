@@ -5,9 +5,9 @@
 #include "../Core/Application.hpp"
 #include "Bullet.hpp"
 
-Cannon::Cannon(int maxDMG, int minDMG, int range, float reloadTime,float bulletspeed, const float deltaBulletPos, const float fireSpeed)
+Cannon::Cannon(int maxDMG, int minDMG, int range, float reloadTime,float bulletspeed, const float deltaBulletPos, const float fireSpeed,const int sellPrice)
 	:_maxDMG(maxDMG), _minDMG(minDMG), _range(range), _reloadTime(reloadTime), _curTime(0.f), _enableShot(true),
-	_bulletSpeed(bulletspeed), _rangeSpawn(deltaBulletPos), _longRange(false), _fireSpeed(fireSpeed)
+	_bulletSpeed(bulletspeed), _rangeSpawn(deltaBulletPos), _longRange(false), _fireSpeed(fireSpeed), _sellPrice(sellPrice)
 {
 	_team = base::team::player;
 }

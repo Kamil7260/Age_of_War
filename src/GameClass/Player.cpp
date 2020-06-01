@@ -10,7 +10,7 @@
 #include "CoinCounter.hpp"
 
 Player::Player()
-	:_enableSpawn(true), _drawCannonPlaces(false),_coinCount(100)
+	:_enableSpawn(true), _drawCannonPlaces(false), _coinCount(100), _wantSell(false), _sellClickCount(0)
 {
 	_cannon = nullptr;
 	_tag = "Player";
@@ -32,11 +32,6 @@ Player::Player()
 	button->setTag("Button");
 	core::Renderer::getInstance().forceAddObject(std::move(button), base::object_type::gui);
 
-	 
-	button = std::make_unique<Button>(base::collider({ 0.f,68.f,0.f,68.f }));
-	button->setTag("Button");
-    core::Renderer::getInstance().forceAddObject(std::move(button), base::object_type::gui);
-	
 	button = std::make_unique<Button>(base::collider({ 0.f,68.f,0.f,68.f }));
 	button->setTag("Button");
 	core::Renderer::getInstance().forceAddObject(std::move(button), base::object_type::gui);
@@ -52,6 +47,22 @@ Player::Player()
 	button = std::make_unique<Button>(base::collider({ 0.f,68.f,0.f,68.f }));
 	button->setTag("Button");
 	core::Renderer::getInstance().forceAddObject(std::move(button), base::object_type::gui);
+
+	button = std::make_unique<Button>(base::collider({ 0.f,68.f,0.f,68.f }));
+	button->setTag("Button");
+	core::Renderer::getInstance().forceAddObject(std::move(button), base::object_type::gui);
+
+	button = std::make_unique<Button>(base::collider({ 0.f,68.f,0.f,68.f }));
+	button->setTag("SellButton");
+	button->setClickEvent([&](bool isPressed)->void {
+		if (isPressed) {
+			this->sellActive();
+		}
+	});
+	button->setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/2.png"));
+
+	button->setPosition(sf::Vector2f(1100, 50));
+	core::Renderer::getInstance().addObject(std::move(button), base::object_type::gui);
 	loadNextAge();
 
 	std::unique_ptr<CoinCounter> coin = std::make_unique<CoinCounter>(&_coinCount);
@@ -93,13 +104,14 @@ void Player::onUpdate()
 	{
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::K))
 		{
-			_currentAge = "II";
+			_currentAge = "V";
 			loadNextAge();
 		}
 		if (!sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
 			_enableSpawn = true;
-			_drawCannonPlaces = false;
+			if(!_wantSell)
+				_drawCannonPlaces = false;
 		}
 	}
 	else _timer += core::Application::getInstance().getTime();
@@ -107,6 +119,33 @@ void Player::onUpdate()
 	if (_cannon != nullptr)
 	{
 		_cannon->onUpdate();
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		{
+			if (_wantSell)
+			{
+				++_sellClickCount;
+				if (_sellClickCount > 1)
+				{
+					auto pos = _cannon->getPosition();
+					auto mPos = core::Renderer::getInstance().getMousePosition();
+					if (pos.x + 30.f > mPos.x && pos.x - 30 < mPos.x)
+					{
+						if (pos.y - 30 < mPos.y && pos.y + 30.f > mPos.y)
+						{
+							_coinCount += _cannon->getSellPrice();
+							_cannon = nullptr;
+						}
+					}
+					_sellClickCount = 0;
+					_wantSell = false;
+					_drawCannonPlaces = false;
+					sellCanceled();
+				}
+			}
+			else {
+				_sellClickCount = 0;
+			}
+		}
 	}
 }
 
@@ -116,6 +155,8 @@ void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	if (_cannon != nullptr)
 	{
 		target.draw(*_cannon, states);
+		if(_wantSell)
+			target.draw(_cannonPlace, states);
 	}
 	else if (_drawCannonPlaces)
 	{
@@ -187,7 +228,7 @@ void Player::spawnCannon(const int type)
 			{
 				auto& k = _cannonTemplate.at(type);
 				std::string name = _currentAge + "C" + std::to_string(type);
-				_cannon = std::make_unique<Cannon>(k.maxDMG, k.minDMG, k.range,k.reloadTime,k.bulletSpeed,k.bulletPosition,k.fireSpeed);
+				_cannon = std::make_unique<Cannon>(k.maxDMG, k.minDMG, k.range,k.reloadTime,k.bulletSpeed,k.bulletPosition,k.fireSpeed,k.price/2);
 				if (k.long_range)
 					_cannon->longRange();
 				auto clip = core::Application::getInstance().getClip(name);
@@ -200,6 +241,23 @@ void Player::spawnCannon(const int type)
 			}
 		}
 	}
+}
+
+void Player::sellActive()
+{
+	if (_cannon != nullptr)
+	{
+		_drawCannonPlaces = true;
+		_wantSell = true;
+		core::Application::getInstance().setCursor(1);
+	}
+	_sellClickCount = 0;
+}
+
+void Player::sellCanceled()
+{
+	_wantSell = false;
+	core::Application::getInstance().setCursor(0);
 }
 
 void Player::loadNextAge()

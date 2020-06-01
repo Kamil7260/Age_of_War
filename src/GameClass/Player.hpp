@@ -35,6 +35,9 @@ public:
 
 	virtual void spawnCannon(const int type);
 
+	virtual void sellActive();
+	virtual void sellCanceled();
+
 	virtual void loadNextAge();
 
 	virtual void income(const int value) {
@@ -52,5 +55,8 @@ private:
 	std::unique_ptr<Cannon> _cannon;
 
 	int _coinCount;
+	bool _wantSell;
+
+	int _sellClickCount;
 };
 
