@@ -238,5 +238,13 @@
   {
     "type": "Texture",
     "path": "Assets/gui/2.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/3.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/6.png"
   }
 ]

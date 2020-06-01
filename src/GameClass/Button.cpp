@@ -1,7 +1,7 @@
 #include "Button.hpp"
 
 Button::Button(const base::collider& collider)
-	:Actor(collider), _onClickEvent(nullptr),_shadowDraw(false), _isCollided(false), _isReleaseCalled(true)
+	:Actor(collider), _onClickEvent(nullptr),_shadowDraw(false), _isCollided(false), _isReleaseCalled(true),_drawBox(false)
 {
 	_shadow.setFillColor(sf::Color::White);
 	_shadow.setFillColor(sf::Color(255, 255, 255, 60));

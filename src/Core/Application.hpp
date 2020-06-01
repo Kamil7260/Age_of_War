@@ -33,6 +33,8 @@ public:
 		return _cannonInfoJson;
 	}
 
+	virtual void setCursor(const unsigned int type);
+
 	~Application() = default;
 	Application(const Application&) = delete;
 	Application(Application&&) = delete;
@@ -48,5 +50,7 @@ private:
 	sf::Clock _clock;
 	float _deltaTime;
 	std::unique_ptr<ClipManager> _clips;
+	sf::Sprite _cursor;
+	std::array<std::shared_ptr<sf::Texture>, 2> _cursorTextures;
 };
 }

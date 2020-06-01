@@ -87,6 +87,13 @@ void core::Application::run()
 	std::unique_ptr<Enemy> enemy = std::make_unique<Enemy>();
 	enemy->setPosition(sf::Vector2f(2900, 870));
 	renderer.addEnemyObject(std::move(enemy));
+	
+
+	_cursorTextures.at(0) = textureManager.get("Assets/gui/3.png");
+	_cursorTextures.at(1) = textureManager.get("Assets/gui/6.png");
+
+	setCursor(0);
+	window->setMouseCursorVisible(false);
 
 	float lastFpsTimeCheck = 0.f;
 	sf::Text fpsPlayer;
@@ -125,11 +132,13 @@ void core::Application::run()
 			}
 		}
 
+		_cursor.setPosition(static_cast<sf::Vector2f>(renderer.getMousePosition()));
 		window->clear();
 		renderer.draw();
 
 		window->draw(fpsPlayer);
 
+		window->draw(_cursor);
 		window->display();
 		_deltaTime = _clock.getElapsedTime().asSeconds() - frameStartTime;
 		lastFpsTimeCheck += _deltaTime;
@@ -149,6 +158,13 @@ void core::Application::run()
 const base::Clip& core::Application::getClip(const std::string& name)
 {
 	return *_clips->getClip(name);
+}
+
+void core::Application::setCursor(const unsigned int type)
+{
+	auto& k = _cursorTextures.at(type);
+	_cursor.setOrigin(sf::Vector2f(k->getSize().x / 2.f, k->getSize().y / 2.f));
+	_cursor.setTexture(*k, true);
 }
 
 void core::Application::assetLoader()
