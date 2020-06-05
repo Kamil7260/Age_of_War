@@ -1,7 +1,7 @@
 #include <random>
 #include "../Core/Application.hpp"
 #include "../Core/ResourceManager.hpp"
-
+#include "../Base/Stronghold.hpp"
 
 #include "Range.hpp"
 #include "TextDisplay.hpp"
@@ -126,6 +126,7 @@ void Range::onUpdate()
 	updateAnimator();
 }
 
+
 void Range::damage(int dmg)
 {
 	Mob::damage(dmg);
@@ -179,6 +180,24 @@ void Range::onCollision(std::unique_ptr<base::Actor>& collision)
 
 			return;
 		}
+
+		if (collision->getTag() == "Player" || collision->getTag() == "Enemy")
+		{
+			if (_attackTimer > _speedAttack)
+			{
+				_attackTimer = 0.f;
+				_enableAttack = false;
+				if (_hp <= 0) return;
+				std::random_device mch;
+				std::default_random_engine generator(mch());
+				std::uniform_int_distribution<int> distribution(_attack, _maxAttack);
+				int attack_roll = distribution(generator);
+
+				auto ptr = static_cast<base::Stronghold*>(collision.get());
+				ptr->damage(attack_roll);
+			}
+		}
+
 		if (_currentClipName != _attackClip && _hp > 0)
 		{
 			play(_attackClip);

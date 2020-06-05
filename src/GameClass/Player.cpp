@@ -8,6 +8,7 @@
 #include "QueueManager.hpp"
 #include "CannonSpawner.hpp"
 #include "Counter.hpp"
+#include "HpBar.hpp"
 
 Player::Player()
 	:_enableSpawn(true), _drawCannonPlaces(false), _coinCount(10000), _wantSell(false), _sellClickCount(0), _baseUpgrade(1), _expCount(1), _upgradeCondition(1000), _cannonPlaceCost(1000)
@@ -20,6 +21,15 @@ Player::Player()
 	_myColider = { 111.f,111.f,111.f,111.f };
 
 	_ages = { "I","II","III","IV","V" };
+	auto hp = std::make_unique<HpBar>(&_hp, 24, 250);
+	hp->setPosition(sf::Vector2f(20.f, 800));
+	hp->setCallbackOnDie([&]()->void {
+		auto tex = core::ResourceManager<sf::Texture>::getInstance().get("Assets/frames/2.png");
+		core::Application::getInstance().freezeScreen(*tex);
+		});
+	hp->setFont(*core::ResourceManager<sf::Font>::getInstance().get("Assets/fonts/3.ttf"));
+	hp->setCharacterSize(15);
+	core::Renderer::getInstance().addObject(std::move(hp), base::object_type::gui);
 
 	for (auto& k : _cannonPlaces)
 	{
@@ -145,6 +155,7 @@ Player::Player()
 	auto ek = core::Application::getInstance().getClip("star");
 	exp->addClip(std::move(ek), "star");
 	core::Renderer::getInstance().addObject(std::move(exp), base::object_type::gui);
+
 }
 
 void Player::setPosition(const sf::Vector2f& pos)

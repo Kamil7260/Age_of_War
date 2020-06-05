@@ -29,4 +29,5 @@ private:
 	sf::Sprite _sprite;
 	std::array<base::unitInfo, 3> _mobTemplate;
 	std::string _currentAge;
+	
 };

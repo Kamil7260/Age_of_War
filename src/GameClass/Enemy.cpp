@@ -3,16 +3,27 @@
 #include "../Core/Application.hpp"
 #include "../GameClass/Melee.hpp"
 #include "../GameClass/Range.hpp"
-
+#include "HpBar.hpp"
 Enemy::Enemy()
 	:_timer(0.f)
 {
 	_currentAge = "I";
+	_tag = "Enemy";
 	_team = base::team::enemy;
 	_sprite.setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/base/I.png"));
 	setScale(sf::Vector2f(-1.f, 1.f));
 	_sprite.setOrigin(275.f, 170.f);
 	_myColider = { 131.f,131.f,131.f,131.f };
+
+	auto hp = std::make_unique<HpBar>(&_hp, 24, 250);
+	hp->setPosition(sf::Vector2f(70.f, 800));
+	hp->setCallbackOnDie([&]()->void {
+		auto tex = core::ResourceManager<sf::Texture>::getInstance().get("Assets/frames/1.png");
+		core::Application::getInstance().freezeScreen(*tex);
+		});
+	hp->setFont(*core::ResourceManager<sf::Font>::getInstance().get("Assets/fonts/3.ttf"));
+	hp->setCharacterSize(15);
+	core::Renderer::getInstance().addObject(std::move(hp), base::object_type::gui);
 
 	_mobTemplate.at(0) = base::loadUnitFromJson(0, _currentAge);
 	_mobTemplate.at(1) = base::loadUnitFromJson(1, _currentAge);
