@@ -2,16 +2,16 @@
 
 #include "../Base/ActorAnimator.hpp"
 
-class CoinCounter : public base::ActorAnimator
+class Counter : public base::ActorAnimator
 {
 public:
-	CoinCounter(int* target);
-	CoinCounter(const CoinCounter&) = default;
-	CoinCounter(CoinCounter&&) = default;
+	Counter(int* target);
+	Counter(const Counter&) = default;
+	Counter(Counter&&) = default;
 
-	CoinCounter& operator=(const CoinCounter&) = default;
-	CoinCounter& operator=(CoinCounter&&) = default;
-	~CoinCounter() = default;
+	Counter& operator=(const Counter&) = default;
+	Counter& operator=(Counter&&) = default;
+	~Counter() = default;
 
 	void setFont(const sf::Font& font);
 
@@ -27,11 +27,13 @@ public:
 
 	void onUpdate() override;
 
+	virtual void addClip(base::Clip clip, const std::string& name) override;
+
 	void setCharacterSize(const unsigned int size);
 protected:
 	sf::Text _text;
 	int* _target;
 
 	float _curTime;
-	int _currentCoin;
+	int _currentValue;
 };
