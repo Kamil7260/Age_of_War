@@ -7,21 +7,25 @@
 #include "Button.hpp"
 #include "QueueManager.hpp"
 #include "CannonSpawner.hpp"
-#include "CoinCounter.hpp"
+#include "Counter.hpp"
 
 Player::Player()
-	:_enableSpawn(true), _drawCannonPlaces(false), _coinCount(100), _wantSell(false), _sellClickCount(0)
+	:_enableSpawn(true), _drawCannonPlaces(false), _coinCount(10000), _wantSell(false), _sellClickCount(0), _baseUpgrade(1), _expCount(1), _upgradeCondition(1000), _cannonPlaceCost(1000)
 {
-	_cannon = nullptr;
+	_cannons = { nullptr,nullptr,nullptr };
 	_tag = "Player";
-	_currentAge = "I";
+	_currentAge = "0";
 	_timer = 0;
-	_sprite.setOrigin(275.f, 170.f);
+	_sprites.at(0).setOrigin(275.f, 170.f);
 	_myColider = { 111.f,111.f,111.f,111.f };
 
+	_ages = { "I","II","III","IV","V" };
 
-	_cannonPlace.setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/base/6.png"));
-	_cannonPlace.setOrigin(sf::Vector2f(30.f, 30.f));
+	for (auto& k : _cannonPlaces)
+	{
+		k.setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/base/6.png"));
+		k.setOrigin(sf::Vector2f(30.f, 30.f));
+	}
 
 	auto manager = std::make_unique<QueueManager>();
 	manager->setPosition(sf::Vector2f(300.f, 150.f));
@@ -58,55 +62,142 @@ Player::Player()
 		if (isPressed) {
 			this->sellActive();
 		}
-	});
+		});
 	button->setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/2.png"));
 
 	button->setPosition(sf::Vector2f(1100, 50));
 	core::Renderer::getInstance().addObject(std::move(button), base::object_type::gui);
+
+	auto& infoBlock = core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/5.png");
+	auto& font = core::ResourceManager<sf::Font>::getInstance().get("Assets/fonts/3.ttf");
+	{
+		button = std::make_unique<Button>(base::collider({ 0.f,68.f,0.f,68.f }));
+		button->setTag("AgeUpgradeButton");
+		button->setClickEvent([&](bool isPressed)->void {
+			if (isPressed && _enableSpawn) {
+				_enableSpawn = false;
+				this->loadNextAge();
+			}
+			});
+
+		auto ptr = static_cast<Button*>(button.get());
+		auto& info = ptr->getInfo();
+		auto& k = _cannonTemplate.at(1);
+		info.clear();
+		info.setPosition(sf::Vector2f(0.f, 300.f));
+		info.setTexture(*infoBlock);
+		info.setFont(*font);
+		info.setColor(sf::Color::Yellow);
+		info.setCharacterSize(15);
+		info.addValue(" ", "\nResearch new ages and \nlearn modern tech\n ");
+		info.addValue(&_upgradeCondition, "Exp points required to upgrade\n  : ");
+
+	}
+	button->setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/1.png"));
+
+	button->setPosition(sf::Vector2f(1300, 50));
+	core::Renderer::getInstance().addObject(std::move(button), base::object_type::gui);
+
+	button = std::make_unique<Button>(base::collider({ 0.f,68.f,0.f,68.f }));
+	button->setTag("BaseUpgradeButton");
+	button->setClickEvent([&](bool isPressed)->void {
+		if (isPressed && _enableSpawn) {
+			_enableSpawn = false;
+			this->baseUpgrade();
+		}
+		});
+	{
+		auto ptr = static_cast<Button*>(button.get());
+		auto& info = ptr->getInfo();
+		auto& k = _cannonTemplate.at(1);
+		info.clear();
+		info.setPosition(sf::Vector2f(0.f, 300.f));
+		info.setTexture(*infoBlock);
+		info.setFont(*font);
+		info.setColor(sf::Color::Yellow);
+		info.setCharacterSize(15);
+		info.addValue(" ", "\nCreate new cannon place\n ");
+		info.addValue(&_cannonPlaceCost, "Cost : ");
+	}
+
+
+	button->setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/7.png"));
+
+	button->setPosition(sf::Vector2f(1200, 50));
+	core::Renderer::getInstance().addObject(std::move(button), base::object_type::gui);
+
 	loadNextAge();
 
-	std::unique_ptr<CoinCounter> coin = std::make_unique<CoinCounter>(&_coinCount);
+	std::unique_ptr<Counter> coin = std::make_unique<Counter>(&_coinCount);
 	coin->setPosition(sf::Vector2f(1600, 40));
 	coin->setFont(*core::ResourceManager<sf::Font>::getInstance().get("Assets/fonts/3.ttf"));
 	coin->setCharacterSize(20);
 	coin->setColor(sf::Color::Yellow);
+	auto ck = core::Application::getInstance().getClip("coin");
+	coin->addClip(std::move(ck), "coin");
 	core::Renderer::getInstance().addObject(std::move(coin), base::object_type::gui);
+
+	std::unique_ptr<Counter> exp = std::make_unique<Counter>(&_expCount);
+	exp->setPosition(sf::Vector2f(1600, 80));
+	exp->setFont(*core::ResourceManager<sf::Font>::getInstance().get("Assets/fonts/3.ttf"));
+	exp->setCharacterSize(20);
+	exp->setColor(sf::Color::Yellow);
+	auto ek = core::Application::getInstance().getClip("star");
+	exp->addClip(std::move(ek), "star");
+	core::Renderer::getInstance().addObject(std::move(exp), base::object_type::gui);
 }
 
 void Player::setPosition(const sf::Vector2f& pos)
 {
 	_position = pos;
-	_sprite.setPosition(pos);
-	_cannonPlace.setPosition(sf::Vector2f(pos.x +10 , pos.y - 90.f));
-	if (_cannon != nullptr)
-		_cannon->setPosition(pos);
+	_sprites.at(0).setPosition(pos);
+
+	for (int k = 0; k < 3; ++k)
+	{
+		_cannonPlaces[k].setPosition(sf::Vector2f(pos.x + 10, pos.y - 70.f - 70.f * k));
+		if (_cannons[k] != nullptr)
+			_cannons[k]->setPosition(sf::Vector2f(pos.x + 10, pos.y - 70.f - 70.f * k));
+
+		if (k < 2)
+		{
+			_sprites.at(k + 1).setPosition(pos.x + 10, pos.y -50.f - 90.f * (k + 1));
+		}
+	}
 }
 
 void Player::setScale(const sf::Vector2f& sca)
 {
 	_scale = sca;
-	_sprite.setScale(sca);
-	_cannonPlace.scale(sca);
+	for(auto& k : _sprites)
+		k.setScale(sca);
+	for (int k = 0; k < 3; ++k)
+	{
+		_cannonPlaces[k].scale(sca);
+		_cannons[k]->setScale(sca);
+	}
 }
 
 void Player::move(const sf::Vector2f& delta)
 {
 	_position += delta;
-	_sprite.move(delta);
-	if (_cannon != nullptr)
-		_cannon->move(delta);
-	_cannonPlace.move(delta);
+
+	for(auto& k : _sprites)
+		k.move(delta);
+
+	for (auto& k : _cannons)
+	{
+		if (k != nullptr)
+			k->move(delta);
+	}
+	
+	for(auto& k : _cannonPlaces)
+		k.move(delta);
 }
 
 void Player::onUpdate()
 {
 	if (_timer >= 0.3f)
 	{
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::K))
-		{
-			_currentAge = "V";
-			loadNextAge();
-		}
 		if (!sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
 			_enableSpawn = true;
@@ -116,9 +207,12 @@ void Player::onUpdate()
 	}
 	else _timer += core::Application::getInstance().getTime();
 
-	if (_cannon != nullptr)
 	{
-		_cannon->onUpdate();
+		for (int k = 0; k < _baseUpgrade; ++k)
+		{
+			if(_cannons[k] != nullptr)
+				_cannons[k]->onUpdate();
+		}
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
 			if (_wantSell)
@@ -126,20 +220,27 @@ void Player::onUpdate()
 				++_sellClickCount;
 				if (_sellClickCount > 1)
 				{
-					auto pos = _cannon->getPosition();
-					auto mPos = core::Renderer::getInstance().getMousePosition();
-					if (pos.x + 30.f > mPos.x && pos.x - 30 < mPos.x)
+					for (int k = 0; k < _baseUpgrade; ++k)
 					{
-						if (pos.y - 30 < mPos.y && pos.y + 30.f > mPos.y)
+						if (_cannons[k] == nullptr)
+							continue;
+						auto pos = _cannons[k]->getPosition();
+						auto mPos = core::Renderer::getInstance().getMousePosition();
+						if (pos.x + 30.f > mPos.x && pos.x - 30 < mPos.x)
 						{
-							_coinCount += _cannon->getSellPrice();
-							_cannon = nullptr;
+							if (pos.y - 30 < mPos.y && pos.y + 30.f > mPos.y)
+							{
+								_coinCount += _cannons[k]->getSellPrice();
+								_cannons[k] = nullptr;
+								break;
+							}
 						}
 					}
 					_sellClickCount = 0;
 					_wantSell = false;
 					_drawCannonPlaces = false;
 					sellCanceled();
+
 				}
 			}
 			else {
@@ -151,16 +252,22 @@ void Player::onUpdate()
 
 void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	target.draw(_sprite, states);
-	if (_cannon != nullptr)
+	for(int k = 0; k<_baseUpgrade; ++k)
 	{
-		target.draw(*_cannon, states);
-		if(_wantSell)
-			target.draw(_cannonPlace, states);
+		target.draw(_sprites[k], states);
 	}
-	else if (_drawCannonPlaces)
+	for (int k = 0; k < _baseUpgrade; ++k)
 	{
-		target.draw(_cannonPlace, states);
+		if (_cannons[k] != nullptr)
+		{
+			target.draw(*_cannons[k], states);
+			if (_wantSell)
+				target.draw(_cannonPlaces[k], states);
+		}
+		else if (_drawCannonPlaces)
+		{
+			target.draw(_cannonPlaces[k], states);
+		}
 	}
 }
 
@@ -215,29 +322,34 @@ void Player::addToQueue(const unsigned int type)
 
 void Player::spawnCannon(const int type)
 {
-	if (_cannon == nullptr)
-	{
-		if (_cannonTemplate.at(type).price > _coinCount)
-			return;
+	if (_cannonTemplate.at(type).price > _coinCount)
+		return;
 
-		auto pos = _cannonPlace.getPosition();
-		auto mPos = core::Renderer::getInstance().getMousePosition();
-		if (pos.x + 30.f > mPos.x && pos.x - 30 < mPos.x)
+	auto mPos = core::Renderer::getInstance().getMousePosition();
+
+	for (int v = 0; v < _baseUpgrade; ++v)
+	{
+		if (_cannons[v] == nullptr)
 		{
-			if (pos.y - 30 < mPos.y && pos.y + 30.f > mPos.y)
+			auto pos = _cannonPlaces[v].getPosition();
+			if (pos.x + 30.f > mPos.x && pos.x - 30 < mPos.x)
 			{
-				auto& k = _cannonTemplate.at(type);
-				std::string name = _currentAge + "C" + std::to_string(type);
-				_cannon = std::make_unique<Cannon>(k.maxDMG, k.minDMG, k.range,k.reloadTime,k.bulletSpeed,k.bulletPosition,k.fireSpeed,k.price/2);
-				if (k.long_range)
-					_cannon->longRange();
-				auto clip = core::Application::getInstance().getClip(name);
-				_cannon->addClip(std::move(clip), name);
-				name = "Assets/ammunition/" + _currentAge + "/C" + std::to_string(type) + ".png";
-				_cannon->setBulletTexture(core::ResourceManager<sf::Texture>::getInstance().get(name));
-				_cannon->setAnimationSpeed(k.animationSpeed);
-				_cannon->setPosition(_cannonPlace.getPosition());
-				_coinCount -= k.price;
+				if (pos.y - 30 < mPos.y && pos.y + 30.f > mPos.y)
+				{
+					auto& k = _cannonTemplate.at(type);
+					std::string name = _currentAge + "C" + std::to_string(type);
+					_cannons.at(v) = std::make_unique<Cannon>(k.maxDMG, k.minDMG, k.range, k.reloadTime, k.bulletSpeed, k.bulletPosition, k.fireSpeed, k.price / 2);
+					if (k.long_range)
+						_cannons.at(v)->longRange();
+					auto clip = core::Application::getInstance().getClip(name);
+					_cannons.at(v)->addClip(std::move(clip), name);
+					name = "Assets/ammunition/" + _currentAge + "/C" + std::to_string(type) + ".png";
+					_cannons.at(v)->setBulletTexture(core::ResourceManager<sf::Texture>::getInstance().get(name));
+					_cannons.at(v)->setAnimationSpeed(k.animationSpeed);
+					_cannons.at(v)->setPosition(_cannonPlaces.at(v).getPosition());
+					_coinCount -= k.price;
+					return;
+				}
 			}
 		}
 	}
@@ -245,11 +357,15 @@ void Player::spawnCannon(const int type)
 
 void Player::sellActive()
 {
-	if (_cannon != nullptr)
+	for (int k = 0; k < _baseUpgrade; ++k)
 	{
-		_drawCannonPlaces = true;
-		_wantSell = true;
-		core::Application::getInstance().setCursor(1);
+		if (_cannons.at(k) != nullptr)
+		{
+			_drawCannonPlaces = true;
+			_wantSell = true;
+			core::Application::getInstance().setCursor(1);
+			break;
+		}
 	}
 	_sellClickCount = 0;
 }
@@ -262,11 +378,41 @@ void Player::sellCanceled()
 
 void Player::loadNextAge()
 {
+	if (_currentAge == _ages.back())
+	{
+		return;
+	}
+	if (_currentAge == "0") {
+		_currentAge = "I";
+	}
+	else {
+		for (auto k = _ages.begin(); k != _ages.end(); ++k)
+		{
+			if ((*k) == _currentAge)
+			{
+				++k;
+				if (k != _ages.end()) {
+					_currentAge = *k;
+				}
+			}
+		}
+	}
+	if (_currentAge == _ages.back())
+	{
+		auto& k = core::Renderer::getInstance().find("AgeUpgradeButton");
+		k->remove();
+		core::Renderer::getInstance().clearNoActive();
+	}
+	_upgradeCondition *= 2;
 
 	auto& infoBlock = core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/5.png");
 	auto& font = core::ResourceManager<sf::Font>::getInstance().get("Assets/fonts/3.ttf");
 
-	_sprite.setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/base/" + _currentAge + ".png"));
+	_sprites.at(0).setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/base/" + _currentAge + ".png"), true);
+	_sprites.at(1).setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/base/" + _currentAge + "1.png"), true);
+	_sprites.at(2).setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/base/" + _currentAge + "2.png"),true);
+	_sprites.at(1).setOrigin(sf::Vector2f(88.f, 99.f));
+	_sprites.at(2).setOrigin(sf::Vector2f(88.f, 99.f));
 	_mobTemplate.at(0) = base::loadUnitFromJson(0, _currentAge);
 	_mobTemplate.at(1) = base::loadUnitFromJson(1, _currentAge);
 	_mobTemplate.at(2) = base::loadUnitFromJson(2, _currentAge);
@@ -524,5 +670,24 @@ void Player::loadNextAge()
 			}
 			});
 		core::Renderer::getInstance().addObject(std::move(bt5), base::object_type::gui);
+	}
+}
+
+void Player::baseUpgrade()
+{
+	if (_baseUpgrade < static_cast<int>(_sprites.size()))
+	{
+		if (_coinCount > _cannonPlaceCost)
+		{
+			_coinCount -= _cannonPlaceCost;
+			++_baseUpgrade;
+			_cannonPlaceCost *= 2;
+			if (_baseUpgrade == static_cast<int>(_sprites.size()))
+			{
+				auto& k = core::Renderer::getInstance().find("BaseUpgradeButton");
+				k->remove();
+				core::Renderer::getInstance().clearNoActive();
+			}
+		}
 	}
 }

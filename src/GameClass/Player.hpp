@@ -44,19 +44,27 @@ public:
 		_coinCount += value;
 	}
 
+	virtual void baseUpgrade();
+
 private:
 	float _timer;
-	sf::Sprite _sprite;
+	std::array<sf::Sprite,3> _sprites;
 	bool _enableSpawn;
 	std::vector<std::pair<std::unique_ptr<base::Actor>, std::unique_ptr<base::Actor>>> _queue;
 	std::string _currentAge;
-	sf::Sprite _cannonPlace;
+	std::array<sf::Sprite,3> _cannonPlaces;
 	bool _drawCannonPlaces;
-	std::unique_ptr<Cannon> _cannon;
+	std::array<std::unique_ptr<Cannon>,3> _cannons;
 
 	int _coinCount;
 	bool _wantSell;
 
 	int _sellClickCount;
+	int _baseUpgrade;
+
+	std::array<std::string, 5> _ages;
+	int _expCount;
+	int _upgradeCondition;
+	int _cannonPlaceCost;
 };
 
