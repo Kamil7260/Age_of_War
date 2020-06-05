@@ -7,6 +7,7 @@
 #include "../GameClass/Player.hpp"
 #include "../GameClass/Enemy.hpp"
 
+
 void core::Application::run()
 {
 	LOG_INFO("Running...");
@@ -53,8 +54,16 @@ void core::Application::run()
 
 	_clock.restart();
 	float frameStartTime;
+	
+	{
+		bool isLoaded = false;
+		std::thread loader(&Application::assetLoader, this, std::ref(isLoaded));
 
-	assetLoader();
+		loadingScreen(isLoaded, window);
+		loader.detach();
+	}
+	
+
 	{
 		auto k = core::ResourceManager<sf::Texture>::getInstance().get("Assets/background/1.png");
 		if (k == nullptr) {
@@ -167,21 +176,23 @@ void core::Application::setCursor(const unsigned int type)
 	_cursor.setTexture(*k, true);
 }
 
-void core::Application::assetLoader()
+void core::Application::assetLoader(bool &isLoaded)
 {
 	auto &texture = ResourceManager<sf::Texture>::getInstance();
 	auto& font = ResourceManager<sf::Font>::getInstance();
 	json clipInfo;
-	LOG_INFO("Loading clips from json");
 	{
-		std::ifstream reader("Data/clipLoader.json");
-		if (!reader.good())
+		LOG_INFO("Loading clips from json");
 		{
-			LOG_ERROR("Can not open mobinfo json file");
-			return;
+			std::ifstream reader("Data/clipLoader.json");
+			if (!reader.good())
+			{
+				LOG_ERROR("Can not open mobinfo json file");
+				return;
+			}
+			reader >> clipInfo;
+			reader.close();
 		}
-		reader >> clipInfo;
-		reader.close();
 	}
 	std::unique_ptr<base::Clip> clip;
 	int count;
@@ -202,11 +213,13 @@ void core::Application::assetLoader()
 		clip->setOrigin(origin);
 		for (int k = 1; k <= count; ++k)
 		{
+
 			lpath = path;
 			lpath += std::to_string(k);
 			lpath += ".png";
 			texture.loadFromFile(lpath);
 			clip->addFrame(texture.get(lpath));
+
 		}
 		_clips->addClip(std::move(clip), name);
 	}
@@ -228,15 +241,70 @@ void core::Application::assetLoader()
 	{
 		type = (*it)["type"];
 		path = (*it)["path"];
-		
+
 		if (type == "Texture") {
 			texture.loadFromFile(path);
 		}
 		else if (type == "Font") {
 			font.loadFromFile(path);
+
 		}
 	}
+	isLoaded = true;
+}
 
+void core::Application::loadingScreen(bool& isLoaded,const std::unique_ptr<sf::RenderWindow>& window)
+{
+	std::array<sf::Texture,37> tex;
+	for (int k = 1; k <= 37; ++k)
+	{
+		tex.at(k-1).loadFromFile("Assets/loading/" + std::to_string(k) + ".jpg");
+	}
+
+	sf::Sprite sprite;
+	auto texk = static_cast<sf::Vector2f>(tex[0].getSize());
+	auto wink = static_cast<sf::Vector2f>(window->getSize());
+
+	sprite.setScale(sf::Vector2f(wink.x / texk.x, wink.y / texk.y));
+	size_t currentFrame = 0;
+	sf::Clock clock;
+	float frameStartTime;
+	float deltaTime = 1 / 60.f;
+	float currentTime = 0.f;
+	while (window->isOpen() && !isLoaded)
+	{
+		currentTime += deltaTime;
+
+		frameStartTime = clock.getElapsedTime().asSeconds();
+		{
+			sf::Event event;
+			while (window->pollEvent(event))
+			{
+				if (event.type == sf::Event::Closed)
+				{
+					isLoaded = true;
+					window->close();
+				}
+			}
+
+			if (currentTime > 0.05f)
+			{
+				currentTime = 0.f;
+				++currentFrame;
+
+				if (currentFrame < tex.size())
+				{
+					sprite.setTexture(tex.at(currentFrame));
+				}
+				else currentFrame = 0;
+			}
+
+			window->clear();
+			window->draw(sprite);
+			window->display();
+			deltaTime = clock.getElapsedTime().asSeconds() - frameStartTime;
+		}
+	}
 }
 
 core::Application::Application()

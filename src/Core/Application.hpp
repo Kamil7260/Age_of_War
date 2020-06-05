@@ -2,6 +2,8 @@
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include <nlohmann/json.hpp>
+#include <thread>
+#include <mutex>
 
 #include "Renderer.hpp"
 #include "ClipManager.hpp"
@@ -41,9 +43,9 @@ public:
 	Application& operator=(const Application&) = delete;
 	Application& operator=(Application&&) = delete;
 private:
+	void assetLoader(bool& isLoaded);
+	void loadingScreen(bool& isLoaded,const std::unique_ptr<sf::RenderWindow>& window);
 
-	void assetLoader();
-	
 	json _mobInfoJson;
 	json _cannonInfoJson;
 	Application();	

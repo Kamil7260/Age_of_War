@@ -37,6 +37,7 @@ void Button::onUpdate()
 
 void Button::onMouseCollision(bool isPressed)
 {
+	_infoBox.refresh();
 	_isCollided = true;
 	_shadowDraw = true;
 	_isReleaseCalled = false;
