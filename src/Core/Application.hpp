@@ -37,6 +37,8 @@ public:
 
 	virtual void setCursor(const unsigned int type);
 
+	virtual void freezeScreen(const sf::Texture& at);
+
 	~Application() = default;
 	Application(const Application&) = delete;
 	Application(Application&&) = delete;
@@ -46,6 +48,9 @@ private:
 	void assetLoader(bool& isLoaded);
 	void loadingScreen(bool& isLoaded,const std::unique_ptr<sf::RenderWindow>& window);
 
+	void reset();
+	void freeze();
+
 	json _mobInfoJson;
 	json _cannonInfoJson;
 	Application();	
@@ -54,5 +59,8 @@ private:
 	std::unique_ptr<ClipManager> _clips;
 	sf::Sprite _cursor;
 	std::array<std::shared_ptr<sf::Texture>, 2> _cursorTextures;
+	sf::Texture _freezeTexture;
+	bool _breakLoop;
+	sf::Vector2f _windowSize;
 };
 }

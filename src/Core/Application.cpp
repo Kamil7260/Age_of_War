@@ -18,6 +18,7 @@ void core::Application::run()
 	float camSpeed = 400.f;
 	renderer.setCamSpeed(camSpeed);
 	renderer.setCamScope({0.f,1150.f});
+	_windowSize = static_cast<sf::Vector2f>(renderer.getInstance().getWindow()->getSize());
 
 	LOG_INFO("Init TextureManager");
 	auto& textureManager = ResourceManager<sf::Texture>::getInstance();
@@ -60,49 +61,18 @@ void core::Application::run()
 		std::thread loader(&Application::assetLoader, this, std::ref(isLoaded));
 
 		loadingScreen(isLoaded, window);
-		loader.detach();
+		loader.join();
+		//loader.detach();
 	}
-	
-
-	{
-		auto k = core::ResourceManager<sf::Texture>::getInstance().get("Assets/background/1.png");
-		if (k == nullptr) {
-			LOG_ERROR("Resource manager get(Assets/background/1.png) -> nullptr");
-		}
-		else {
-			std::unique_ptr<BackGround> bcg = std::make_unique<BackGround>();
-			bcg->setPosition(sf::Vector2f(-50.f, 0.f));
-			bcg->setTexture(*k);
-			bcg->setScale(sf::Vector2f(1.f, 1.07f));
-			renderer.addObject(std::move(bcg), base::object_type::background);
-		}
-		k = core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/4.png");
-		if (k == nullptr) {
-			LOG_ERROR("Resource manager get(Assets/gui/4.png) -> nullptr");
-		}
-		else {
-			std::unique_ptr<BackGround> bcg = std::make_unique<BackGround>();
-			bcg = std::make_unique<BackGround>();
-			bcg->setTexture(*k);
-			bcg->setPosition(sf::Vector2f(200.f, 0.f));
-			renderer.addObject(std::move(bcg), base::object_type::gui);
-		}	
-	}
-
-	std::unique_ptr<Player> player = std::make_unique<Player>();
-	player->setPosition(sf::Vector2f(140, 870));
-	renderer.addObject(std::move(player), base::object_type::actor);
-	
-	std::unique_ptr<Enemy> enemy = std::make_unique<Enemy>();
-	enemy->setPosition(sf::Vector2f(2900, 870));
-	renderer.addEnemyObject(std::move(enemy));
-	
-
 	_cursorTextures.at(0) = textureManager.get("Assets/gui/3.png");
 	_cursorTextures.at(1) = textureManager.get("Assets/gui/6.png");
+	reset();
 
 	setCursor(0);
 	window->setMouseCursorVisible(false);
+
+
+	auto& view = renderer.getView();
 
 	float lastFpsTimeCheck = 0.f;
 	sf::Text fpsPlayer;
@@ -142,7 +112,10 @@ void core::Application::run()
 		}
 
 		_cursor.setPosition(static_cast<sf::Vector2f>(renderer.getMousePosition()));
+
+		view.setCenter(sf::Vector2f(960.f,540.f));
 		window->clear();
+		window->setView(view);
 		renderer.draw();
 
 		window->draw(fpsPlayer);
@@ -160,6 +133,12 @@ void core::Application::run()
 		if (_deltaTime > 0.08f) {
 			_deltaTime = 0.08f;
 		}
+
+		if (_breakLoop)
+		{
+			freeze();
+			reset();
+		}
 	}
 	return;
 }
@@ -174,6 +153,12 @@ void core::Application::setCursor(const unsigned int type)
 	auto& k = _cursorTextures.at(type);
 	_cursor.setOrigin(sf::Vector2f(k->getSize().x / 2.f, k->getSize().y / 2.f));
 	_cursor.setTexture(*k, true);
+}
+
+void core::Application::freezeScreen(const sf::Texture& at)
+{
+	_breakLoop = true;
+	_freezeTexture = at;
 }
 
 void core::Application::assetLoader(bool &isLoaded)
@@ -307,6 +292,78 @@ void core::Application::loadingScreen(bool& isLoaded,const std::unique_ptr<sf::R
 	}
 }
 
+void core::Application::reset()
+{
+	auto& renderer = core::Renderer::getInstance();
+	auto k = core::ResourceManager<sf::Texture>::getInstance().get("Assets/background/1.png");
+	if (k == nullptr) {
+		LOG_ERROR("Resource manager get(Assets/background/1.png) -> nullptr");
+	}
+	else {
+		std::unique_ptr<BackGround> bcg = std::make_unique<BackGround>();
+		bcg->setPosition(sf::Vector2f(-50.f, 0.f));
+		bcg->setTexture(*k);
+		bcg->setScale(sf::Vector2f(1.f, 1.07f));
+		renderer.addObject(std::move(bcg), base::object_type::background);
+	}
+	k = core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/4.png");
+	if (k == nullptr) {
+		LOG_ERROR("Resource manager get(Assets/gui/4.png) -> nullptr");
+	}
+	else {
+		std::unique_ptr<BackGround> bcg = std::make_unique<BackGround>();
+		bcg = std::make_unique<BackGround>();
+		bcg->setTexture(*k);
+		bcg->setPosition(sf::Vector2f(200.f, 0.f));
+		renderer.addObject(std::move(bcg), base::object_type::gui);
+	}
+
+
+	std::unique_ptr<Player> player = std::make_unique<Player>();
+	player->setPosition(sf::Vector2f(140, 870));
+	renderer.addObject(std::move(player), base::object_type::actor);
+
+	std::unique_ptr<Enemy> enemy = std::make_unique<Enemy>();
+	enemy->setPosition(sf::Vector2f(2900, 870));
+	renderer.addEnemyObject(std::move(enemy));
+}
+
+void core::Application::freeze()
+{
+	sf::Sprite sprite;
+
+	auto& window = core::Renderer::getInstance().getWindow();
+	sprite.setTexture(_freezeTexture);
+	auto texk = static_cast<sf::Vector2f>(_freezeTexture.getSize());
+	//auto wink = static_cast<sf::Vector2f>(window->getSize());
+	auto& view = core::Renderer::getInstance().getView();
+	sprite.setScale(sf::Vector2f(1920.f / texk.x, 1080.f / texk.y));
+	sprite.setPosition(0.f, 0.f);
+	while (window->isOpen())
+	{
+		sf::Event event;
+		while (window->pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+				window->close();
+			if (event.type == sf::Event::MouseButtonReleased || event.type == sf::Event::KeyReleased)
+			{
+				core::Renderer::getInstance().forceClear();
+				_breakLoop = false;
+				return;
+			}
+			
+		}
+		_cursor.setPosition(static_cast<sf::Vector2f>(sf::Mouse::getPosition(*window)));
+		view.setCenter(sf::Vector2f(960.f, 540.f));
+		window->clear();
+		window->setView(view);
+		window->draw(sprite);
+		window->draw(_cursor);
+		window->display();
+	}
+}
+
 core::Application::Application()
-	:_deltaTime(0.f)
+	:_deltaTime(0.f), _breakLoop(false)
 {}

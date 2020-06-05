@@ -31,7 +31,7 @@ namespace core {
 
 		void clearNoActive();
 
-		const std::unique_ptr<sf::RenderWindow>& getWindow() {
+		std::unique_ptr<sf::RenderWindow>& getWindow() {
 			return _window;
 		};
 
@@ -50,6 +50,12 @@ namespace core {
 
 		void setCamSpeed(const float speed) { _camSpeed = speed; }
 		void setCamScope(const sf::Vector2f& scope) { _scope = scope; }
+
+		void forceClear();
+
+		sf::View& getView() {
+			return _view;
+		}
 	private:
 		float _camSpeed;
 		sf::Vector2f _position;
@@ -84,6 +90,7 @@ namespace core {
 		std::unique_ptr<base::Actor> _placeHolder;
 		bool _shouldBeErase;
 		sf::Vector2i _mousePosition;
+		sf::View _view;
 	};
 		
 }

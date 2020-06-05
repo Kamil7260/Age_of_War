@@ -358,6 +358,28 @@ std::unique_ptr<base::Actor> core::Renderer::findAndRemove(const std::string& ta
 	return nullptr;
 }
 
+void core::Renderer::forceClear()
+{
+	if (!_queue.empty())
+		_queue.clear();
+	if (!_enemyQueue.empty())
+		_enemyQueue.clear();
+	if (!_bulletQueue.empty())
+		_bulletQueue.clear();
+	if (!_backGround.empty())
+		_backGround.clear();
+	if (!_actor.empty())
+		_actor.clear();
+	if (!_bulletActor.empty())
+		_bulletActor.clear();
+	if (!_enemyBulletActor.empty())
+		_enemyBulletActor.clear();
+	if (!_enemyActor.empty())
+		_enemyActor.clear();
+	if (!_gui.empty())
+		_gui.clear();
+}
+
 std::unique_ptr<base::Actor>& core::Renderer::getLastColliderActor(std::vector<std::unique_ptr<base::Actor>>& actor)
 {
 
@@ -505,6 +527,7 @@ void core::Renderer::addBullet(std::unique_ptr<base::Actor> actor)
 core::Renderer::Renderer()
 {
 	LOG_INFO("Creating window...");
+	_view = sf::View(sf::Vector2f(0, 0), sf::Vector2f(1920, 1080));
 	_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 1080), "Age of War");
 	_window->setFramerateLimit(60);
 	_placeHolder = nullptr;
