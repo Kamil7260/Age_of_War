@@ -19,9 +19,9 @@ public:
 		static Application app;
 		return app;
 	}
-	float getTime() const { return _deltaTime; }
+	float getTime() const { return m_deltaTime; }
 	const sf::Clock& getClock() {
-		return _clock;
+		return m_clock;
 	}
 
 	void run();
@@ -29,10 +29,10 @@ public:
 	const base::Clip& getClip(const std::string& name);
 
 	const json& getMobInfo() const {
-		return _mobInfoJson;
+		return m_mobInfoJson;
 	}
 	const json& getCannonInfo() const {
-		return _cannonInfoJson;
+		return m_cannonInfoJson;
 	}
 
 	virtual void setCursor(const unsigned int type);
@@ -51,16 +51,16 @@ private:
 	void reset();
 	void freeze();
 
-	json _mobInfoJson;
-	json _cannonInfoJson;
+	json m_mobInfoJson;
+	json m_cannonInfoJson;
 	Application();	
-	sf::Clock _clock;
-	float _deltaTime;
-	std::unique_ptr<ClipManager> _clips;
-	sf::Sprite _cursor;
-	std::array<std::shared_ptr<sf::Texture>, 2> _cursorTextures;
-	sf::Texture _freezeTexture;
-	bool _breakLoop;
-	sf::Vector2f _windowSize;
+	sf::Clock m_clock;
+	float m_deltaTime;
+	std::unique_ptr<ClipManager> m_clips;
+	sf::Sprite m_cursor;
+	std::array<std::shared_ptr<sf::Texture>, 2> m_cursorTextures;
+	sf::Texture m_freezeTexture;
+	bool m_breakLoop;
+	sf::Vector2f m_windowSize;
 };
 }

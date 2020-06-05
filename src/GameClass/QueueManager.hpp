@@ -22,7 +22,7 @@ protected:
 
 	virtual void repos();
 
-	std::vector<std::pair<Ikon,std::function<void()>>> _queueContainer;
-	bool _isEnd;
-	int _space;
+	std::vector<std::pair<Ikon,std::function<void()>>> m_queueContainer;
+	bool m_isEnd;
+	int m_space;
 };

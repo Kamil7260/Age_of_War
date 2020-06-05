@@ -25,9 +25,9 @@ public:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 private:
-	float _timer;
-	sf::Sprite _sprite;
-	std::array<base::unitInfo, 3> _mobTemplate;
-	std::string _currentAge;
+	float m_timer;
+	sf::Sprite m_sprite;
+	std::array<base::unitInfo, 3> m_mobTemplate;
+	std::string m_currentAge;
 	
 };

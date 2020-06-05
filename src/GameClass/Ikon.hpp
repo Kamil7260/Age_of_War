@@ -27,10 +27,10 @@ public:
 
 	virtual void setCallBackOnEnd(const std::function<void()>& onEnd);
 protected:
-	sf::Sprite _sprite;
-	float _maxTime;
-	float _timer;
-	sf::RectangleShape _shadow;
-	std::function<void()> _onEnd;
-	sf::Vector2f _shadowSize;
+	sf::Sprite m_sprite;
+	float m_maxTime;
+	float m_timer;
+	sf::RectangleShape m_shadow;
+	std::function<void()> m_onEnd;
+	sf::Vector2f m_shadowSize;
 };

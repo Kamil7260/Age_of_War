@@ -24,17 +24,17 @@ namespace base {
 		virtual void setAnimatorName(const std::string& name) = 0;
 
 		virtual bool isColliderActive() const override {
-			return _activeCollider;
+			return m_activeCollider;
 		}
 
 	protected:
-		int _hp;
-		int _attack;
-		int _maxAttack;
-		float _speedAttack;
-		float _speedMove;
-		bool _activeCollider;
-		int _income;
+		int m_hp;
+		int m_attack;
+		int m_maxAttack;
+		float m_speedAttack;
+		float m_speedMove;
+		bool m_activeCollider;
+		int m_income;
 	};
 
 }

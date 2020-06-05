@@ -18,7 +18,7 @@ void core::Application::run()
 	float camSpeed = 400.f;
 	renderer.setCamSpeed(camSpeed);
 	renderer.setCamScope({0.f,1150.f});
-	_windowSize = static_cast<sf::Vector2f>(renderer.getInstance().getWindow()->getSize());
+	m_windowSize = static_cast<sf::Vector2f>(renderer.getInstance().getWindow()->getSize());
 
 	LOG_INFO("Init TextureManager");
 	auto& textureManager = ResourceManager<sf::Texture>::getInstance();
@@ -27,7 +27,7 @@ void core::Application::run()
 	auto& fontManager = ResourceManager<sf::Font>::getInstance();
 
 	LOG_INFO("Init ClipManager");
-	_clips = std::make_unique<ClipManager>();
+	m_clips = std::make_unique<ClipManager>();
 
 	LOG_INFO("Loading mobinfo json");
 	{
@@ -37,7 +37,7 @@ void core::Application::run()
 			LOG_ERROR("Can not open mobinfo json file");
 			return;
 		}
-		reader >> _mobInfoJson;
+		reader >> m_mobInfoJson;
 		reader.close();
 	}
 
@@ -49,11 +49,11 @@ void core::Application::run()
 			LOG_ERROR("Can not open cannonInfo json file");
 			return;
 		}
-		reader >> _cannonInfoJson;
+		reader >> m_cannonInfoJson;
 		reader.close();
 	}
 
-	_clock.restart();
+	m_clock.restart();
 	float frameStartTime;
 	
 	{
@@ -64,8 +64,8 @@ void core::Application::run()
 		loader.join();
 		//loader.detach();
 	}
-	_cursorTextures.at(0) = textureManager.get("Assets/gui/3.png");
-	_cursorTextures.at(1) = textureManager.get("Assets/gui/6.png");
+	m_cursorTextures.at(0) = textureManager.get("Assets/gui/3.png");
+	m_cursorTextures.at(1) = textureManager.get("Assets/gui/6.png");
 	reset();
 
 	setCursor(0);
@@ -85,7 +85,7 @@ void core::Application::run()
 	LOG_INFO("Main loop...");
 	while (window->isOpen())
 	{
-		frameStartTime = _clock.getElapsedTime().asSeconds();
+		frameStartTime = m_clock.getElapsedTime().asSeconds();
 		sf::Event event;
 		while (window->pollEvent(event))
 		{
@@ -103,15 +103,15 @@ void core::Application::run()
 		{
 			if (pos.x < window->getSize().x * 0.1f)
 			{
-				renderer.move(sf::Vector2f(camSpeed * _deltaTime, 0));
+				renderer.move(sf::Vector2f(camSpeed * m_deltaTime, 0));
 			}
 			else if (pos.x > window->getSize().x * 0.9f)
 			{
-				renderer.move(sf::Vector2f(-camSpeed * _deltaTime, 0));
+				renderer.move(sf::Vector2f(-camSpeed * m_deltaTime, 0));
 			}
 		}
 
-		_cursor.setPosition(static_cast<sf::Vector2f>(renderer.getMousePosition()));
+		m_cursor.setPosition(static_cast<sf::Vector2f>(renderer.getMousePosition()));
 
 		view.setCenter(sf::Vector2f(960.f,540.f));
 		window->clear();
@@ -120,21 +120,21 @@ void core::Application::run()
 
 		window->draw(fpsPlayer);
 
-		window->draw(_cursor);
+		window->draw(m_cursor);
 		window->display();
-		_deltaTime = _clock.getElapsedTime().asSeconds() - frameStartTime;
-		lastFpsTimeCheck += _deltaTime;
+		m_deltaTime = m_clock.getElapsedTime().asSeconds() - frameStartTime;
+		lastFpsTimeCheck += m_deltaTime;
 		if (lastFpsTimeCheck > 0.2f)
 		{
-			fpsPlayer.setString(std::to_string(static_cast<int>(1.f / _deltaTime)));
+			fpsPlayer.setString(std::to_string(static_cast<int>(1.f / m_deltaTime)));
 			lastFpsTimeCheck = 0.f;
 		}
 
-		if (_deltaTime > 0.08f) {
-			_deltaTime = 0.08f;
+		if (m_deltaTime > 0.08f) {
+			m_deltaTime = 0.08f;
 		}
 
-		if (_breakLoop)
+		if (m_breakLoop)
 		{
 			freeze();
 			reset();
@@ -145,20 +145,20 @@ void core::Application::run()
 
 const base::Clip& core::Application::getClip(const std::string& name)
 {
-	return *_clips->getClip(name);
+	return *m_clips->getClip(name);
 }
 
 void core::Application::setCursor(const unsigned int type)
 {
-	auto& k = _cursorTextures.at(type);
-	_cursor.setOrigin(sf::Vector2f(k->getSize().x / 2.f, k->getSize().y / 2.f));
-	_cursor.setTexture(*k, true);
+	auto& k = m_cursorTextures.at(type);
+	m_cursor.setOrigin(sf::Vector2f(k->getSize().x / 2.f, k->getSize().y / 2.f));
+	m_cursor.setTexture(*k, true);
 }
 
 void core::Application::freezeScreen(const sf::Texture& at)
 {
-	_breakLoop = true;
-	_freezeTexture = at;
+	m_breakLoop = true;
+	m_freezeTexture = at;
 }
 
 void core::Application::assetLoader(bool &isLoaded)
@@ -206,7 +206,7 @@ void core::Application::assetLoader(bool &isLoaded)
 			clip->addFrame(texture.get(lpath));
 
 		}
-		_clips->addClip(std::move(clip), name);
+		m_clips->addClip(std::move(clip), name);
 	}
 
 	json assetInfo;
@@ -334,8 +334,8 @@ void core::Application::freeze()
 	sf::Sprite sprite;
 
 	auto& window = core::Renderer::getInstance().getWindow();
-	sprite.setTexture(_freezeTexture);
-	auto texk = static_cast<sf::Vector2f>(_freezeTexture.getSize());
+	sprite.setTexture(m_freezeTexture);
+	auto texk = static_cast<sf::Vector2f>(m_freezeTexture.getSize());
 	//auto wink = static_cast<sf::Vector2f>(window->getSize());
 	auto& view = core::Renderer::getInstance().getView();
 	sprite.setScale(sf::Vector2f(1920.f / texk.x, 1080.f / texk.y));
@@ -350,21 +350,21 @@ void core::Application::freeze()
 			if (event.type == sf::Event::MouseButtonReleased || event.type == sf::Event::KeyReleased)
 			{
 				core::Renderer::getInstance().forceClear();
-				_breakLoop = false;
+				m_breakLoop = false;
 				return;
 			}
 			
 		}
-		_cursor.setPosition(static_cast<sf::Vector2f>(sf::Mouse::getPosition(*window)));
+		m_cursor.setPosition(static_cast<sf::Vector2f>(sf::Mouse::getPosition(*window)));
 		view.setCenter(sf::Vector2f(960.f, 540.f));
 		window->clear();
 		window->setView(view);
 		window->draw(sprite);
-		window->draw(_cursor);
+		window->draw(m_cursor);
 		window->display();
 	}
 }
 
 core::Application::Application()
-	:_deltaTime(0.f), _breakLoop(false)
+	:m_deltaTime(0.f), m_breakLoop(false)
 {}

@@ -30,11 +30,11 @@ public:
 
 	virtual void setTexture(const sf::Texture& tex);
 protected:
-	sf::Sprite _icon;
-	sf::Text _text;
-	float _curTime;
-	float _maxTime;
-	float _speed;
-	int _income;
-	bool _action;
+	sf::Sprite m_icon;
+	sf::Text m_text;
+	float m_curTime;
+	float m_maxTime;
+	float m_speed;
+	int m_income;
+	bool m_action;
 };	

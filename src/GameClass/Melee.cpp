@@ -7,108 +7,108 @@
 #include "../Base/Stronghold.hpp"
 
 Melee::Melee(const base::collider& collider, int hp, int attack, int maxAttack, float speedAttack, float speedMove, int income)
-	:Mob(hp, attack,maxAttack, speedAttack, speedMove, income),_timer(0.f),_attackTimer(0.f), _touchEnemy(false), _isCollided(false), _enableAttack(true), _died(false)
+	:Mob(hp, attack,maxAttack, speedAttack, speedMove, income),m_timer(0.f),m_attackTimer(0.f), m_touchEnemy(false), m_isCollided(false), m_enableAttack(true), m_died(false)
 {
-	_myColider = collider;
+	m_myColider = collider;
 }
 
 void Melee::setAnimatorName(const std::string& name)
 {
-	_walkClip = name;
-	_walkClip += "_walk";
-	addClip(core::Application::getInstance().getClip(_walkClip), _walkClip);
+	m_walkClip = name;
+	m_walkClip += "_walk";
+	addClip(core::Application::getInstance().getClip(m_walkClip), m_walkClip);
 
-	_idleClip = name;
-	_idleClip += "_idle";
-	addClip(core::Application::getInstance().getClip(_idleClip), _idleClip);
+	m_idleClip = name;
+	m_idleClip += "_idle";
+	addClip(core::Application::getInstance().getClip(m_idleClip), m_idleClip);
 
-	_dieClip = name;
-	_dieClip += "_die";
-	addClip(core::Application::getInstance().getClip(_dieClip), _dieClip);
-	auto d = _container.find(_dieClip);
+	m_dieClip = name;
+	m_dieClip += "_die";
+	addClip(core::Application::getInstance().getClip(m_dieClip), m_dieClip);
+	auto d = m_container.find(m_dieClip);
 	d->second.setCallback([&]()->void {
-		_died = true;
-		_timer = 0.f;
+		m_died = true;
+		m_timer = 0.f;
 		});
 
-	_attackClip = name;
-	_attackClip += "_attack";
-	addClip(core::Application::getInstance().getClip(_attackClip), _attackClip);
+	m_attackClip = name;
+	m_attackClip += "_attack";
+	addClip(core::Application::getInstance().getClip(m_attackClip), m_attackClip);
 	
-	auto k = _container.find(_attackClip);
+	auto k = m_container.find(m_attackClip);
 	k->second.setCallback([&]()->void {
-		_enableAttack = true;
+		m_enableAttack = true;
 		});
 }
 
 void Melee::onUpdate()
 {
 	float delta = core::Application::getInstance().getTime();
-	_timer += delta;
-	if (_hp > 0)
+	m_timer += delta;
+	if (m_hp > 0)
 	{
-		if (_currentClipName == _attackClip && _enableAttack)
+		if (m_currentClipName == m_attackClip && m_enableAttack)
 		{
-			_attackTimer += delta;
+			m_attackTimer += delta;
 		}
-		else _attackTimer = 0;
+		else m_attackTimer = 0;
 
-		if (!_isCollided)
+		if (!m_isCollided)
 		{
-			if (!_isRunning || _currentClipName != _walkClip)
+			if (!m_isRunning || m_currentClipName != m_walkClip)
 			{
-				play(_walkClip);
+				play(m_walkClip);
 			}
-			move(sf::Vector2f(_speedMove * delta, 0.f));
+			move(sf::Vector2f(m_speedMove * delta, 0.f));
 		}
-		else if (!_isRunning) {
-			if (!_touchEnemy)
-				play(_idleClip);
+		else if (!m_isRunning) {
+			if (!m_touchEnemy)
+				play(m_idleClip);
 			else {
-				play(_attackClip);
+				play(m_attackClip);
 			}
 		}
 	}
 	else{
-		if (_died && _timer > 2.f)
+		if (m_died && m_timer > 2.f)
 		{
-			_isActive = false;
+			m_isActive = false;
 			core::Renderer::getInstance().clearNoActive();
 		}
 	}
-	_touchEnemy = false;
-	_isCollided = false;
+	m_touchEnemy = false;
+	m_isCollided = false;
 	updateAnimator();
 }
 
 void Melee::damage(int dmg)
 {
 	Mob::damage(dmg);
-	if (_hp <= 0)
+	if (m_hp <= 0)
 	{
-		if (_team != base::team::player)
+		if (m_team != base::team::player)
 		{
 			auto ptr = std::make_unique<TextDisplay>(2.5f, 70.f);
-			ptr->setPosition(_position);
+			ptr->setPosition(m_position);
 			ptr->setCharacterSize(20);
 			ptr->setFont(*core::ResourceManager<sf::Font>::getInstance().get("Assets/fonts/3.ttf"));
-			ptr->setIncome(_income);
+			ptr->setIncome(m_income);
 			ptr->setColor(sf::Color::Yellow);
 			ptr->setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/other/5.png"));
 			core::Renderer::getInstance().addObject(std::move(ptr), base::object_type::gui);
 		}
 
-		_position = { 0.f,0.f };
-		_activeCollider = false;
-		if(_currentClipName != _dieClip)
-		play(_dieClip);
+		m_position = { 0.f,0.f };
+		m_activeCollider = false;
+		if(m_currentClipName != m_dieClip)
+		play(m_dieClip);
 	}
 }
 
 void Melee::setPosition(const sf::Vector2f& pos)
 {
-	_position = pos;
-	_sprite->setPosition(pos);
+	m_position = pos;
+	m_sprite->setPosition(pos);
 }
 
 void Melee::onCollision(std::unique_ptr<base::Actor>& collision)
@@ -116,18 +116,18 @@ void Melee::onCollision(std::unique_ptr<base::Actor>& collision)
 	if (collision->getTag() == "Bullet")
 		return;
 
-	if (collision->getTeam() != _team)
+	if (collision->getTeam() != m_team)
 	{
-		_touchEnemy = true;
-		_isCollided = true;
-		if (_attackTimer>_speedAttack && collision->getTag() == "Mob")
+		m_touchEnemy = true;
+		m_isCollided = true;
+		if (m_attackTimer>m_speedAttack && collision->getTag() == "Mob")
 		{
-			_attackTimer = 0.f;
-			_enableAttack = false;
-			if (_hp <= 0) return;
+			m_attackTimer = 0.f;
+			m_enableAttack = false;
+			if (m_hp <= 0) return;
 			std::random_device mch;
 			std::default_random_engine generator(mch());
-			std::uniform_int_distribution<int> distribution(_attack,_maxAttack);
+			std::uniform_int_distribution<int> distribution(m_attack,m_maxAttack);
 			int attack_roll = distribution(generator);
 
 			auto ptr = static_cast<base::Mob*>(collision.get());
@@ -137,14 +137,14 @@ void Melee::onCollision(std::unique_ptr<base::Actor>& collision)
 
 		if (collision->getTag() == "Player" || collision->getTag() == "Enemy")
 		{
-			if (_attackTimer > _speedAttack)
+			if (m_attackTimer > m_speedAttack)
 			{
-				_attackTimer = 0.f;
-				_enableAttack = false;
-				if (_hp <= 0) return;
+				m_attackTimer = 0.f;
+				m_enableAttack = false;
+				if (m_hp <= 0) return;
 				std::random_device mch;
 				std::default_random_engine generator(mch());
-				std::uniform_int_distribution<int> distribution(_attack, _maxAttack);
+				std::uniform_int_distribution<int> distribution(m_attack, m_maxAttack);
 				int attack_roll = distribution(generator);
 
 				auto ptr = static_cast<base::Stronghold*>(collision.get());
@@ -152,32 +152,32 @@ void Melee::onCollision(std::unique_ptr<base::Actor>& collision)
 			}
 		}
 
-		if (_currentClipName != _attackClip && _hp>0)
+		if (m_currentClipName != m_attackClip && m_hp>0)
 		{
-			play(_attackClip);
+			play(m_attackClip);
 			return;
 		}
 	}
 
-	if (_hp <= 0)
+	if (m_hp <= 0)
 		return;
 
-	if (_speedMove > 0)
+	if (m_speedMove > 0)
 	{
-		if (collision->getPosition().x >= _position.x)
+		if (collision->getPosition().x >= m_position.x)
 		{
-			if(_currentClipName != _attackClip)
-			play(_idleClip);
-			_isCollided = true;
+			if(m_currentClipName != m_attackClip)
+			play(m_idleClip);
+			m_isCollided = true;
 		}
 		return;
 	}
 	else{
-		if (collision->getPosition().x <= _position.x)
+		if (collision->getPosition().x <= m_position.x)
 		{
-			if (_currentClipName != _attackClip)
-			play(_idleClip);
-			_isCollided = true;
+			if (m_currentClipName != m_attackClip)
+			play(m_idleClip);
+			m_isCollided = true;
 		}
 		return;
 	}

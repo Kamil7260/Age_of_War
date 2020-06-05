@@ -23,16 +23,16 @@ public:
 	void onCollision(std::unique_ptr<base::Actor>& collision) override;
 
 private:
-	float _timer;
-	float _attackTimer;
+	float m_timer;
+	float m_attackTimer;
 
-	std::string _attackClip;
-	std::string _idleClip;
-	std::string _walkClip;
-	std::string _dieClip;
+	std::string m_attackClip;
+	std::string m_idleClip;
+	std::string m_walkClip;
+	std::string m_dieClip;
 
-	bool _touchEnemy;
-	bool _isCollided;
-	bool _enableAttack;
-	bool _died;
+	bool m_touchEnemy;
+	bool m_isCollided;
+	bool m_enableAttack;
+	bool m_died;
 };

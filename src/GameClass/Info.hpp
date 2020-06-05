@@ -51,7 +51,7 @@ protected:
 	class namedType : public type {
 	public:
 		namedType(T* target)
-			:_target(target)
+			:m_target(target)
 		{}
 		namedType(const namedType&) = default;
 		namedType(namedType&&) = default;
@@ -59,20 +59,20 @@ protected:
 		namedType& operator=(namedType&&) = default;
 		const std::string getString() override {
 			std::stringstream stream;
-			stream << *_target;
+			stream << *m_target;
 			std::string type;
 			stream >> type;
 			return type;
 		}
 
 	private:
-		T* _target;
+		T* m_target;
 	};
 
-	std::vector<std::pair<std::string, std::unique_ptr<type>>> _container;
+	std::vector<std::pair<std::string, std::unique_ptr<type>>> m_container;
 
-	sf::Sprite _sprite;
-	sf::Text _text;
+	sf::Sprite m_sprite;
+	sf::Text m_text;
 
 };
 
@@ -80,5 +80,5 @@ template<typename T>
 inline void Info::addValue(T* target,const std::string& description)
 {
 	auto p = std::make_unique<namedType<T>>(target);
-	_container.push_back(std::make_pair(description, std::move(p)));
+	m_container.push_back(std::make_pair(description, std::move(p)));
 }

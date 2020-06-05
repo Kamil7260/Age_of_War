@@ -21,6 +21,6 @@ public:
 
 	virtual void setCallbackOnRelease(const std::function<void()>& callme);
 protected:
-	sf::Sprite _sprite;
-	std::function<void()> _spawnCallback;
+	sf::Sprite m_sprite;
+	std::function<void()> m_spawnCallback;
 };

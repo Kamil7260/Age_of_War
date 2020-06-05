@@ -31,9 +31,9 @@ public:
 
 	void setCharacterSize(const unsigned int size);
 protected:
-	sf::Text _text;
-	int* _target;
+	sf::Text m_text;
+	int* m_target;
 
-	float _curTime;
-	int _currentValue;
+	float m_curTime;
+	int m_currentValue;
 };

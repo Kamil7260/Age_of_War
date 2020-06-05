@@ -3,65 +3,65 @@
 #include "../Core/Application.hpp"
 
 Ikon::Ikon(float time)
-	:_maxTime(time), _timer(0.f)
+	:m_maxTime(time), m_timer(0.f)
 {
-	_shadow.setFillColor(sf::Color::Black);
-	_shadow.setFillColor(sf::Color(0, 0, 0, 120));
+	m_shadow.setFillColor(sf::Color::Black);
+	m_shadow.setFillColor(sf::Color(0, 0, 0, 120));
 }
 
 void Ikon::onUpdate()
 {
 	float delta = core::Application::getInstance().getTime();
-	_timer += delta;
+	m_timer += delta;
 
-	if(_timer>_maxTime)
-		if (_onEnd != nullptr)
+	if(m_timer>m_maxTime)
+		if (m_onEnd != nullptr)
 		{
-			_onEnd();
+			m_onEnd();
 		}
-	_shadow.setSize(sf::Vector2f(_shadow.getSize().x, _shadowSize.y * (_maxTime-_timer)/_maxTime));
+	m_shadow.setSize(sf::Vector2f(m_shadow.getSize().x, m_shadowSize.y * (m_maxTime-m_timer)/m_maxTime));
 }
 
 void Ikon::setPosition(const sf::Vector2f& pos)
 {
-	_sprite.setPosition(pos);
-	_shadow.setPosition(pos);
-	_position = pos;
+	m_sprite.setPosition(pos);
+	m_shadow.setPosition(pos);
+	m_position = pos;
 }
 
 void Ikon::setScale(const sf::Vector2f& sca)
 {
-	_sprite.setScale(sca);
-	_shadow.setScale(sca);
-	_scale = sca;
+	m_sprite.setScale(sca);
+	m_shadow.setScale(sca);
+	m_scale = sca;
 }
 
 void Ikon::move(const sf::Vector2f& delta)
 {
-	_sprite.move(delta);
-	_shadow.move(delta);
-	_position += delta;
+	m_sprite.move(delta);
+	m_shadow.move(delta);
+	m_position += delta;
 }
 
 void Ikon::setTexture(const sf::Texture& tex)
 {
-	_sprite.setTexture(tex);
-	_shadowSize = sf::Vector2f(tex.getSize());
-	_shadow.setSize(_shadowSize);
+	m_sprite.setTexture(tex);
+	m_shadowSize = sf::Vector2f(tex.getSize());
+	m_shadow.setSize(m_shadowSize);
 }
 
 void Ikon::setTimePoint(const float points)
 {
-	_maxTime = points;
+	m_maxTime = points;
 }
 
 void Ikon::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	target.draw(_sprite, states);
-	target.draw(_shadow, states);
+	target.draw(m_sprite, states);
+	target.draw(m_shadow, states);
 }
 
 void Ikon::setCallBackOnEnd(const std::function<void()>& onEnd)
 {
-	_onEnd = onEnd;
+	m_onEnd = onEnd;
 }

@@ -2,93 +2,93 @@
 #include "../Core/Application.hpp"
 
 base::Clip::Clip(float speed)
-	: _isFinish(true), _speed(speed), _curTime(0.f), _origin(0.5f, 0.5f), _callback(nullptr), _callbackOnTime(nullptr),
-	_onTime(0.f), _onTimeCalled(false), _onTimeCounter(0.f)
+	: m_isFinish(true), m_speed(speed), m_curTime(0.f), m_origin(0.5f, 0.5f), m_callback(nullptr), m_callbackOnTime(nullptr),
+	m_onTime(0.f), m_onTimeCalled(false), m_onTimeCounter(0.f)
 {
 }
 
 void base::Clip::addFrame(const std::shared_ptr<sf::Texture>& tex)
 {
-	_container.push_back(tex);
+	m_container.push_back(tex);
 }
 
 bool base::Clip::update()
 {
 	auto delta = core::Application::getInstance().getTime();
-	_curTime += delta;
+	m_curTime += delta;
 	 
-	if (_onTimeCounter > 0.f)
+	if (m_onTimeCounter > 0.f)
 	{
-		_onTimeCounter -= delta;
+		m_onTimeCounter -= delta;
 	}
-	else if(!_onTimeCalled) {
-		if (_callbackOnTime != nullptr) {
-			_callbackOnTime();
-			_onTimeCalled = true;
+	else if(!m_onTimeCalled) {
+		if (m_callbackOnTime != nullptr) {
+			m_callbackOnTime();
+			m_onTimeCalled = true;
 		}
 	}
-	if (_curTime >= _speed)
+	if (m_curTime >= m_speed)
 	{
-		_curTime = 0.f;
-		++_currentFrame;
-		if (_currentFrame == _container.end())
+		m_curTime = 0.f;
+		++m_currentFrame;
+		if (m_currentFrame == m_container.end())
 		{
-			_currentFrame = _container.begin();
-			_isFinish = true;
-			if (_callback != nullptr)
-				_callback();
+			m_currentFrame = m_container.begin();
+			m_isFinish = true;
+			if (m_callback != nullptr)
+				m_callback();
 			return true;
 		}
-		_sprite->setTexture(*(*_currentFrame));
+		m_sprite->setTexture(*(*m_currentFrame));
 	}
 	return false;
 }
 
 void base::Clip::setOrigin(const sf::Vector2f& origin)
 {
-	_origin = origin;
+	m_origin = origin;
 }
 
 void base::Clip::setSprite(const std::shared_ptr<sf::Sprite>& sprite)
 {
-	_sprite = sprite;
+	m_sprite = sprite;
 }
 
 void base::Clip::setSpeed(const float speed)
 {
-	_speed = speed;
+	m_speed = speed;
 }
 
 void base::Clip::start()
 {
-	_onTimeCalled = false;
-	_isFinish = false;
-	_currentFrame = _container.begin();
-	_sprite->setTexture(*(*_currentFrame),true);
-	_curTime = 0.f;
-	_onTimeCounter = _onTime;
-	_sprite->setOrigin(_origin);
+	m_onTimeCalled = false;
+	m_isFinish = false;
+	m_currentFrame = m_container.begin();
+	m_sprite->setTexture(*(*m_currentFrame),true);
+	m_curTime = 0.f;
+	m_onTimeCounter = m_onTime;
+	m_sprite->setOrigin(m_origin);
 }
 
 const sf::Vector2f& base::Clip::getOriginMask() const
 {
-	return _origin;
+	return m_origin;
 }
 
 void base::Clip::setCallbackOnTime(const std::function<void()>& callme, const float time)
 {
-	_callbackOnTime = callme;
-	_onTime = time;
+	m_callbackOnTime = callme;
+	m_onTime = time;
 }
 
 std::shared_ptr<sf::Texture> base::Clip::getMask() const
 {
-	if (_container.empty())
+	if (m_container.empty())
 		return nullptr;
-	return *_container.begin();
+	return *m_container.begin();
 }
 
 void base::Clip::setCallback(const std::function<void()>& callme)
 {
-	_callback = callme;
+	m_callback = callme;
 }

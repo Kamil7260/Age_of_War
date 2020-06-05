@@ -3,76 +3,76 @@
 #include "../Core/Application.hpp"
 
 Counter::Counter(int* target)
-	:_target(target), _curTime(0.f), _currentValue(0)
+	:m_target(target), m_curTime(0.f), m_currentValue(0)
 {
 }
 
 void Counter::setFont(const sf::Font& font)
 {
-	_text.setFont(font);
+	m_text.setFont(font);
 }
 
 void Counter::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	target.draw(*_sprite, states);
-	target.draw(_text, states);
+	target.draw(*m_sprite, states);
+	target.draw(m_text, states);
 }
 
 void Counter::setScale(const sf::Vector2f& sca)
 {
-	_sprite->setScale(sca);
-	_text.setScale(sca);
-	_scale = sca;
+	m_sprite->setScale(sca);
+	m_text.setScale(sca);
+	m_scale = sca;
 }
 
 void Counter::move(const sf::Vector2f& delta)
 {
-	_sprite->move(delta);
-	_text.move(delta);
-	_position += delta;
+	m_sprite->move(delta);
+	m_text.move(delta);
+	m_position += delta;
 }
 
 void Counter::setPosition(const sf::Vector2f& pos)
 {
-	_sprite->setPosition(pos);
-	_text.setPosition(pos + sf::Vector2f(20.f,-15.f));
-	_position = pos;
+	m_sprite->setPosition(pos);
+	m_text.setPosition(pos + sf::Vector2f(20.f,-15.f));
+	m_position = pos;
 }
 
 void Counter::setColor(const sf::Color& color)
 {
-	_text.setFillColor(color);
+	m_text.setFillColor(color);
 }
 
 void Counter::onUpdate()
 {
 	updateAnimator();
-	if (!_isRunning)
-		play(_currentClipName);
+	if (!m_isRunning)
+		play(m_currentClipName);
 
-	_curTime += core::Application::getInstance().getTime();
-	if(*_target != _currentValue)
-	if (_curTime > 0.01f) {
-		_curTime = 0.f;
-		if (_currentValue < *_target)
+	m_curTime += core::Application::getInstance().getTime();
+	if(*m_target != m_currentValue)
+	if (m_curTime > 0.01f) {
+		m_curTime = 0.f;
+		if (m_currentValue < *m_target)
 		{
-			++_currentValue;
+			++m_currentValue;
 		}
 		else {
-			--_currentValue;
+			--m_currentValue;
 		}
-		_text.setString(std::to_string(_currentValue));
+		m_text.setString(std::to_string(m_currentValue));
 	}
 }
 
 void Counter::addClip(base::Clip clip, const std::string& name)
 {
-	clip.setSprite(_sprite);
-	_container.insert(std::make_pair(name, std::move(clip)));
-	_currentClipName = name;
+	clip.setSprite(m_sprite);
+	m_container.insert(std::make_pair(name, std::move(clip)));
+	m_currentClipName = name;
 }
 
 void Counter::setCharacterSize(const unsigned int size)
 {
-	_text.setCharacterSize(size);
+	m_text.setCharacterSize(size);
 }

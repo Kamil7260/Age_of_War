@@ -1,101 +1,101 @@
 #include "Button.hpp"
 
 Button::Button(const base::collider& collider)
-	:Actor(collider), _onClickEvent(nullptr),_shadowDraw(false), _isCollided(false), _isReleaseCalled(true),_drawBox(false)
+	:Actor(collider), m_onClickEvent(nullptr),m_shadowDraw(false), m_isCollided(false),m_isReleaseCalled(true),m_drawBox(false)
 {
-	_shadow.setFillColor(sf::Color::White);
-	_shadow.setFillColor(sf::Color(255, 255, 255, 60));
+	m_shadow.setFillColor(sf::Color::White);
+	m_shadow.setFillColor(sf::Color(255, 255, 255, 60));
 }
 
 void Button::setTexture(const sf::Texture& tex)
 {
-	_sprite.setTexture(tex);
-	_shadow.setSize(sf::Vector2f(tex.getSize()));
+	m_sprite.setTexture(tex);
+	m_shadow.setSize(sf::Vector2f(tex.getSize()));
 }
 
 void Button::onUpdate()
 {
-	if(!_shadowDraw)
-		_shadow.setFillColor(sf::Color(255, 255, 255, 0));
-	_shadowDraw = false;
+	if(!m_shadowDraw)
+		m_shadow.setFillColor(sf::Color(255, 255, 255, 0));
+	m_shadowDraw = false;
 
-	if (_isCollided)
+	if (m_isCollided)
 	{
-		_drawBox = true;
+		m_drawBox = true;
 	}
 	else {
-		_drawBox = false;
-		if (!_isReleaseCalled)
+		m_drawBox = false;
+		if (!m_isReleaseCalled)
 		{
-			if(_onReleaseEvent != nullptr)
-				_onReleaseEvent();
-			_isReleaseCalled = true;
+			if(m_onReleaseEvent != nullptr)
+				m_onReleaseEvent();
+			m_isReleaseCalled = true;
 		}
 	}
-	_isCollided = false;
+	m_isCollided = false;
 }
 
 void Button::onMouseCollision(bool isPressed)
 {
-	_infoBox.refresh();
-	_isCollided = true;
-	_shadowDraw = true;
-	_isReleaseCalled = false;
-	if (_onClickEvent != nullptr)
+	m_infoBox.refresh();
+	m_isCollided = true;
+	m_shadowDraw = true;
+	m_isReleaseCalled = false;
+	if (m_onClickEvent != nullptr)
 	{
-		_onClickEvent(isPressed);
+		m_onClickEvent(isPressed);
 	}
 	if (isPressed)
 	{
-		_shadow.setFillColor(sf::Color(255, 255, 255, 140));
+		m_shadow.setFillColor(sf::Color(255, 255, 255, 140));
 		return;
 	}
 
-	_shadow.setFillColor(sf::Color(0, 0, 0, 50));
+	m_shadow.setFillColor(sf::Color(0, 0, 0, 50));
 }
 
 void Button::setPosition(const sf::Vector2f& pos)
 {
-	_shadow.setPosition(pos);
-	_sprite.setPosition(pos);
-	_position = pos;
+	m_shadow.setPosition(pos);
+	m_sprite.setPosition(pos);
+	m_position = pos;
 }
 
 void Button::setScale(const sf::Vector2f& sca)
 {
-	_shadow.setScale(sca);
-	_sprite.setScale(sca);
-	_scale = sca;
+	m_shadow.setScale(sca);
+	m_sprite.setScale(sca);
+	m_scale = sca;
 }
 
 void Button::move(const sf::Vector2f& delta)
 {
-	_shadow.move(delta);
-	_sprite.move(delta);
-	_position += delta;
+	m_shadow.move(delta);
+	m_sprite.move(delta);
+	m_position += delta;
 }
 
 Info& Button::getInfo()
 {
-	return _infoBox;
+	return m_infoBox;
 }
 
 void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	target.draw(_sprite, states);
-	target.draw(_shadow, states);
-	if (_drawBox)
+	target.draw(m_sprite, states);
+	target.draw(m_shadow, states);
+	if (m_drawBox)
 	{
-		_infoBox.draw(target,states);
+		m_infoBox.draw(target,states);
 	}
 }
 
 void Button::setCallbackOnMouseRelease(const std::function<void()>& func)
 {
-	_onReleaseEvent = func;
+	m_onReleaseEvent = func;
 }
 
 void Button::setClickEvent(const std::function<void(bool)>& func)
 {
-	_onClickEvent = func;
+	m_onClickEvent = func;
 }

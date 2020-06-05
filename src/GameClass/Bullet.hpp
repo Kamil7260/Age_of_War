@@ -22,13 +22,13 @@ public:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 	
 	virtual void setRotation(const int rot) override {
-		_rotation = rot;
-		_sprite.setRotation(static_cast<float>(rot));
+		m_rotation = rot;
+		m_sprite.setRotation(static_cast<float>(rot));
 	}
 protected:
-	sf::Sprite _sprite;
-	sf::Vector2f _direction;
-	float _speed;
-	int _maxDMG;
-	int _minDMG;
+	sf::Sprite m_sprite;
+	sf::Vector2f m_direction;
+	float m_speed;
+	int m_maxDMG;
+	int m_minDMG;
 };

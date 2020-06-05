@@ -5,33 +5,33 @@
 #include "../Core/Renderer.hpp"
 #include "../Core/Application.hpp"
 Bullet::Bullet(int minDMG, int maxDMG,float speed, const sf::Vector2f& dir)
-	:_direction(dir), _speed(speed), _minDMG(minDMG), _maxDMG(maxDMG)
+	:m_direction(dir), m_speed(speed), m_minDMG(minDMG), m_maxDMG(maxDMG)
 {
-	_myColider = { 0,30,0,30 };
-	_tag = "Bullet";
+	m_myColider = { 0,30,0,30 };
+	m_tag = "Bullet";
 }
 
 void Bullet::setTexture(const sf::Texture& tex)
 {
-	_sprite.setTexture(tex);
+	m_sprite.setTexture(tex);
 }
 
 void Bullet::setPosition(const sf::Vector2f& pos)
 {
-	_sprite.setPosition(pos);
-	_position = pos;
+	m_sprite.setPosition(pos);
+	m_position = pos;
 }
 
 void Bullet::setScale(const sf::Vector2f& sca)
 {
-	_sprite.setScale(sca);
-	_scale = sca;
+	m_sprite.setScale(sca);
+	m_scale = sca;
 }
 
 void Bullet::move(const sf::Vector2f& delta)
 {
-	_sprite.move(delta);
-	_position += delta;
+	m_sprite.move(delta);
+	m_position += delta;
 }
 
 void Bullet::onCollision(std::unique_ptr<Actor>& collision)
@@ -42,7 +42,7 @@ void Bullet::onCollision(std::unique_ptr<Actor>& collision)
 		
 		std::random_device mch;
 		std::default_random_engine generator(mch());
-		std::uniform_int_distribution<int> distribution(_minDMG, _maxDMG);
+		std::uniform_int_distribution<int> distribution(m_minDMG, m_maxDMG);
 		int attack_roll = distribution(generator);
 
 		ptr->damage(attack_roll);
@@ -54,10 +54,10 @@ void Bullet::onCollision(std::unique_ptr<Actor>& collision)
 void Bullet::onUpdate()
 {
 	auto k = core::Application::getInstance().getTime();
-	k *= _speed;
-	move(sf::Vector2f(_direction.x * k, _direction.y * k));
+	k *= m_speed;
+	move(sf::Vector2f(m_direction.x * k, m_direction.y * k));
 
-	if (_position.y > 1000)
+	if (m_position.y > 1000)
 	{
 		remove();
 		core::Renderer::getInstance().clearNoActive();
@@ -66,5 +66,5 @@ void Bullet::onUpdate()
 
 void Bullet::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	target.draw(_sprite, states);
+	target.draw(m_sprite, states);
 }

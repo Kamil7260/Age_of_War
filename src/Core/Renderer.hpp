@@ -32,7 +32,7 @@ namespace core {
 		void clearNoActive();
 
 		std::unique_ptr<sf::RenderWindow>& getWindow() {
-			return _window;
+			return m_window;
 		};
 
 		std::unique_ptr<base::Actor>& isEnemyInRange(const sf::Vector2f& myPosition, const float myRange, const base::team& myTeam);
@@ -45,22 +45,22 @@ namespace core {
 		std::unique_ptr<base::Actor> findAndRemove(const std::string& tag);
 
 		const sf::Vector2i getMousePosition() {
-			return sf::Mouse::getPosition(*_window);
+			return sf::Mouse::getPosition(*m_window);
 		}
 
-		void setCamSpeed(const float speed) { _camSpeed = speed; }
-		void setCamScope(const sf::Vector2f& scope) { _scope = scope; }
+		void setCamSpeed(const float speed) { m_camSpeed = speed; }
+		void setCamScope(const sf::Vector2f& scope) { m_scope = scope; }
 
 		void forceClear();
 
 		sf::View& getView() {
-			return _view;
+			return m_view;
 		}
 
 	private:
-		float _camSpeed;
-		sf::Vector2f _position;
-		sf::Vector2f _scope;
+		float m_camSpeed;
+		sf::Vector2f m_position;
+		sf::Vector2f m_scope;
 		std::unique_ptr<base::Actor>& getLastColliderActor(std::vector<std::unique_ptr<base::Actor>>& actor);
 
 		void eraseNoActive();
@@ -75,23 +75,23 @@ namespace core {
 
 		Renderer();
 
-		std::vector<std::pair<std::unique_ptr<base::Actor>,base::object_type>> _queue;
-		std::vector<std::unique_ptr<base::Actor>> _enemyQueue;
-		std::vector<std::unique_ptr<base::Actor>> _bulletQueue;
+		std::vector<std::pair<std::unique_ptr<base::Actor>,base::object_type>> m_queue;
+		std::vector<std::unique_ptr<base::Actor>> m_enemyQueue;
+		std::vector<std::unique_ptr<base::Actor>> m_bulletQueue;
 
-		std::vector<std::unique_ptr<base::Actor>> _backGround;
-		std::vector<std::unique_ptr<base::Actor>> _actor;
-		std::vector<std::unique_ptr<base::Actor>> _bulletActor;
+		std::vector<std::unique_ptr<base::Actor>> m_backGround;
+		std::vector<std::unique_ptr<base::Actor>> m_actor;
+		std::vector<std::unique_ptr<base::Actor>> m_bulletActor;
 
-		std::vector<std::unique_ptr<base::Actor>> _enemyBulletActor;
-		std::vector<std::unique_ptr<base::Actor>> _enemyActor;
-		std::vector<std::unique_ptr<base::Actor>> _gui;
-		std::unique_ptr<sf::RenderWindow> _window;
+		std::vector<std::unique_ptr<base::Actor>> m_enemyBulletActor;
+		std::vector<std::unique_ptr<base::Actor>> m_enemyActor;
+		std::vector<std::unique_ptr<base::Actor>> m_gui;
+		std::unique_ptr<sf::RenderWindow> m_window;
 
-		std::unique_ptr<base::Actor> _placeHolder;
-		bool _shouldBeErase;
-		sf::Vector2i _mousePosition;
-		sf::View _view;
+		std::unique_ptr<base::Actor> m_placeHolder;
+		bool m_shouldBeErase;
+		sf::Vector2i m_mousePosition;
+		sf::View m_view;
 	};
 		
 }

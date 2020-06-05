@@ -22,25 +22,25 @@ public:
 	virtual void correctDirection(std::unique_ptr<base::Actor>& target);
 
 	virtual void longRange() {
-		_longRange = true;
+		m_longRange = true;
 	};
 
 	virtual int getSellPrice() const {
-		return _sellPrice;
+		return m_sellPrice;
 	}
 
 protected:
-	int _maxDMG;
-	int _minDMG;
-	int _range;
-	bool _enableShot;
-	std::shared_ptr<sf::Texture> _bulletTex;
-	float _reloadTime;
-	float _curTime;
-	float _bulletSpeed;
-	sf::Vector2f _bulletSpawnPoint;
-	float _rangeSpawn;
-	bool _longRange;
-	float _fireSpeed;
-	int _sellPrice;
+	int m_maxDMG;
+	int m_minDMG;
+	int m_range;
+	bool m_enableShot;
+	std::shared_ptr<sf::Texture> m_bulletTex;
+	float m_reloadTime;
+	float m_curTime;
+	float m_bulletSpeed;
+	sf::Vector2f m_bulletSpawnPoint;
+	float m_rangeSpawn;
+	bool m_longRange;
+	float m_fireSpeed;
+	int m_sellPrice;
 };

@@ -33,11 +33,11 @@ namespace core {
 		ResourceManager() = default;
 
 		struct container {
-			std::string _path;
-			std::shared_ptr<T> _data;
+			std::string m_path;
+			std::shared_ptr<T> m_data;
 		};
 
-		std::vector<std::shared_ptr<container>> _container;
+		std::vector<std::shared_ptr<container>> m_container;
 	};
 
 	template<typename T>
@@ -50,10 +50,10 @@ namespace core {
 			return false;
 		}
 		else {
-			_container.push_back(std::make_shared<container>());
-			auto& k = _container.back();
-			k->_path = path;
-			k->_data = std::move(temp);
+			m_container.push_back(std::make_shared<container>());
+			auto& k = m_container.back();
+			k->m_path = path;
+			k->m_data = std::move(temp);
 		}
 		return true;
 	}
@@ -68,10 +68,10 @@ namespace core {
 			return false;
 		}
 		else {
-			_container.push_back(std::make_shared<container>());
-			auto& k = _container.back();
-			k->_path = path;
-			k->_data = std::move(temp);
+			m_container.push_back(std::make_shared<container>());
+			auto& k = m_container.back();
+			k->m_path = path;
+			k->m_data = std::move(temp);
 		}
 		return true;
 	}
@@ -79,11 +79,11 @@ namespace core {
 	template<typename T>
 	inline const std::shared_ptr<T> ResourceManager<T>::get(const std::string& path)
 	{
-		for (auto k = _container.begin(); k != _container.end(); ++k)
+		for (auto k = m_container.begin(); k != m_container.end(); ++k)
 		{
-			if ((*k)->_path == path)
+			if ((*k)->m_path == path)
 			{
-				return (*k)->_data;
+				return (*k)->m_data;
 			}
 		}
 		LOG_WARNING("Tried to get asset that does not exist with path = ", path);
@@ -93,13 +93,13 @@ namespace core {
 	template<typename T>
 	inline bool ResourceManager<T>::remove(const std::string& path)
 	{
-		for (auto it = _container.begin(); it != _container.end(); ++it)
+		for (auto it = m_container.begin(); it != m_container.end(); ++it)
 		{
 			if ((*it)->_path == path)
 			{
-				if(it != _container.end()-1)
-					std::iter_swap(it,_container.end() - 1);
-				_container.pop_back();
+				if(it != m_container.end()-1)
+					std::iter_swap(it,m_container.end() - 1);
+				m_container.pop_back();
 				return true;
 			}
 		}

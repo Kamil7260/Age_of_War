@@ -26,14 +26,14 @@ public:
 	virtual void setCallbackOnMouseRelease(const std::function<void()>& func);
 	virtual void setClickEvent(const std::function<void(bool)>& func);
 protected:
-	sf::Sprite _sprite;
-	std::function<void(bool)> _onClickEvent;
-	std::function<void()> _onReleaseEvent;
-	bool _isReleaseCalled;
+	sf::Sprite m_sprite;
+	std::function<void(bool)> m_onClickEvent;
+	std::function<void()> m_onReleaseEvent;
+	bool m_isReleaseCalled;
 
-	sf::RectangleShape _shadow;
-	bool _shadowDraw;
-	Info _infoBox;
-	bool _drawBox;
-	bool _isCollided;
+	sf::RectangleShape m_shadow;
+	bool m_shadowDraw;
+	Info m_infoBox;
+	bool m_drawBox;
+	bool m_isCollided;
 };

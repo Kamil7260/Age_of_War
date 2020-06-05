@@ -7,34 +7,34 @@
 #include "Player.hpp"
 
 TextDisplay::TextDisplay(float maxTime, float speed)
-	:_maxTime(maxTime), _curTime(0.f),_speed(speed), _income(0), _action(false)
+	:m_maxTime(maxTime), m_curTime(0.f),m_speed(speed), m_income(0), m_action(false)
 {
 }
 
 void TextDisplay::move(const sf::Vector2f& delta)
 {
-	_text.move(sf::Vector2f(delta));
-	_icon.move(sf::Vector2f(delta));
-	_position += delta;
+	m_text.move(sf::Vector2f(delta));
+	m_icon.move(sf::Vector2f(delta));
+	m_position += delta;
 }
 
 void TextDisplay::onUpdate()
 {
 	auto delta = core::Application::getInstance().getTime();
-	_curTime += delta;
+	m_curTime += delta;
 
-	auto deltaP = _speed * delta * (_maxTime - _curTime) / _maxTime;
+	auto deltaP = m_speed * delta * (m_maxTime - m_curTime) / m_maxTime;
 	move(sf::Vector2f(0.f, -deltaP));
-	if (_curTime > 1.f)
+	if (m_curTime > 1.f)
 	{
-		if (!_action) {
+		if (!m_action) {
 			auto& p = core::Renderer::getInstance().find("Player");
 			auto s_ptr = static_cast<Player*>(p.get());
-			s_ptr->income(_income);
-			_action = true;
+			s_ptr->income(m_income);
+			m_action = true;
 		}
 	}
-	if (_curTime > _maxTime)
+	if (m_curTime > m_maxTime)
 	{
 		remove();
 		core::Renderer::getInstance().clearNoActive();
@@ -43,46 +43,46 @@ void TextDisplay::onUpdate()
 
 void TextDisplay::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	target.draw(_text, states);
-	target.draw(_icon, states);
+	target.draw(m_text, states);
+	target.draw(m_icon, states);
 }
 
 void TextDisplay::setPosition(const sf::Vector2f& pos)
 {
-	_position = pos;
-	_text.setPosition(pos);
-	_icon.setPosition(sf::Vector2f(pos.x-30.f,pos.y));
+	m_position = pos;
+	m_text.setPosition(pos);
+	m_icon.setPosition(sf::Vector2f(pos.x-30.f,pos.y));
 }
 
 void TextDisplay::setScale(const sf::Vector2f& sca)
 {
-	_scale = sca;
-	_text.setScale(sca);
-	_icon.setScale(sca);
+	m_scale = sca;
+	m_text.setScale(sca);
+	m_icon.setScale(sca);
 }
 
 void TextDisplay::setColor(const sf::Color& color)
 {
-	_text.setFillColor(color);
+	m_text.setFillColor(color);
 }
 
 void TextDisplay::setCharacterSize(const unsigned int size)
 {
-	_text.setCharacterSize(size);
+	m_text.setCharacterSize(size);
 }
 
 void TextDisplay::setIncome(const int income)
 {
-	_income = income;
-	_text.setString(std::to_string(_income));
+	m_income = income;
+	m_text.setString(std::to_string(m_income));
 }
 
 void TextDisplay::setFont(const sf::Font& font)
 {
-	_text.setFont(font);
+	m_text.setFont(font);
 }
 
 void TextDisplay::setTexture(const sf::Texture& tex)
 {
-	_icon.setTexture(tex);
+	m_icon.setTexture(tex);
 }

@@ -2,7 +2,7 @@
 
 bool core::ClipManager::addClip(std::unique_ptr<base::Clip> clip, const std::string& name)
 {
-	auto it = _container.insert(std::make_pair(name, std::move(clip)));
+	auto it = m_container.insert(std::make_pair(name, std::move(clip)));
 	if (!it.second)
 	{
 		LOG_ERROR("Clip with name : ", name, " already exist");
@@ -13,23 +13,23 @@ bool core::ClipManager::addClip(std::unique_ptr<base::Clip> clip, const std::str
 
 void core::ClipManager::removeClip(const std::string& name)
 {
-	auto it = _container.find(name);
-	if (it == _container.end())
+	auto it = m_container.find(name);
+	if (it == m_container.end())
 	{
 		LOG_ERROR("tried to delete clip with name : ", name, "but it does not exist");
 	}
 	else {
-		_container.erase(it);
+		m_container.erase(it);
 	}
 }
 
 const std::unique_ptr<base::Clip>& core::ClipManager::getClip(const std::string& name)
 {
-	auto it = _container.find(name);
-	if (it == _container.end())
+	auto it = m_container.find(name);
+	if (it == m_container.end())
 	{
 		LOG_ERROR("Clip with name : ", name, " does not exist");
-		return _container.begin()->second;
+		return m_container.begin()->second;
 	}
 	return it->second;
 }

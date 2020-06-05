@@ -7,122 +7,122 @@
 #include "TextDisplay.hpp"
 
 Range::Range(const base::collider& collider, int hp, int attack, int maxAttack, int range, float speedAttack, float speedMove, int income)
-	:Mob(hp, attack, maxAttack, speedAttack, speedMove, income), _timer(0.f), _attackTimer(0.f), _range(range),
-	_touchEnemy(false), _isCollided(false), _enableAttack(true), _died(false), _inRange(false)
+	:Mob(hp, attack, maxAttack, speedAttack, speedMove, income), m_timer(0.f), m_attackTimer(0.f), m_range(range),
+	m_touchEnemy(false), m_isCollided(false), m_enableAttack(true), m_died(false), m_inRange(false)
 {
-	_myColider = collider;
+	m_myColider = collider;
 }
 
 void Range::setAnimatorName(const std::string& name)
 {
-	_walkClip = name;
-	_walkClip += "_walk";
-	addClip(core::Application::getInstance().getClip(_walkClip), _walkClip);
+	m_walkClip = name;
+	m_walkClip += "_walk";
+	addClip(core::Application::getInstance().getClip(m_walkClip), m_walkClip);
 
-	_idleClip = name;
-	_idleClip += "_idle";
-	addClip(core::Application::getInstance().getClip(_idleClip), _idleClip);
+	m_idleClip = name;
+	m_idleClip += "_idle";
+	addClip(core::Application::getInstance().getClip(m_idleClip), m_idleClip);
 
-	_dieClip = name;
-	_dieClip += "_die";
-	addClip(core::Application::getInstance().getClip(_dieClip), _dieClip);
-	auto d = _container.find(_dieClip);
+	m_dieClip = name;
+	m_dieClip += "_die";
+	addClip(core::Application::getInstance().getClip(m_dieClip), m_dieClip);
+	auto d = m_container.find(m_dieClip);
 	d->second.setCallback([&]()->void {
-		_died = true;
-		_timer = 0.f;
+		m_died = true;
+		m_timer = 0.f;
 		});
 
-	_attackClip = name;
-	_attackClip += "_attack";
-	addClip(core::Application::getInstance().getClip(_attackClip), _attackClip);
+	m_attackClip = name;
+	m_attackClip += "_attack";
+	addClip(core::Application::getInstance().getClip(m_attackClip), m_attackClip);
 
-	auto k = _container.find(_attackClip);
+	auto k = m_container.find(m_attackClip);
 	k->second.setCallback([&]()->void {
-		_enableAttack = true;
+		m_enableAttack = true;
 		});
 
-	_idleShotClip = name;
-	_idleShotClip += "_idleshot";
-	addClip(core::Application::getInstance().getClip(_idleShotClip), _idleShotClip);
-	k = _container.find(_idleShotClip);
+	m_idleShotClip = name;
+	m_idleShotClip += "_idleshot";
+	addClip(core::Application::getInstance().getClip(m_idleShotClip), m_idleShotClip);
+	k = m_container.find(m_idleShotClip);
 	k->second.setCallback([&]()->void {
-		_enableAttack = true;
+		m_enableAttack = true;
 		});
 
-	_walkShotClip = name;
-	_walkShotClip += "_walkshot";
-	addClip(core::Application::getInstance().getClip(_walkShotClip), _walkShotClip);
-	k = _container.find(_walkShotClip);
+	m_walkShotClip = name;
+	m_walkShotClip += "_walkshot";
+	addClip(core::Application::getInstance().getClip(m_walkShotClip), m_walkShotClip);
+	k = m_container.find(m_walkShotClip);
 	k->second.setCallback([&]()->void {
-		_enableAttack = true;
+		m_enableAttack = true;
 		});
 }
 
 void Range::onUpdate()
 {
 	float delta = core::Application::getInstance().getTime();
-	_timer += delta;
-	if (_hp > 0)
+	m_timer += delta;
+	if (m_hp > 0)
 	{
-		auto &inRangeActor = core::Renderer::getInstance().isEnemyInRange(_position, 250.f, _team);
+		auto &inRangeActor = core::Renderer::getInstance().isEnemyInRange(m_position, 250.f, m_team);
 		if (inRangeActor  != nullptr)
 		{
-			_inRange = true;
-			if (_attackTimer> _speedAttack) {
-				_attackTimer = 0.f;
-				_enableAttack = false;
+			m_inRange = true;
+			if (m_attackTimer> m_speedAttack) {
+				m_attackTimer = 0.f;
+				m_enableAttack = false;
 				if (inRangeActor->getTag() == "Mob")
 				{
 					std::random_device mch;
 					std::default_random_engine generator(mch());
-					std::uniform_int_distribution<int> distribution(_attack, _maxAttack);
+					std::uniform_int_distribution<int> distribution(m_attack, m_maxAttack);
 					int attack_roll = distribution(generator);
 					auto ptr = static_cast<base::Mob*>(inRangeActor.get());
 					ptr->damage(attack_roll);
 				}
 			}
 		}
-		else _inRange = false;
+		else m_inRange = false;
 
-		if ((_currentClipName == _attackClip || _currentClipName == _idleShotClip || _currentClipName == _walkShotClip) && _enableAttack)
+		if ((m_currentClipName == m_attackClip || m_currentClipName == m_idleShotClip || m_currentClipName == m_walkShotClip) && m_enableAttack)
 		{
-			_attackTimer += delta;
+			m_attackTimer += delta;
 		}
-		else _attackTimer = 0;
+		else m_attackTimer = 0;
 
-		if (!_isCollided)
+		if (!m_isCollided)
 		{
-			if (!_isRunning || ( _currentClipName != _walkClip && _currentClipName != _walkShotClip))
+			if (!m_isRunning || ( m_currentClipName != m_walkClip && m_currentClipName != m_walkShotClip))
 			{
-				if(!_inRange)
-					play(_walkClip);
+				if(!m_inRange)
+					play(m_walkClip);
 				else 
-					play(_walkShotClip);
+					play(m_walkShotClip);
 			}
-			move(sf::Vector2f(_speedMove * delta, 0.f));
+			move(sf::Vector2f(m_speedMove * delta, 0.f));
 		}
-		else if (!_isRunning) {
-			if (!_touchEnemy)
+		else if (!m_isRunning) {
+			if (!m_touchEnemy)
 			{
-				if (!_inRange)
-					play(_idleClip);
+				if (!m_inRange)
+					play(m_idleClip);
 				else
-					play(_idleShotClip);
+					play(m_idleShotClip);
 			}
 			else {
-				play(_attackClip);
+				play(m_attackClip);
 			}
 		}
 	}
 	else {
-		if (_died && _timer > 2.f)
+		if (m_died && m_timer > 2.f)
 		{
-			_isActive = false;
+			m_isActive = false;
 			core::Renderer::getInstance().clearNoActive();
 		}
 	}
-	_touchEnemy = false;
-	_isCollided = false;
+	m_touchEnemy = false;
+	m_isCollided = false;
 	updateAnimator();
 }
 
@@ -130,31 +130,31 @@ void Range::onUpdate()
 void Range::damage(int dmg)
 {
 	Mob::damage(dmg);
-	if (_hp <= 0)
+	if (m_hp <= 0)
 	{
-		if (_team != base::team::player)
+		if (m_team != base::team::player)
 		{
 			auto ptr = std::make_unique<TextDisplay>(2.5f, 70.f);
-			ptr->setPosition(_position);
+			ptr->setPosition(m_position);
 			ptr->setCharacterSize(20);
 			ptr->setFont(*core::ResourceManager<sf::Font>::getInstance().get("Assets/fonts/3.ttf"));
-			ptr->setIncome(_income);
+			ptr->setIncome(m_income);
 			ptr->setColor(sf::Color::Yellow);
 			ptr->setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/other/5.png"));
 			core::Renderer::getInstance().addObject(std::move(ptr), base::object_type::gui);
 		}
 
-		_position = { 0.f,0.f };
-		_activeCollider = false;
-		if (_currentClipName != _dieClip)
-			play(_dieClip);
+		m_position = { 0.f,0.f };
+		m_activeCollider = false;
+		if (m_currentClipName != m_dieClip)
+			play(m_dieClip);
 	}
 }
 
 void Range::setPosition(const sf::Vector2f& pos)
 {
-	_position = pos;
-	_sprite->setPosition(pos);
+	m_position = pos;
+	m_sprite->setPosition(pos);
 }
 
 void Range::onCollision(std::unique_ptr<base::Actor>& collision)
@@ -162,18 +162,18 @@ void Range::onCollision(std::unique_ptr<base::Actor>& collision)
 	if (collision->getTag() == "Bullet")
 		return;
 
-	if (collision->getTeam() != _team)
+	if (collision->getTeam() != m_team)
 	{
-		_touchEnemy = true;
-		_isCollided = true;
-		if (_attackTimer > _speedAttack && collision->getTag() == "Mob")
+		m_touchEnemy = true;
+		m_isCollided = true;
+		if (m_attackTimer > m_speedAttack && collision->getTag() == "Mob")
 		{
-			_attackTimer = 0.f;
-			_enableAttack = false;
-			if (_hp <= 0) return;
+			m_attackTimer = 0.f;
+			m_enableAttack = false;
+			if (m_hp <= 0) return;
 			std::random_device mch;
 			std::default_random_engine generator(mch());
-			std::uniform_int_distribution<int> distribution(_attack, _maxAttack);
+			std::uniform_int_distribution<int> distribution(m_attack, m_maxAttack);
 			int attack_roll = distribution(generator);
 			auto ptr = static_cast<base::Mob*>(collision.get());
 			ptr->damage(attack_roll/2);
@@ -183,14 +183,14 @@ void Range::onCollision(std::unique_ptr<base::Actor>& collision)
 
 		if (collision->getTag() == "Player" || collision->getTag() == "Enemy")
 		{
-			if (_attackTimer > _speedAttack)
+			if (m_attackTimer > m_speedAttack)
 			{
-				_attackTimer = 0.f;
-				_enableAttack = false;
-				if (_hp <= 0) return;
+				m_attackTimer = 0.f;
+				m_enableAttack = false;
+				if (m_hp <= 0) return;
 				std::random_device mch;
 				std::default_random_engine generator(mch());
-				std::uniform_int_distribution<int> distribution(_attack, _maxAttack);
+				std::uniform_int_distribution<int> distribution(m_attack, m_maxAttack);
 				int attack_roll = distribution(generator);
 
 				auto ptr = static_cast<base::Stronghold*>(collision.get());
@@ -198,44 +198,44 @@ void Range::onCollision(std::unique_ptr<base::Actor>& collision)
 			}
 		}
 
-		if (_currentClipName != _attackClip && _hp > 0)
+		if (m_currentClipName != m_attackClip && m_hp > 0)
 		{
-			play(_attackClip);
+			play(m_attackClip);
 			return;
 		}
 	}
 
-	if (_hp <= 0)
+	if (m_hp <= 0)
 		return;
 
-	if (_speedMove > 0)
+	if (m_speedMove > 0)
 	{
-		if (collision->getPosition().x >= _position.x)
+		if (collision->getPosition().x >= m_position.x)
 		{
-			if (_currentClipName != _attackClip)
+			if (m_currentClipName != m_attackClip)
 			{
-				if(_currentClipName != _idleClip && _currentClipName != _idleShotClip)
-				if (!_inRange)
-					play(_idleClip);
+				if(m_currentClipName != m_idleClip && m_currentClipName != m_idleShotClip)
+				if (!m_inRange)
+					play(m_idleClip);
 				else
-					play(_idleShotClip);
+					play(m_idleShotClip);
 			}
-			_isCollided = true;
+			m_isCollided = true;
 		}
 		return;
 	}
 	else {
-		if (collision->getPosition().x <= _position.x)
+		if (collision->getPosition().x <= m_position.x)
 		{
-			if (_currentClipName != _attackClip)
+			if (m_currentClipName != m_attackClip)
 			{
-				if (_currentClipName != _idleClip && _currentClipName != _idleShotClip)
-				if (!_inRange)
-					play(_idleClip);
+				if (m_currentClipName != m_idleClip && m_currentClipName != m_idleShotClip)
+				if (!m_inRange)
+					play(m_idleClip);
 				else
-					play(_idleShotClip);
+					play(m_idleShotClip);
 			}
-			_isCollided = true;
+			m_isCollided = true;
 		}
 		return;
 	}

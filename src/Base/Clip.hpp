@@ -18,7 +18,7 @@ namespace base {
 		virtual void addFrame(const std::shared_ptr<sf::Texture>& tex);
 		virtual bool update();
 
-		virtual bool isFinish() const { return _isFinish; };
+		virtual bool isFinish() const { return m_isFinish; };
 
 		virtual void setOrigin(const sf::Vector2f& origin);
 
@@ -36,17 +36,17 @@ namespace base {
 
 		virtual void setCallback(const std::function<void()>& callme);
 	protected:
-		bool _isFinish;
-		std::vector<std::shared_ptr<sf::Texture>> _container;
-		std::vector < std::shared_ptr<sf::Texture>>::iterator _currentFrame;
-		std::shared_ptr<sf::Sprite> _sprite;
-		float _speed;
-		float _curTime;
-		sf::Vector2f _origin;
-		std::function<void()> _callback;
-		std::function<void()> _callbackOnTime;
-		float _onTime;
-		float _onTimeCounter;
-		bool _onTimeCalled;
+		bool m_isFinish;
+		std::vector<std::shared_ptr<sf::Texture>> m_container;
+		std::vector < std::shared_ptr<sf::Texture>>::iterator m_currentFrame;
+		std::shared_ptr<sf::Sprite> m_sprite;
+		float m_speed;
+		float m_curTime;
+		sf::Vector2f m_origin;
+		std::function<void()> m_callback;
+		std::function<void()> m_callbackOnTime;
+		float m_onTime;
+		float m_onTimeCounter;
+		bool m_onTimeCalled;
 	};
 }

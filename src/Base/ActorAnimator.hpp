@@ -35,19 +35,19 @@ namespace base {
 
 		virtual void setAnimationSpeed(const float speed); 
 
-		virtual const std::string& getCurrentClipName() const { return _currentClip->first; }
+		virtual const std::string& getCurrentClipName() const { return m_currentClip->first; }
 
 	protected:
 
-		std::map<std::string, Clip> _container;
-		std::map<std::string, Clip>::iterator _currentClip;
+		std::map<std::string, Clip> m_container;
+		std::map<std::string, Clip>::iterator m_currentClip;
 
-		std::shared_ptr<sf::Sprite> _sprite;
-		bool _isRunning;
-		bool _isFinish;
-		float _animationSpeed;
+		std::shared_ptr<sf::Sprite> m_sprite;
+		bool m_isRunning;
+		bool m_isFinish;
+		float m_animationSpeed;
 
-		std::string _currentClipName;
+		std::string m_currentClipName;
 	};
 
 }

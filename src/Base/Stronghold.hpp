@@ -15,12 +15,12 @@ namespace base {
 
 		virtual void damage(int dmg);
 
-		virtual bool isColliderActive() const override { return _activeCollider; }
+		virtual bool isColliderActive() const override { return m_activeCollider; }
 	protected:
-		int _hp;
-		bool _activeCollider;
-		std::array<unitInfo, 3> _mobTemplate;
-		std::array<cannonInfo,3> _cannonTemplate;
+		int m_hp;
+		bool m_activeCollider;
+		std::array<unitInfo, 3> m_mobTemplate;
+		std::array<cannonInfo,3> m_cannonTemplate;
 	};
 
 }

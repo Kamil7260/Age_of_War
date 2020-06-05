@@ -30,7 +30,7 @@ public:
 	virtual void addToQueue(const unsigned int type);
 
 	virtual void drawCannonPlaces(bool value) {
-		_drawCannonPlaces = value;
+		m_drawCannonPlaces = value;
 	}
 
 	virtual void spawnCannon(const int type);
@@ -41,30 +41,30 @@ public:
 	virtual void loadNextAge();
 
 	virtual void income(const int value) {
-		_coinCount += value;
+		m_coinCount += value;
 	}
 
 	virtual void baseUpgrade();
 
 private:
-	float _timer;
-	std::array<sf::Sprite,3> _sprites;
-	bool _enableSpawn;
-	std::vector<std::pair<std::unique_ptr<base::Actor>, std::unique_ptr<base::Actor>>> _queue;
-	std::string _currentAge;
-	std::array<sf::Sprite,3> _cannonPlaces;
-	bool _drawCannonPlaces;
-	std::array<std::unique_ptr<Cannon>,3> _cannons;
+	float m_timer;
+	std::array<sf::Sprite,3> m_sprites;
+	bool m_enableSpawn;
+	std::vector<std::pair<std::unique_ptr<base::Actor>, std::unique_ptr<base::Actor>>> m_queue;
+	std::string m_currentAge;
+	std::array<sf::Sprite,3> m_cannonPlaces;
+	bool m_drawCannonPlaces;
+	std::array<std::unique_ptr<Cannon>,3> m_cannons;
 
-	int _coinCount;
-	bool _wantSell;
+	int m_coinCount;
+	bool m_wantSell;
 
-	int _sellClickCount;
-	int _baseUpgrade;
+	int m_sellClickCount;
+	int m_baseUpgrade;
 
-	std::array<std::string, 5> _ages;
-	int _expCount;
-	int _upgradeCondition;
-	int _cannonPlaceCost;
+	std::array<std::string, 5> m_ages;
+	int m_expCount;
+	int m_upgradeCondition;
+	int m_cannonPlaceCost;
 };
 

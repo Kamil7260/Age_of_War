@@ -1,11 +1,11 @@
 #include "Stronghold.hpp"
 
 base::Stronghold::Stronghold()
-	:_hp(50), _activeCollider(true)
+	:m_hp(50), m_activeCollider(true)
 {
 }
 
 void base::Stronghold::damage(int dmg)
 {
-	_hp -= dmg;
+	m_hp -= dmg;
 }

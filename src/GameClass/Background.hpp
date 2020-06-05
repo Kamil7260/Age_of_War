@@ -23,12 +23,12 @@ public:
 
 	virtual void onUpdate() override;
 
-	virtual void setTexture(const sf::Texture& tex) { _sprite.setTexture(tex); }
+	virtual void setTexture(const sf::Texture& tex) { m_sprite.setTexture(tex); }
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 private:
-	sf::Sprite _sprite;
+	sf::Sprite m_sprite;
 
 
 };

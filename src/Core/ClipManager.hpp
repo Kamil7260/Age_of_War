@@ -24,7 +24,7 @@ namespace core {
 		const std::unique_ptr<base::Clip>& getClip(const std::string& name);
 
 	private:
-		std::map<std::string, std::unique_ptr<base::Clip>> _container;
+		std::map<std::string, std::unique_ptr<base::Clip>> m_container;
 	};
 
 
