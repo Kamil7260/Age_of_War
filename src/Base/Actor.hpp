@@ -69,6 +69,14 @@ namespace base {
 		virtual void setRotation(const int rot) {
 			_rotation = rot;
 		}
+
+		virtual void dynamicDraw(bool ty) {
+			_dynamic = ty;
+		}
+
+		virtual bool isDynamic() const {
+			return _dynamic;
+		}
 	protected:
 		std::string _tag;
 		bool _isActive;
@@ -78,5 +86,6 @@ namespace base {
 		sf::Vector2f _scale;
 		collider _myColider;
 		int _rotation;
+		bool _dynamic;
 	};
 }

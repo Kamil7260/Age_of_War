@@ -13,9 +13,9 @@ TextDisplay::TextDisplay(float maxTime, float speed)
 
 void TextDisplay::move(const sf::Vector2f& delta)
 {
-	_text.move(sf::Vector2f(0.f, delta.y));
-	_icon.move(sf::Vector2f(0.f, delta.y));
-	_position += sf::Vector2f(0.f, delta.y);
+	_text.move(sf::Vector2f(delta));
+	_icon.move(sf::Vector2f(delta));
+	_position += delta;
 }
 
 void TextDisplay::onUpdate()

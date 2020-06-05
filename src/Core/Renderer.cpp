@@ -290,6 +290,14 @@ void core::Renderer::move(const sf::Vector2f& delta)
 	{
 		(*it)->move(delta);
 	}
+
+	for (auto it = _gui.begin(); it != _gui.end(); ++it)
+	{
+		if ((*it)->isDynamic())
+		{
+			(*it)->move(delta);
+		}
+	}
 }
 
 std::unique_ptr<base::Actor>& core::Renderer::find(const std::string& tag)

@@ -313,6 +313,7 @@ void core::Application::reset()
 	else {
 		std::unique_ptr<BackGround> bcg = std::make_unique<BackGround>();
 		bcg = std::make_unique<BackGround>();
+		bcg->dynamicDraw(false);
 		bcg->setTexture(*k);
 		bcg->setPosition(sf::Vector2f(200.f, 0.f));
 		renderer.addObject(std::move(bcg), base::object_type::gui);

@@ -39,7 +39,9 @@ Player::Player()
 
 	auto manager = std::make_unique<QueueManager>();
 	manager->setPosition(sf::Vector2f(300.f, 150.f));
+	manager->dynamicDraw(false);
 	core::Renderer::getInstance().addObject(std::move(manager), base::object_type::gui);
+
 
 
 	auto button = std::make_unique<Button>(base::collider({ 0.f,68.f,0.f,68.f }));
@@ -73,6 +75,7 @@ Player::Player()
 			this->sellActive();
 		}
 		});
+	button->dynamicDraw(false);
 	button->setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/2.png"));
 
 	button->setPosition(sf::Vector2f(1100, 50));
@@ -83,6 +86,7 @@ Player::Player()
 	{
 		button = std::make_unique<Button>(base::collider({ 0.f,68.f,0.f,68.f }));
 		button->setTag("AgeUpgradeButton");
+		button->dynamicDraw(false);
 		button->setClickEvent([&](bool isPressed)->void {
 			if (isPressed && _enableSpawn) {
 				_enableSpawn = false;
@@ -107,8 +111,8 @@ Player::Player()
 
 	button->setPosition(sf::Vector2f(1300, 50));
 	core::Renderer::getInstance().addObject(std::move(button), base::object_type::gui);
-
 	button = std::make_unique<Button>(base::collider({ 0.f,68.f,0.f,68.f }));
+	button->dynamicDraw(false);
 	button->setTag("BaseUpgradeButton");
 	button->setClickEvent([&](bool isPressed)->void {
 		if (isPressed && _enableSpawn) {
@@ -142,6 +146,7 @@ Player::Player()
 	coin->setPosition(sf::Vector2f(1600, 40));
 	coin->setFont(*core::ResourceManager<sf::Font>::getInstance().get("Assets/fonts/3.ttf"));
 	coin->setCharacterSize(20);
+	coin->dynamicDraw(false);
 	coin->setColor(sf::Color::Yellow);
 	auto ck = core::Application::getInstance().getClip("coin");
 	coin->addClip(std::move(ck), "coin");
@@ -151,6 +156,7 @@ Player::Player()
 	exp->setPosition(sf::Vector2f(1600, 80));
 	exp->setFont(*core::ResourceManager<sf::Font>::getInstance().get("Assets/fonts/3.ttf"));
 	exp->setCharacterSize(20);
+	exp->dynamicDraw(false);
 	exp->setColor(sf::Color::Yellow);
 	auto ek = core::Application::getInstance().getClip("star");
 	exp->addClip(std::move(ek), "star");
@@ -438,6 +444,7 @@ void Player::loadNextAge()
 	}
 	auto texture = core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/" + _currentAge + "/1.png");
 	bt0->setPosition(sf::Vector2f(300.f, 50.f));
+	bt0->dynamicDraw(false);
 	if(texture != nullptr)
 	{
 		auto ptr = static_cast<Button*>(bt0.get());
@@ -474,6 +481,7 @@ void Player::loadNextAge()
 	}
 	texture = core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/" + _currentAge + "/2.png");
 	bt1->setPosition(sf::Vector2f(400.f, 50.f));
+	bt1->dynamicDraw(false);
 	{
 		auto ptr = static_cast<Button*>(bt1.get());
 		auto& info = ptr->getInfo();
@@ -509,6 +517,7 @@ void Player::loadNextAge()
 	}
 	texture = core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/" + _currentAge + "/3.png");
 	bt2->setPosition(sf::Vector2f(500.f, 50.f));
+	bt2->dynamicDraw(false);
 	if(texture != nullptr)
 	{
 		auto ptr = static_cast<Button*>(bt2.get());
@@ -544,6 +553,7 @@ void Player::loadNextAge()
 	}
 	texture = core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/" + _currentAge + "/4.png");
 	bt3->setPosition(sf::Vector2f(700.f, 50.f));
+	bt3->dynamicDraw(false);
 	if(texture!=nullptr)
 	{
 		auto ptr = static_cast<Button*>(bt3.get());
@@ -593,6 +603,7 @@ void Player::loadNextAge()
 	}
 	texture = core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/" + _currentAge + "/5.png");
 	bt4->setPosition(sf::Vector2f(800.f, 50.f));
+	bt4->dynamicDraw(false);
 	if(texture != nullptr)
 	{
 		auto ptr = static_cast<Button*>(bt4.get());
@@ -642,6 +653,7 @@ void Player::loadNextAge()
 	}
 	texture = core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/" + _currentAge + "/6.png");
 	bt5->setPosition(sf::Vector2f(900.f, 50.f));
+	bt5->dynamicDraw(false);
 	if(texture != nullptr)
 	{
 		auto ptr = static_cast<Button*>(bt5.get());

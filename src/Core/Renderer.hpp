@@ -56,6 +56,7 @@ namespace core {
 		sf::View& getView() {
 			return _view;
 		}
+
 	private:
 		float _camSpeed;
 		sf::Vector2f _position;
