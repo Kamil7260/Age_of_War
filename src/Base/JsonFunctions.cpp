@@ -103,6 +103,7 @@ const base::unitInfo base::loadUnitFromJson(const unsigned int type, const std::
 		LOG_ERROR("age : ", age, " index -> ", type, "!= price");
 		return mob;
 	}
+	mob.price = price;
 	auto displayName = obj["name"];
 	if (displayName == nullptr)
 	{

@@ -40,7 +40,7 @@ void HpBar::onUpdate()
 
 void HpBar::setPosition(const sf::Vector2f& pos)
 {
-	m_position += pos;
+	m_position = pos;
 
 	m_frame[0].position = pos + sf::Vector2f(-m_x/ 2.f, -m_y/ 2.f);
 	m_frame[1].position = pos + sf::Vector2f(m_x/ 2.f, -m_y/ 2.f);
