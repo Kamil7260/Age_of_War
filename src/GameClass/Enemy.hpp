@@ -24,10 +24,11 @@ public:
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
+	virtual void loadNewAge();
 private:
 	float m_timer;
 	sf::Sprite m_sprite;
 	std::array<base::unitInfo, 3> m_mobTemplate;
-	std::string m_currentAge;
-	
+	std::array<std::string, 5> m_ages;
+	int m_currentAge;
 };

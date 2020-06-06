@@ -5,35 +5,36 @@
 #include "../GameClass/Range.hpp"
 #include "HpBar.hpp"
 Enemy::Enemy()
-	:m_timer(0.f)
+	:m_timer(0.f), m_currentAge(0)
 {
-	m_currentAge = "I";
 	m_tag = "Enemy";
 	m_team = base::team::enemy;
-	m_sprite.setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/base/I.png"));
 	setScale(sf::Vector2f(-1.f, 1.f));
 	m_sprite.setOrigin(275.f, 170.f);
 	m_myColider = { 131.f,131.f,131.f,131.f };
+	m_ages = { "I","II","III","IV","V" };
 
 	auto hp = std::make_unique<HpBar>(&m_hp, 24, 250);
-	hp->setPosition(sf::Vector2f(70.f, 800));
+	hp->setPosition(sf::Vector2f(m_position.x + 100, 800));
+	hp->setTag("EnemyHp");
+	hp->dynamicDraw(true);
 	hp->setCallbackOnDie([&]()->void {
 		auto tex = core::ResourceManager<sf::Texture>::getInstance().get("Assets/frames/1.png");
 		core::Application::getInstance().freezeScreen(*tex);
 		});
 	hp->setFont(*core::ResourceManager<sf::Font>::getInstance().get("Assets/fonts/3.ttf"));
 	hp->setCharacterSize(15);
-	core::Renderer::getInstance().addObject(std::move(hp), base::object_type::gui);
-
-	m_mobTemplate.at(0) = base::loadUnitFromJson(0, m_currentAge);
-	m_mobTemplate.at(1) = base::loadUnitFromJson(1, m_currentAge);
-	m_mobTemplate.at(2) = base::loadUnitFromJson(2, m_currentAge);
+	core::Renderer::getInstance().forceAddObject(std::move(hp), base::object_type::gui);
+	loadNewAge();
 }
 
 void Enemy::setPosition(const sf::Vector2f& pos)
 {
 	m_position = pos;
 	m_sprite.setPosition(pos);
+	auto& hp = core::Renderer::getInstance().find("EnemyHp");
+	hp->setPosition(sf::Vector2f(pos.x + 130.f, pos.y - 50.f));
+
 }
 
 void Enemy::setScale(const sf::Vector2f& sca)
@@ -96,4 +97,15 @@ void Enemy::onUpdate()
 void Enemy::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	target.draw(m_sprite, states);
+}
+
+void Enemy::loadNewAge()
+{
+	if (m_currentAge >= m_ages.size())
+		return;
+	m_sprite.setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/base/" + m_ages.at(m_currentAge) + ".png"));
+	m_mobTemplate.at(0) = base::loadUnitFromJson(0, m_ages.at(m_currentAge));
+	m_mobTemplate.at(1) = base::loadUnitFromJson(1, m_ages.at(m_currentAge));
+	m_mobTemplate.at(2) = base::loadUnitFromJson(2, m_ages.at(m_currentAge));
+	++m_currentAge;
 }
