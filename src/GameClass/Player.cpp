@@ -11,7 +11,7 @@
 #include "HpBar.hpp"
 
 Player::Player()
-	:m_enableSpawn(true), m_drawCannonPlaces(false), m_coinCount(10000), m_wantSell(false), m_sellClickCount(0), m_baseUpgrade(1), m_expCount(1), m_upgradeCondition(1000), m_cannonPlaceCost(1000)
+	:m_enableSpawn(true), m_drawCannonPlaces(false), m_coinCount(10000), m_wantSell(false), m_sellClickCount(0), m_baseUpgrade(1), m_expCount(3000), m_upgradeCondition(1000), m_cannonPlaceCost(1000), m_enableInsertToQueue(true)
 {
 	m_cannons = { nullptr,nullptr,nullptr };
 	m_tag = "Player";
@@ -83,34 +83,7 @@ Player::Player()
 
 	auto& infoBlock = core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/5.png");
 	auto& font = core::ResourceManager<sf::Font>::getInstance().get("Assets/fonts/3.ttf");
-	{
-		button = std::make_unique<Button>(base::collider({ 0.f,68.f,0.f,68.f }));
-		button->setTag("AgeUpgradeButton");
-		button->dynamicDraw(false);
-		button->setClickEvent([&](bool isPressed)->void {
-			if (isPressed && m_enableSpawn) {
-				m_enableSpawn = false;
-				this->loadNextAge();
-			}
-			});
-
-		auto ptr = static_cast<Button*>(button.get());
-		auto& info = ptr->getInfo();
-		auto& k = m_cannonTemplate.at(1);
-		info.clear();
-		info.setPosition(sf::Vector2f(0.f, 300.f));
-		info.setTexture(*infoBlock);
-		info.setFont(*font);
-		info.setColor(sf::Color::Yellow);
-		info.setCharacterSize(15);
-		info.addValue(" ", "\nResearch new ages and \nlearn modern tech\n ");
-		info.addValue(&m_upgradeCondition, "Exp points required to upgrade\n  : ");
-
-	}
-	button->setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/1.png"));
-
-	button->setPosition(sf::Vector2f(1300, 50));
-	core::Renderer::getInstance().addObject(std::move(button), base::object_type::gui);
+	
 	button = std::make_unique<Button>(base::collider({ 0.f,68.f,0.f,68.f }));
 	button->dynamicDraw(false);
 	button->setTag("BaseUpgradeButton");
@@ -395,6 +368,7 @@ void Player::sellCanceled()
 
 void Player::loadNextAge()
 {
+
 	if (m_currentAge == m_ages.back())
 	{
 		return;
@@ -403,6 +377,9 @@ void Player::loadNextAge()
 		m_currentAge = "I";
 	}
 	else {
+	
+		if (m_expCount < m_upgradeCondition)
+			return;
 		for (auto k = m_ages.begin(); k != m_ages.end(); ++k)
 		{
 			if ((*k) == m_currentAge)
@@ -422,8 +399,61 @@ void Player::loadNextAge()
 	}
 	m_upgradeCondition *= 2;
 
+
 	auto& infoBlock = core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/5.png");
 	auto& font = core::ResourceManager<sf::Font>::getInstance().get("Assets/fonts/3.ttf");
+
+	auto button = std::make_unique<Button>(base::collider({ 0.f,68.f,0.f,68.f }));
+	button->setTag("AgeUpgradeButton");
+	button->dynamicDraw(false);
+
+	button->setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/1.png"));
+
+	button->setPosition(sf::Vector2f(1300, 50));
+
+	button->setClickEvent([&](bool isPressed)->void {
+		if (isPressed && m_enableSpawn) {
+			if (m_expCount < m_upgradeCondition)
+				return;
+
+			m_enableInsertToQueue = false;
+			m_timer = 0.f;
+			m_enableSpawn = false;
+			auto& manager = core::Renderer::getInstance().find("QueueManager");
+			if (manager != nullptr)
+			{
+				auto& b = core::Renderer::getInstance().find("AgeUpgradeButton");
+				b->remove();
+				core::Renderer::getInstance().clearNoActive();
+				auto queue = static_cast<QueueManager*>(manager.get());
+				Ikon ikon;
+				ikon.setTimePoint(15.f);
+				std::string path = "Assets/gui/1.png";
+				ikon.setTexture(*core::ResourceManager<sf::Texture>::getInstance().get(path));
+				queue->addIkon(ikon, [&]()->void {
+					m_enableInsertToQueue = true;
+					this->loadNextAge();
+					});
+			}
+			else {
+				LOG_ERROR("Can not find QueueManager");
+			}
+		}
+		});
+
+	auto ptr = static_cast<Button*>(button.get());
+	auto& info = ptr->getInfo();
+	auto& k = m_cannonTemplate.at(1);
+	info.clear();
+	info.setPosition(sf::Vector2f(0.f, 300.f));
+	info.setTexture(*infoBlock);
+	info.setFont(*font);
+	info.setColor(sf::Color::Yellow);
+	info.setCharacterSize(15);
+	info.addValue(" ", "\nResearch new ages and \nlearn modern tech\n ");
+	info.addValue(&m_upgradeCondition, "Exp points required to upgrade\n  : ");
+
+	core::Renderer::getInstance().addObject(std::move(button), base::object_type::gui);
 
 	m_sprites.at(0).setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/base/" + m_currentAge + ".png"), true);
 	m_sprites.at(1).setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/base/" + m_currentAge + "1.png"), true);
@@ -468,7 +498,8 @@ void Player::loadNextAge()
 		ptr->setClickEvent([&](bool isPressed)->void {
 			if (isPressed && m_enableSpawn)
 			{
-				addToQueue(0);
+				if(m_enableInsertToQueue)
+					addToQueue(0);
 			}
 			});
 		core::Renderer::getInstance().addObject(std::move(bt0), base::object_type::gui);
@@ -504,7 +535,8 @@ void Player::loadNextAge()
 		ptr->setClickEvent([&](bool isPressed)->void {
 			if (isPressed && m_enableSpawn)
 			{
-				addToQueue(1);
+				if(m_enableInsertToQueue)
+					addToQueue(1);
 			}
 			});
 		core::Renderer::getInstance().addObject(std::move(bt1), base::object_type::gui);
@@ -540,7 +572,8 @@ void Player::loadNextAge()
 		ptr->setClickEvent([&](bool isPressed)->void {
 			if (isPressed && m_enableSpawn)
 			{
-				addToQueue(2);
+				if(m_enableInsertToQueue)
+					addToQueue(2);
 			}
 			});
 		core::Renderer::getInstance().addObject(std::move(bt2), base::object_type::gui);

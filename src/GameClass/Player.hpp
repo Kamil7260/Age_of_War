@@ -42,9 +42,14 @@ public:
 
 	virtual void income(const int value) {
 		m_coinCount += value;
+		m_expCount += value;
 	}
 
 	virtual void baseUpgrade();
+
+	virtual bool enableInsert() {
+		return m_enableInsertToQueue;
+	}
 
 private:
 	float m_timer;
@@ -66,5 +71,6 @@ private:
 	int m_expCount;
 	int m_upgradeCondition;
 	int m_cannonPlaceCost;
+	bool m_enableInsertToQueue;
 };
 
