@@ -57,6 +57,14 @@ namespace core {
 			return m_view;
 		}
 
+		const size_t getPlayerUnitsCount() const {
+			return m_actor.size();
+		}
+
+		const sf::Vector2f& getPlayerLeaderPosition() const {
+			return m_actor.back()->getPosition();
+		}
+
 	private:
 		float m_camSpeed;
 		sf::Vector2f m_position;
@@ -67,7 +75,8 @@ namespace core {
 
 		void insertQueue();
 
-		bool collisionBetween(std::unique_ptr<base::Actor>& left, std::unique_ptr<base::Actor>& right) const ;
+		bool collisionBetween(std::unique_ptr<base::Actor>& left, std::unique_ptr<base::Actor>& right) const;
+		bool collisionBetweenBack(std::unique_ptr<base::Actor>& left, std::unique_ptr<base::Actor>& right) const;
 		std::vector<std::unique_ptr<base::Actor>>::iterator& getNextActiveCollider(std::vector<std::unique_ptr<base::Actor>>::iterator& current, const std::vector<std::unique_ptr<base::Actor>>::iterator& last);
 
 		void onMouse(const std::unique_ptr<base::Actor>& source) const;

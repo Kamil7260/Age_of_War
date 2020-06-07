@@ -31,4 +31,8 @@ private:
 	std::array<base::unitInfo, 3> m_mobTemplate;
 	std::array<std::string, 5> m_ages;
 	int m_currentAge;
+
+	std::vector<std::pair<std::unique_ptr<base::Actor>,float>> m_queue;
+	int m_groupOverAll;
+	float m_breakTime;
 };

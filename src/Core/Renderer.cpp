@@ -182,7 +182,7 @@ void core::Renderer::updateCollision()
 		auto right = m_actor.begin() + 1;
 		if (right != m_actor.end())
 		{
-			collisionBetween(*left, *right);
+			collisionBetweenBack(*left, *right);
 			onMouse(*right);
 			left = getNextActiveCollider(left, m_actor.end());
 			right = getNextActiveCollider(right, m_actor.end());
@@ -191,7 +191,7 @@ void core::Renderer::updateCollision()
 			}
 			for (; right != m_actor.end();)
 			{
-				collisionBetween(*left, *right);
+				collisionBetweenBack(*left, *right);
 				onMouse(*right);
 				left = getNextActiveCollider(left, m_actor.end());
 				right = getNextActiveCollider(right, m_actor.end());
@@ -204,7 +204,7 @@ void core::Renderer::updateCollision()
 		auto right = m_enemyActor.begin() + 1;
 		if (right != m_enemyActor.end())
 		{
-			collisionBetween(*left, *right);
+			collisionBetweenBack(*left, *right);
 			onMouse(*right);
 			left = getNextActiveCollider(left, m_enemyActor.end());
 			right = getNextActiveCollider(right, m_enemyActor.end());
@@ -213,7 +213,7 @@ void core::Renderer::updateCollision()
 			}
 			for (; right != m_enemyActor.end();)
 			{
-				collisionBetween(*left, *right);
+				collisionBetweenBack(*left, *right);
 				onMouse(*right);
 				left = getNextActiveCollider(left, m_enemyActor.end());
 				right = getNextActiveCollider(right, m_enemyActor.end());
@@ -492,6 +492,25 @@ bool core::Renderer::collisionBetween(std::unique_ptr<base::Actor>& left, std::u
 			&& left->getPosition().y + leftCollider.down >= right->getPosition().y - rightCollider.up)
 		{
 			left->onCollision(right);
+			right->onCollision(left);
+			return true;
+		}
+	}
+	return false;
+}
+
+bool core::Renderer::collisionBetweenBack(std::unique_ptr<base::Actor>& left, std::unique_ptr<base::Actor>& right) const
+{
+	auto leftCollider = left->getCollider();
+	auto rightCollider = right->getCollider();
+
+	if (left->getPosition().x + leftCollider.right >= right->getPosition().x - rightCollider.left
+		&& left->getPosition().x - leftCollider.left <= right->getPosition().x + rightCollider.right)
+	{
+		if (left->getPosition().y - leftCollider.up <= right->getPosition().y + rightCollider.down
+			&& left->getPosition().y + leftCollider.down >= right->getPosition().y - rightCollider.up)
+		{
+		//	left->onCollision(right);
 			right->onCollision(left);
 			return true;
 		}

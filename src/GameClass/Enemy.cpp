@@ -5,7 +5,7 @@
 #include "../GameClass/Range.hpp"
 #include "HpBar.hpp"
 Enemy::Enemy()
-	:m_timer(0.f), m_currentAge(0)
+	:m_timer(0.f), m_currentAge(0), m_groupOverAll(14), m_breakTime(0)
 {
 	m_tag = "Enemy";
 	m_team = base::team::enemy;
@@ -51,43 +51,67 @@ void Enemy::move(const sf::Vector2f& delta)
 
 void Enemy::onUpdate()
 {
-	m_timer += core::Application::getInstance().getTime();
-
-	if (m_timer >= 5)
+	float delta = core::Application::getInstance().getTime();
+	if (m_queue.empty())
+		m_timer += delta;
+	else {
+		auto& ref = m_queue.back();
+		ref.second -= delta;
+		if (ref.second < 0.f)
+		{
+			ref.first->setPosition(sf::Vector2f(m_position.x - 100, m_position.y + 75));
+			core::Renderer::getInstance().addEnemyObject(std::move(ref.first));
+			m_queue.erase(m_queue.end() - 1);
+		}
+	}
+	if (m_timer > m_breakTime)
 	{
 		std::random_device mch;
 		std::default_random_engine generator(mch());
-		std::uniform_int_distribution<int> distribution(1, 6);
-		int attack_roll = distribution(generator);
+		std::uniform_int_distribution<int> rollType(1, 7);
+		std::uniform_int_distribution<int> rollTime(10, 20);
 
-		if (attack_roll == 6)
+		m_timer = 0;
+		m_breakTime = rollTime(generator);
+		
+		int currentOverAll = 0;
+		int attack_roll;
+		while (currentOverAll < m_groupOverAll)
 		{
-			auto& k = m_mobTemplate.at(2);
-			std::unique_ptr<Melee> man = std::make_unique<Melee>(k.collider, k.hp, k.minDMG, k.maxDMG, k.speedAttack, k.speedMove, k.income);
-			man->setScale(sf::Vector2f(k.scale.x, k.scale.y));
-			man->setAnimatorName(k.name);
-			man->setAnimationSpeed(k.animationSpeed);
-			man->setPosition(sf::Vector2f(m_position.x - 100, m_position.y + 75));
-			core::Renderer::getInstance().addEnemyObject(std::move(man));
-		}
-		else if (attack_roll < 3)
-		{
-			auto& k = m_mobTemplate.at(1);
-			std::unique_ptr<Range> man = std::make_unique<Range>(k.collider, k.hp, k.minDMG, k.maxDMG, k.range, k.speedAttack, k.speedMove, k.income);
-			man->setScale(sf::Vector2f(k.scale.x, k.scale.y));
-			man->setAnimatorName(k.name);
-			man->setAnimationSpeed(k.animationSpeed);
-			man->setPosition(sf::Vector2f(m_position.x - 100, m_position.y + 75));
-			core::Renderer::getInstance().addEnemyObject(std::move(man));
-		}
-		else {
-			auto& k = m_mobTemplate.at(0);
-			std::unique_ptr<Melee> man = std::make_unique<Melee>(k.collider, k.hp, k.minDMG, k.maxDMG, k.speedAttack, k.speedMove, k.income);
-			man->setScale(sf::Vector2f(k.scale.x, k.scale.y));
-			man->setAnimatorName(k.name);
-			man->setAnimationSpeed(k.animationSpeed);
-			man->setPosition(sf::Vector2f(m_position.x - 100, m_position.y + 75));
-			core::Renderer::getInstance().addEnemyObject(std::move(man));
+			attack_roll = rollType(generator);
+			currentOverAll += attack_roll;
+			if (attack_roll == 6)
+			{
+				auto& k = m_mobTemplate.at(2);
+				std::unique_ptr<Melee> man = std::make_unique<Melee>(k.collider, k.hp, k.minDMG, k.maxDMG, k.speedAttack, k.speedMove, k.income);
+				man->setScale(sf::Vector2f(k.scale.x, k.scale.y));
+				man->setAnimatorName(k.name);
+				man->setAnimationSpeed(k.animationSpeed);
+				man->setPosition(sf::Vector2f(m_position.x - 100, m_position.y + 75));
+				m_queue.push_back(std::make_pair(std::move(man), k.spawnTime));
+				//core::Renderer::getInstance().addEnemyObject(std::move(man));
+			}
+			else if (attack_roll < 3)
+			{
+				auto& k = m_mobTemplate.at(1);
+				std::unique_ptr<Range> man = std::make_unique<Range>(k.collider, k.hp, k.minDMG, k.maxDMG, k.range, k.speedAttack, k.speedMove, k.income);
+				man->setScale(sf::Vector2f(k.scale.x, k.scale.y));
+				man->setAnimatorName(k.name);
+				man->setAnimationSpeed(k.animationSpeed);
+				man->setPosition(sf::Vector2f(m_position.x - 100, m_position.y + 75));
+				//	core::Renderer::getInstance().addEnemyObject(std::move(man));
+				m_queue.push_back(std::make_pair(std::move(man), k.spawnTime));
+			}
+			else {
+				auto& k = m_mobTemplate.at(0);
+				std::unique_ptr<Melee> man = std::make_unique<Melee>(k.collider, k.hp, k.minDMG, k.maxDMG, k.speedAttack, k.speedMove, k.income);
+				man->setScale(sf::Vector2f(k.scale.x, k.scale.y));
+				man->setAnimatorName(k.name);
+				man->setAnimationSpeed(k.animationSpeed);
+				man->setPosition(sf::Vector2f(m_position.x - 100, m_position.y + 75));
+				//core::Renderer::getInstance().addEnemyObject(std::move(man));
+				m_queue.push_back(std::make_pair(std::move(man), k.spawnTime));
+			}
 		}
 		m_timer = 0;
 	}
