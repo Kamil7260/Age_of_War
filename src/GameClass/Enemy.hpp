@@ -25,6 +25,11 @@ public:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 	virtual void loadNewAge();
+
+	virtual void addIncome(const unsigned int income)
+	{
+		m_exp += income;
+	}
 private:
 	float m_timer;
 	sf::Sprite m_sprite;
@@ -35,4 +40,6 @@ private:
 	std::vector<std::pair<std::unique_ptr<base::Actor>,float>> m_queue;
 	int m_groupOverAll;
 	float m_breakTime;
+	int m_exp;
+	int m_requiredExp;
 };

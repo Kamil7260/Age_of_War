@@ -5,6 +5,7 @@
 #include "../Core/ResourceManager.hpp"
 #include "TextDisplay.hpp"
 #include "../Base/Stronghold.hpp"
+#include "Enemy.hpp"
 
 Melee::Melee(const base::collider& collider, int hp, int attack, int maxAttack, float speedAttack, float speedMove, int income)
 	:Mob(hp, attack,maxAttack, speedAttack, speedMove, income),m_timer(0.f),m_attackTimer(0.f), m_touchEnemy(false), m_isCollided(false), m_enableAttack(true), m_died(false)
@@ -78,6 +79,7 @@ void Melee::onUpdate()
 	}
 	m_touchEnemy = false;
 	m_isCollided = false;
+
 	updateAnimator();
 }
 
@@ -97,6 +99,16 @@ void Melee::damage(int dmg)
 			ptr->setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/other/5.png"));
 			core::Renderer::getInstance().addObject(std::move(ptr), base::object_type::gui);
 		}
+		else if (m_team == base::team::player)
+		{
+			auto& k = core::Renderer::getInstance().find("Enemy");
+			if (k != nullptr)
+			{
+				auto ptr = static_cast<Enemy*>(k.get());
+				ptr->addIncome(m_income);
+			}
+		}
+		
 
 		m_position = { 0.f,0.f };
 		m_activeCollider = false;

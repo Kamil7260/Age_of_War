@@ -5,7 +5,7 @@
 #include "../GameClass/Range.hpp"
 #include "HpBar.hpp"
 Enemy::Enemy()
-	:m_timer(0.f), m_currentAge(0), m_groupOverAll(14), m_breakTime(0)
+	:m_timer(0.f), m_currentAge(0), m_groupOverAll(14), m_breakTime(0),m_exp(0), m_requiredExp(200)
 {
 	m_tag = "Enemy";
 	m_team = base::team::enemy;
@@ -13,7 +13,7 @@ Enemy::Enemy()
 	m_sprite.setOrigin(275.f, 170.f);
 	m_myColider = { 131.f,131.f,131.f,131.f };
 	m_ages = { "I","II","III","IV","V" };
-
+	
 	auto hp = std::make_unique<HpBar>(&m_hp, 24, 250);
 	hp->setPosition(sf::Vector2f(m_position.x + 100, 800));
 	hp->setTag("EnemyHp");
@@ -51,6 +51,13 @@ void Enemy::move(const sf::Vector2f& delta)
 
 void Enemy::onUpdate()
 {
+
+	if (m_exp > m_requiredExp)
+	{
+		loadNewAge();
+		m_requiredExp *= 2;
+	}
+
 	float delta = core::Application::getInstance().getTime();
 	if (m_queue.empty())
 		m_timer += delta;
@@ -69,7 +76,7 @@ void Enemy::onUpdate()
 		std::random_device mch;
 		std::default_random_engine generator(mch());
 		std::uniform_int_distribution<int> rollType(1, 7);
-		std::uniform_int_distribution<int> rollTime(10, 20);
+		std::uniform_int_distribution<int> rollTime(13, 23);
 
 		m_timer = 0;
 		m_breakTime = rollTime(generator);

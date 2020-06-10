@@ -5,6 +5,7 @@
 
 #include "Range.hpp"
 #include "TextDisplay.hpp"
+#include "Enemy.hpp"
 
 Range::Range(const base::collider& collider, int hp, int attack, int maxAttack, int range, float speedAttack, float speedMove, int income)
 	:Mob(hp, attack, maxAttack, speedAttack, speedMove, income), m_timer(0.f), m_attackTimer(0.f), m_range(range),
@@ -143,7 +144,15 @@ void Range::damage(int dmg)
 			ptr->setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/other/5.png"));
 			core::Renderer::getInstance().addObject(std::move(ptr), base::object_type::gui);
 		}
-
+		else if (m_team == base::team::player)
+		{
+			auto& k = core::Renderer::getInstance().find("Enemy");
+			if (k != nullptr)
+			{
+				auto ptr = static_cast<Enemy*>(k.get());
+				ptr->addIncome(m_income);
+			}
+		}
 		m_position = { 0.f,0.f };
 		m_activeCollider = false;
 		if (m_currentClipName != m_dieClip)
