@@ -113,7 +113,7 @@
   },
   {
     "name": "IIT0_attack",
-    "count": 48,
+    "count": 25,
     "path": "Assets/mobs/II/T0/attack/",
     "origin": [ 50, 110 ]
   },
@@ -137,7 +137,7 @@
   },
   {
     "name": "IIT1_attack",
-    "count": 99,
+    "count": 47,
     "path": "Assets/mobs/II/T1/attack/",
     "origin": [ 35, 80 ]
   },
@@ -209,7 +209,7 @@
   },
   {
     "name": "IIIT0_attack",
-    "count": 84,
+    "count": 46,
     "path": "Assets/mobs/III/T0/attack/",
     "origin": [ 35, 120 ]
   },
@@ -433,61 +433,61 @@
     "name": "VT0_attack",
     "count": 37,
     "path": "Assets/mobs/V/T0/attack/",
-    "origin": [ 85, 125 ]
+    "origin": [ 85, 115 ]
   },
   {
     "name": "VT0_die",
     "count": 40,
     "path": "Assets/mobs/V/T0/die/",
-    "origin": [ 115, 95 ]
+    "origin": [ 115, 85 ]
   },
   {
     "name": "VT0_idle",
     "count": 58,
     "path": "Assets/mobs/V/T0/idle/",
-    "origin": [ 95, 95 ]
+    "origin": [ 95, 85 ]
   },
   {
     "name": "VT0_walk",
     "count": 47,
     "path": "Assets/mobs/V/T0/walk/",
-    "origin": [ 105, 95 ]
+    "origin": [ 105, 85 ]
   },
   {
     "name": "VT1_attack",
     "count": 30,
     "path": "Assets/mobs/V/T1/attack/",
-    "origin": [ 50, 95 ]
+    "origin": [ 50, 85 ]
   },
   {
     "name": "VT1_die",
     "count": 49,
     "path": "Assets/mobs/V/T1/die/",
-    "origin": [ 85, 65 ]
+    "origin": [ 85, 55 ]
   },
   {
     "name": "VT1_idle",
     "count": 94,
     "path": "Assets/mobs/V/T1/idle/",
-    "origin": [ 30, 65 ]
+    "origin": [ 30, 55 ]
   },
   {
     "name": "VT1_idleshot",
     "count": 14,
     "path": "Assets/mobs/V/T1/idleshot/",
-    "origin": [ 30, 65 ]
+    "origin": [ 30, 55 ]
   },
   {
     "name": "VT1_walk",
     "count": 34,
     "path": "Assets/mobs/V/T1/walk/",
-    "origin": [ 45, 65 ]
+    "origin": [ 45, 55 ]
   },
   {
     "name": "VT1_walkshot",
     "count": 38,
     "path": "Assets/mobs/V/T1/walkshot/",
-    "origin": [ 45, 65 ]
+    "origin": [ 45, 55 ]
   },
   {
     "name": "VT2_attack",
@@ -504,7 +504,7 @@
   {
     "name": "VT2_idle",
     "count": 28,
-    "path": "Assets/mobs/V/T2/die/",
+    "path": "Assets/mobs/V/T2/idle/",
     "origin": [ 115, 75 ]
   },
   {
@@ -512,5 +512,11 @@
     "count": 28,
     "path": "Assets/mobs/V/T2/walk/",
     "origin": [ 115, 75 ]
+  },
+  {
+    "name": "star",
+    "count": 1,
+    "path": "Assets/other/exp/",
+    "origin": [ 16, 16 ]
   }
 ]

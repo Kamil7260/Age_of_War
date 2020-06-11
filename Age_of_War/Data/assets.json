@@ -246,5 +246,81 @@
   {
     "type": "Texture",
     "path": "Assets/gui/6.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/base/I1.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/base/I2.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/base/II1.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/base/II2.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/base/III1.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/base/III2.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/base/IV1.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/base/IV2.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/base/V1.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/base/V2.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/7.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/frames/1.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/frames/2.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/up/1.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/up/2.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/up/3.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/up/4.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/up/5.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/up/6.png"
   }
 ]
