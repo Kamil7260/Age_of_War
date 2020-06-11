@@ -64,6 +64,10 @@ namespace core {
 		const sf::Vector2f& getPlayerLeaderPosition() const {
 			return m_actor.back()->getPosition();
 		}
+		
+		void resetPosition(const sf::Vector2f& correct) {
+			m_position = correct;
+		}
 
 	private:
 		float m_camSpeed;

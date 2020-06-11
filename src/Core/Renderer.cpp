@@ -229,10 +229,9 @@ void core::Renderer::updateCollision()
 	{
 		for (auto it = m_enemyActor.begin(); it != m_enemyActor.end(); ++it)
 		{
+			if ((*it)->isColliderActive())
 			if (collisionBetween(*k, *it))
 			{
-				(*k)->onCollision(*it);
-				(*it)->onCollision(*k);
 				break;
 			}
 		}
@@ -245,8 +244,6 @@ void core::Renderer::updateCollision()
 			if((*it)->isColliderActive())
 			if (collisionBetween(*k, *it))
 			{
-				(*k)->onCollision(*it);
-				(*it)->onCollision(*k);
 				break;
 			}
 		}
@@ -312,12 +309,12 @@ std::unique_ptr<base::Actor>& core::Renderer::find(const std::string& tag)
 		if ((*it)->getTag() == tag)
 			return *it;
 	}
-	for (auto it = m_actor.begin(); it != m_actor.end(); ++it)
+	for (auto it = m_enemyActor.begin(); it != m_enemyActor.end(); ++it)
 	{
 		if ((*it)->getTag() == tag)
 			return *it;
 	}
-	for (auto it = m_enemyActor.begin(); it != m_enemyActor.end(); ++it)
+	for (auto it = m_actor.begin(); it != m_actor.end(); ++it)
 	{
 		if ((*it)->getTag() == tag)
 			return *it;
