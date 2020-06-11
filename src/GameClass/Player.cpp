@@ -4,14 +4,14 @@
 #include "../Core/Application.hpp"
 #include "Melee.hpp"
 #include "Range.hpp"
-#include "Button.hpp"
 #include "QueueManager.hpp"
 #include "CannonSpawner.hpp"
 #include "Counter.hpp"
 #include "HpBar.hpp"
+#include "UpgradeButton.hpp"
 
 Player::Player()
-	:m_enableSpawn(true), m_drawCannonPlaces(false), m_coinCount(10000), m_wantSell(false), m_sellClickCount(0), m_baseUpgrade(1), m_expCount(3000), m_upgradeCondition(1000), m_cannonPlaceCost(1000), m_enableInsertToQueue(true)
+	:m_enableSpawn(true), m_drawCannonPlaces(false), m_coinCount(250), m_wantSell(false), m_sellClickCount(0), m_baseUpgrade(1), m_expCount(1), m_upgradeCondition(1000), m_cannonPlaceCost(1000), m_enableInsertToQueue(true)
 {
 	m_cannons = { nullptr,nullptr,nullptr };
 	m_tag = "Player";
@@ -19,6 +19,8 @@ Player::Player()
 	m_timer = 0;
 	m_sprites.at(0).setOrigin(275.f, 170.f);
 	m_myColider = { 111.f,111.f,111.f,111.f };
+
+	m_unitUpgradeCost = { 350,500,900 };
 
 	m_ages = { "I","II","III","IV","V" };
 	auto hp = std::make_unique<HpBar>(&m_hp, 24, 250);
@@ -135,6 +137,122 @@ Player::Player()
 	exp->addClip(std::move(ek), "star");
 	core::Renderer::getInstance().addObject(std::move(exp), base::object_type::gui);
 
+
+	auto upgrade = std::make_unique<UpgradeButton>(base::collider({ 0,50,0,50 }));
+	upgrade->dynamicDraw(false);
+	auto& info1 = upgrade->getInfo();
+	info1.clear();
+	info1.setPosition(sf::Vector2f(0.f, 300.f));
+	info1.setTexture(*infoBlock);
+	info1.setFont(*font);
+	info1.setColor(sf::Color::Yellow);
+	info1.setCharacterSize(20);
+	info1.addValue<std::string>(nullptr,"Upgrade unit");
+	info1.addValue(&m_unitUpgradeCost.at(0),"Cost ");
+
+	upgrade->setTag("UpgradeButton1");
+	upgrade->setPosition(sf::Vector2f(280, 0));
+	upgrade->setClickEvent([&](bool isPressed)->void {
+		if (isPressed && m_enableSpawn)
+		{
+			m_enableSpawn = false;
+			if (m_coinCount < m_unitUpgradeCost.at(0))
+				return;
+			auto& k = core::Renderer::getInstance().find("UpgradeButton1");
+			if (k != nullptr)
+			{
+				auto ptr = static_cast<UpgradeButton*>(k.get());
+				ptr->increaseLvl();
+				this->upgradeUnit(0);
+			}
+		}
+		});
+	upgrade->addLevel(core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/up/1.png"));
+	upgrade->addLevel(core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/up/2.png"));
+	upgrade->addLevel(core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/up/3.png"));
+	upgrade->addLevel(core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/up/4.png"));
+	upgrade->addLevel(core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/up/5.png"));
+	upgrade->addLevel(core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/up/6.png"));
+
+	core::Renderer::getInstance().addObject(std::move(upgrade), base::object_type::gui);
+
+	upgrade = std::make_unique<UpgradeButton>(base::collider({ 0,50,0,50 }));
+	upgrade->setTag("UpgradeButton2");
+	upgrade->setPosition(sf::Vector2f(390, 0));
+	upgrade->dynamicDraw(false);
+	auto& info2 = upgrade->getInfo();
+	info2.clear();
+	info2.setPosition(sf::Vector2f(0.f, 300.f));
+	info2.setTexture(*infoBlock);
+	info2.setFont(*font);
+	info2.setColor(sf::Color::Yellow);
+	info2.setCharacterSize(20);
+	info2.addValue<std::string>(nullptr, "Upgrade unit");
+	info2.addValue(&m_unitUpgradeCost.at(1), "Cost ");
+
+	upgrade->setClickEvent([&](bool isPressed)->void {
+		if (isPressed && m_enableSpawn)
+		{
+			if (m_coinCount < m_unitUpgradeCost.at(1))
+				return;
+			m_enableSpawn = false;
+			auto& k = core::Renderer::getInstance().find("UpgradeButton2");
+			if (k != nullptr)
+			{
+				auto ptr = static_cast<UpgradeButton*>(k.get());
+				ptr->increaseLvl();
+				this->upgradeUnit(1);
+			}
+		}
+		});
+	upgrade->addLevel(core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/up/1.png"));
+	upgrade->addLevel(core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/up/2.png"));
+	upgrade->addLevel(core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/up/3.png"));
+	upgrade->addLevel(core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/up/4.png"));
+	upgrade->addLevel(core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/up/5.png"));
+	upgrade->addLevel(core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/up/6.png"));
+
+	core::Renderer::getInstance().addObject(std::move(upgrade), base::object_type::gui);
+
+
+	upgrade = std::make_unique<UpgradeButton>(base::collider({ 0,50,0,50 }));
+	upgrade->setTag("UpgradeButton3");
+	upgrade->setPosition(sf::Vector2f(500, 0));
+	upgrade->dynamicDraw(false);
+	auto& info3 = upgrade->getInfo();
+	info3.clear();
+	info3.setPosition(sf::Vector2f(0.f, 300.f));
+	info3.setTexture(*infoBlock);
+	info3.setFont(*font);
+	info3.setColor(sf::Color::Yellow);
+	info3.setCharacterSize(20);
+	info3.addValue<std::string>(nullptr, "Upgrade unit");
+	info3.addValue(&m_unitUpgradeCost.at(2), "Cost ");
+
+	upgrade->setClickEvent([&](bool isPressed)->void {
+		if (isPressed && m_enableSpawn)
+		{
+			if (m_coinCount < m_unitUpgradeCost.at(2))
+				return;
+
+			m_enableSpawn = false;
+			auto& k = core::Renderer::getInstance().find("UpgradeButton3");
+			if (k != nullptr)
+			{
+				auto ptr = static_cast<UpgradeButton*>(k.get());
+				ptr->increaseLvl();
+				this->upgradeUnit(2);
+			}
+		}
+		});
+	upgrade->addLevel(core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/up/1.png"));
+	upgrade->addLevel(core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/up/2.png"));
+	upgrade->addLevel(core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/up/3.png"));
+	upgrade->addLevel(core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/up/4.png"));
+	upgrade->addLevel(core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/up/5.png"));
+	upgrade->addLevel(core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/up/6.png"));
+
+	core::Renderer::getInstance().addObject(std::move(upgrade), base::object_type::gui);
 }
 
 void Player::setPosition(const sf::Vector2f& pos)
@@ -266,8 +384,8 @@ void Player::spawnObject(const unsigned int type)
 {
 	if (type == 1)
 	{
-		auto& k = m_mobTemplate.at(type);
-		std::unique_ptr<Range> man = std::make_unique<Range>(k.collider, k.hp, k.minDMG, k.maxDMG, k.range, k.speedAttack, k.speedMove,k.income);
+		auto& k = m_calcMobTemplate.at(type);
+		std::unique_ptr<Range> man = std::make_unique<Range>(k.collider, k.hp, k.minDMG, k.maxDMG,k.range,k.speedAttack, k.speedMove,k.income);
 		man->setScale(sf::Vector2f(k.scale.x, k.scale.y));
 		man->setAnimatorName(k.name);
 		man->setAnimationSpeed(k.animationSpeed);
@@ -275,8 +393,8 @@ void Player::spawnObject(const unsigned int type)
 		core::Renderer::getInstance().addObject(std::move(man), base::object_type::actor);
 		return;
 	}
-	auto& k = m_mobTemplate.at(type);
-	std::unique_ptr<Melee> man = std::make_unique<Melee>(k.collider, k.hp, k.minDMG, k.maxDMG, k.speedAttack, k.speedMove, k.income);
+	auto& k = m_calcMobTemplate.at(type);
+	std::unique_ptr<Melee> man = std::make_unique<Melee>(k.collider, k.hp,k.minDMG, k.maxDMG, k.speedAttack, k.speedMove, k.income);
 	man->setScale(sf::Vector2f(k.scale.x, k.scale.y));
 	man->setAnimatorName(k.name);
 	man->setAnimationSpeed(k.animationSpeed);
@@ -460,12 +578,15 @@ void Player::loadNextAge()
 	m_sprites.at(2).setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/base/" + m_currentAge + "2.png"),true);
 	m_sprites.at(1).setOrigin(sf::Vector2f(88.f, 99.f));
 	m_sprites.at(2).setOrigin(sf::Vector2f(88.f, 99.f));
-	m_mobTemplate.at(0) = base::loadUnitFromJson(0, m_currentAge);
-	m_mobTemplate.at(1) = base::loadUnitFromJson(1, m_currentAge);
-	m_mobTemplate.at(2) = base::loadUnitFromJson(2, m_currentAge);
+	m_calcMobTemplate.at(0) = m_mobTemplate.at(0) = base::loadUnitFromJson(0, m_currentAge);
+	m_calcMobTemplate.at(1) = m_mobTemplate.at(1) = base::loadUnitFromJson(1, m_currentAge);
+	m_calcMobTemplate.at(2) = m_mobTemplate.at(2) = base::loadUnitFromJson(2, m_currentAge);
 	m_cannonTemplate.at(0) = base::loadCannonFromJson(m_currentAge, 0);
 	m_cannonTemplate.at(1) = base::loadCannonFromJson(m_currentAge, 1);
 	m_cannonTemplate.at(2) = base::loadCannonFromJson(m_currentAge, 2);
+
+	refreshStats();
+
 	auto bt0 = core::Renderer::getInstance().findAndRemove("Button");
 	if (bt0 == nullptr)
 	{
@@ -486,12 +607,12 @@ void Player::loadNextAge()
 		info.setFont(*font);
 		info.setColor(sf::Color::Yellow);
 		info.setCharacterSize(20);
-		info.addValue(" ", m_mobTemplate.at(0).displayName);
-		info.addValue(&m_mobTemplate.at(0).hp, "Hp : ");
-		info.addValue(&m_mobTemplate.at(0).minDMG, "Base dmg : ");
-		info.addValue(&m_mobTemplate.at(0).maxDMG, "Critical dmg : ");
-		info.addValue(&m_mobTemplate.at(0).spawnTime, "Recruitment time : ");
-		info.addValue(&m_mobTemplate.at(0).price, "Price : ");
+		info.addValue(" ", m_calcMobTemplate.at(0).displayName);
+		info.addValue(&m_calcMobTemplate.at(0).hp, "Hp : ");
+		info.addValue(&m_calcMobTemplate.at(0).minDMG, "Base dmg : ");
+		info.addValue(&m_calcMobTemplate.at(0).maxDMG, "Critical dmg : ");
+		info.addValue(&m_calcMobTemplate.at(0).spawnTime, "Recruitment time : ");
+		info.addValue(&m_calcMobTemplate.at(0).price, "Price : ");
 
 		info.refresh();
 		ptr->setTexture(*texture);
@@ -522,13 +643,13 @@ void Player::loadNextAge()
 		info.setFont(*font);
 		info.setColor(sf::Color::Yellow);
 		info.setCharacterSize(20);
-		info.addValue(" ", m_mobTemplate.at(1).displayName);
-		info.addValue(&m_mobTemplate.at(1).hp, "Hp : ");
-		info.addValue(&m_mobTemplate.at(1).minDMG, "Base dmg : ");
-		info.addValue(&m_mobTemplate.at(1).maxDMG, "Critical dmg : ");
-		info.addValue(&m_mobTemplate.at(1).range, "Range : ");
-		info.addValue(&m_mobTemplate.at(1).spawnTime, "Recruitment time : ");
-		info.addValue(&m_mobTemplate.at(1).price, "Price : ");
+		info.addValue(" ", m_calcMobTemplate.at(1).displayName);
+		info.addValue(&m_calcMobTemplate.at(1).hp, "Hp : ");
+		info.addValue(&m_calcMobTemplate.at(1).minDMG, "Base dmg : ");
+		info.addValue(&m_calcMobTemplate.at(1).maxDMG, "Critical dmg : ");
+		info.addValue(&m_calcMobTemplate.at(1).range, "Range : ");
+		info.addValue(&m_calcMobTemplate.at(1).spawnTime, "Recruitment time : ");
+		info.addValue(&m_calcMobTemplate.at(1).price, "Price : ");
 
 		info.refresh();
 		ptr->setTexture(*texture);
@@ -561,12 +682,12 @@ void Player::loadNextAge()
 		info.setFont(*font);
 		info.setColor(sf::Color::Yellow);
 		info.setCharacterSize(20);
-		info.addValue(" ", m_mobTemplate.at(2).displayName);
-		info.addValue(&m_mobTemplate.at(2).hp, "Hp : ");
-		info.addValue(&m_mobTemplate.at(2).minDMG, "Base dmg : ");
-		info.addValue(&m_mobTemplate.at(2).maxDMG, "Critical dmg : ");
-		info.addValue(&m_mobTemplate.at(2).spawnTime, "Recruitment time : ");
-		info.addValue(&m_mobTemplate.at(2).price, "Price : ");
+		info.addValue(" ", m_calcMobTemplate.at(2).displayName);
+		info.addValue(&m_calcMobTemplate.at(2).hp, "Hp : ");
+		info.addValue(&m_calcMobTemplate.at(2).minDMG, "Base dmg : ");
+		info.addValue(&m_calcMobTemplate.at(2).maxDMG, "Critical dmg : ");
+		info.addValue(&m_calcMobTemplate.at(2).spawnTime, "Recruitment time : ");
+		info.addValue(&m_calcMobTemplate.at(2).price, "Price : ");
 		info.refresh();
 		ptr->setTexture(*texture);
 		ptr->setClickEvent([&](bool isPressed)->void {
@@ -745,5 +866,34 @@ void Player::baseUpgrade()
 				core::Renderer::getInstance().clearNoActive();
 			}
 		}
+	}
+}
+
+void Player::refreshStats()
+{
+	for (size_t k = 0; k < m_calcMobTemplate.size(); ++k)
+	{
+		m_calcMobTemplate.at(k).hp = static_cast<int>(m_mobTemplate.at(k).hp * m_upgrades.at(k).hp);
+		m_calcMobTemplate.at(k).range = static_cast<int>(m_mobTemplate.at(k).range * m_upgrades.at(k).range);
+		m_calcMobTemplate.at(k).maxDMG = static_cast<int>(m_mobTemplate.at(k).maxDMG * m_upgrades.at(k).maxDMG);
+		m_calcMobTemplate.at(k).minDMG = static_cast<int>(m_mobTemplate.at(k).minDMG * m_upgrades.at(k).minDMG);
+	}
+}
+
+void Player::upgradeUnit(const unsigned int index)
+{	
+	if (index < m_upgrades.size())
+	{
+		m_coinCount -= m_unitUpgradeCost.at(index);
+		m_unitUpgradeCost.at(index) *= 2;
+		auto& k = m_upgrades.at(index);
+		k.hp += 0.05f;
+		k.maxDMG += 0.05f;
+		k.minDMG += 0.05f;
+		k.range += 0.15f;
+		m_calcMobTemplate.at(index).hp = static_cast<int>(m_mobTemplate.at(index).hp * k.hp);
+		m_calcMobTemplate.at(index).range = static_cast<int>(m_mobTemplate.at(index).range * k.range);
+		m_calcMobTemplate.at(index).maxDMG = static_cast<int>(m_mobTemplate.at(index).maxDMG * k.maxDMG);
+		m_calcMobTemplate.at(index).minDMG = static_cast<int>(m_mobTemplate.at(index).minDMG * k.minDMG);
 	}
 }

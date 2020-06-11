@@ -5,6 +5,13 @@
 #include "Melee.hpp"
 #include "Cannon.hpp"
 
+struct upgradeInfo {
+	float hp = 1.f;
+	float minDMG = 1.f;
+	float maxDMG = 1.f;
+	float range = 1.f;
+};
+
 
 class Player : public base::Stronghold {
 public:
@@ -51,6 +58,10 @@ public:
 		return m_enableInsertToQueue;
 	}
 
+	virtual void refreshStats();
+
+	virtual void upgradeUnit(const unsigned int index);
+
 private:
 	float m_timer;
 	std::array<sf::Sprite,3> m_sprites;
@@ -60,7 +71,9 @@ private:
 	std::array<sf::Sprite,3> m_cannonPlaces;
 	bool m_drawCannonPlaces;
 	std::array<std::unique_ptr<Cannon>,3> m_cannons;
-
+	std::array<upgradeInfo, 3> m_upgrades;
+	std::array<base::unitInfo, 3> m_calcMobTemplate;
+	std::array<int,3> m_unitUpgradeCost;
 	int m_coinCount;
 	bool m_wantSell;
 
