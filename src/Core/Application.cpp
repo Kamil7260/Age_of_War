@@ -295,6 +295,7 @@ void core::Application::loadingScreen(bool& isLoaded,const std::unique_ptr<sf::R
 void core::Application::reset()
 {
 	auto& renderer = core::Renderer::getInstance();
+	renderer.resetPosition(sf::Vector2f(0.f, 0.f));
 	auto k = core::ResourceManager<sf::Texture>::getInstance().get("Assets/background/1.png");
 	if (k == nullptr) {
 		LOG_ERROR("Resource manager get(Assets/background/1.png) -> nullptr");
