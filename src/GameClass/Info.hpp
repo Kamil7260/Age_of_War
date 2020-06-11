@@ -58,6 +58,8 @@ protected:
 		namedType& operator=(const namedType&) = default;
 		namedType& operator=(namedType&&) = default;
 		const std::string getString() override {
+			if (m_target == nullptr)
+				return "";
 			std::stringstream stream;
 			stream << *m_target;
 			std::string type;
