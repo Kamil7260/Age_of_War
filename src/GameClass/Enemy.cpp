@@ -5,7 +5,7 @@
 #include "../GameClass/Range.hpp"
 #include "HpBar.hpp"
 Enemy::Enemy()
-	:m_timer(0.f), m_currentAge(0), m_groupOverAll(14), m_breakTime(0),m_exp(0), m_requiredExp(200)
+	:m_timer(0.f), m_currentAge(0), m_groupOverAll(14), m_breakTime(0),m_exp(0), m_requiredExp(1500)
 {
 	m_tag = "Enemy";
 	m_team = base::team::enemy;

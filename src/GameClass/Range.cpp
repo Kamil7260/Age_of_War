@@ -65,7 +65,7 @@ void Range::onUpdate()
 	m_timer += delta;
 	if (m_hp > 0)
 	{
-		auto &inRangeActor = core::Renderer::getInstance().isEnemyInRange(m_position, 250.f, m_team);
+		auto &inRangeActor = core::Renderer::getInstance().isEnemyInRange(m_position, m_range, m_team);
 		if (inRangeActor  != nullptr)
 		{
 			m_inRange = true;
