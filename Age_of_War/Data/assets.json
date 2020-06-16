@@ -322,5 +322,9 @@
   {
     "type": "Texture",
     "path": "Assets/gui/up/6.png"
+  },
+  {
+    "type": "Texture",
+    "path": "Assets/gui/8.png"
   }
 ]
