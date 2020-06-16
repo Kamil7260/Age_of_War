@@ -79,7 +79,7 @@ void Enemy::onUpdate()
 		std::uniform_int_distribution<int> rollTime(13, 23);
 
 		m_timer = 0;
-		m_breakTime = rollTime(generator);
+		m_breakTime = static_cast<float>(rollTime(generator));
 		
 		int currentOverAll = 0;
 		int attack_roll;
@@ -132,7 +132,7 @@ void Enemy::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 void Enemy::loadNewAge()
 {
-	if (m_currentAge >= m_ages.size())
+	if (m_currentAge >= static_cast<int>(m_ages.size()))
 		return;
 	m_sprite.setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/base/" + m_ages.at(m_currentAge) + ".png"));
 	m_mobTemplate.at(0) = base::loadUnitFromJson(0, m_ages.at(m_currentAge));

@@ -1,7 +1,7 @@
 #include "Stronghold.hpp"
 
 base::Stronghold::Stronghold()
-	:m_hp(50), m_activeCollider(true)
+	:m_hp(500), m_activeCollider(true)
 {
 }
 

@@ -1,5 +1,7 @@
 #include "Renderer.hpp"
+#include "Application.hpp"
 
+#include <fstream>
 void core::Renderer::addObject(std::unique_ptr<base::Actor> actor, base::object_type layer)
 {
 	actor->setType(layer);
@@ -32,58 +34,72 @@ void core::Renderer::addEnemyObject(std::unique_ptr<base::Actor> actor)
 
 void core::Renderer::update()
 {
-	for (auto k = m_actor.begin(); k != m_actor.end(); ++k)
-	{
-		(*k)->onUpdate();
-	}
-	for (auto k = m_enemyActor.begin(); k != m_enemyActor.end(); ++k)
-	{
-		(*k)->onUpdate();
-	}
-	for (auto k = m_gui.begin(); k != m_gui.end(); ++k)
-	{
-		(*k)->onUpdate();
-	}
-	for (auto k = m_bulletActor.begin(); k != m_bulletActor.end(); ++k)
-	{
-		(*k)->onUpdate();
-	}
-	for (auto k = m_enemyBulletActor.begin(); k != m_enemyBulletActor.end(); ++k)
-	{
-		(*k)->onUpdate();
-	}
+	try {
+		for (auto k = m_actor.begin(); k != m_actor.end(); ++k)
+		{
+			(*k)->onUpdate();
+		}
+		for (auto k = m_enemyActor.begin(); k != m_enemyActor.end(); ++k)
+		{
+			(*k)->onUpdate();
+		}
+		for (auto k = m_gui.begin(); k != m_gui.end(); ++k)
+		{
+			(*k)->onUpdate();
+		}
+		for (auto k = m_bulletActor.begin(); k != m_bulletActor.end(); ++k)
+		{
+			(*k)->onUpdate();
+		}
+		for (auto k = m_enemyBulletActor.begin(); k != m_enemyBulletActor.end(); ++k)
+		{
+			(*k)->onUpdate();
+		}
 
-	if (m_shouldBeErase)
-		eraseNoActive();
+		if (m_shouldBeErase)
+			eraseNoActive();
 
-	insertQueue();
+		insertQueue();
+	}
+	catch (...)
+	{
+		LOG_ERROR("Exception at onUpdate thrown");
+		Application::getInstance().freezeScreen();
+	}
 }
 
 void core::Renderer::draw()
 {
-	for (auto k = m_backGround.begin(); k != m_backGround.end(); ++k)
-	{
-		m_window->draw((*(*k)));
+	try {
+		for (auto k = m_backGround.begin(); k != m_backGround.end(); ++k)
+		{
+			m_window->draw((*(*k)));
+		}
+		for (auto k = m_actor.begin(); k != m_actor.end(); ++k)
+		{
+			m_window->draw((*(*k)));
+		}
+		for (auto k = m_enemyActor.begin(); k != m_enemyActor.end(); ++k)
+		{
+			m_window->draw((*(*k)));
+		}
+		for (auto k = m_gui.begin(); k != m_gui.end(); ++k)
+		{
+			m_window->draw((*(*k)));
+		}
+		for (auto k = m_bulletActor.begin(); k != m_bulletActor.end(); ++k)
+		{
+			m_window->draw((*(*k)));
+		}
+		for (auto k = m_enemyBulletActor.begin(); k != m_enemyBulletActor.end(); ++k)
+		{
+			m_window->draw((*(*k)));
+		}
 	}
-	for (auto k = m_actor.begin(); k != m_actor.end(); ++k)
+	catch (...)
 	{
-		m_window->draw((*(*k)));
-	}
-	for (auto k = m_enemyActor.begin(); k != m_enemyActor.end(); ++k)
-	{
-		m_window->draw((*(*k)));
-	}
-	for (auto k = m_gui.begin(); k != m_gui.end(); ++k)
-	{
-		m_window->draw((*(*k)));
-	}
-	for (auto k = m_bulletActor.begin(); k != m_bulletActor.end(); ++k)
-	{
-		m_window->draw((*(*k)));
-	}
-	for (auto k = m_enemyBulletActor.begin(); k != m_enemyBulletActor.end(); ++k)
-	{
-		m_window->draw((*(*k)));
+		LOG_ERROR("Exception at draw thrown");
+		Application::getInstance().freezeScreen();
 	}
 }
 
@@ -92,7 +108,7 @@ void core::Renderer::clearNoActive()
 	m_shouldBeErase = true;
 }
 
-std::unique_ptr<base::Actor>& core::Renderer::isEnemyInRange(const sf::Vector2f& myPosition, const float myRange, const base::team& myTeam)
+std::unique_ptr<base::Actor>& core::Renderer::isEnemyInRange(const sf::Vector2f& myPosition, const int myRange, const base::team& myTeam)
 {
 	if (myTeam == base::team::player)
 	{
@@ -102,69 +118,53 @@ std::unique_ptr<base::Actor>& core::Renderer::isEnemyInRange(const sf::Vector2f&
 		if (m_enemyActor.size() == 1)
 		{
 			auto it = m_enemyActor.begin();
-			if (myPosition.x + myRange > (*it)->getPosition().x)
+			if((*it)->isColliderActive())
+			if (myPosition.x + myRange > (*it)->getPosition().x - (*it)->getCollider().left)
 			{
-				if (myPosition.x < (*it)->getPosition().x)
+				return *it;
+			}
+		}
+		else
+		{
+			auto it = m_enemyActor.begin() + 1;
+			for (; it != m_enemyActor.end(); ++it)
+			{
+				if ((*it)->isColliderActive())
+				if (myPosition.x + myRange > (*it)->getPosition().x - (*it)->getCollider().left)
 				{
 					return *it;
 				}
 			}
 		}
-		else for (auto it = m_enemyActor.begin() + 1; it != m_enemyActor.end(); ++it)
-		{
-			if((*it)->isColliderActive())
-				if (myPosition.x + myRange > (*it)->getPosition().x)
-				{
-					if (myPosition.x < (*it)->getPosition().x)
-					{
-						return *it;
-					}
-				}
-		}
-		auto it = m_enemyActor.begin();
-		if (myPosition.x + myRange > (*it)->getPosition().x)
-		{
-			if (myPosition.x < (*it)->getPosition().x)
-			{
-				return *it;
-			}
-		}
 	}
 	else if (myTeam == base::team::enemy)
 	{
+
 		if (m_actor.empty())
 			return m_placeHolder;
 
 		if (m_actor.size() == 1)
 		{
 			auto it = m_actor.begin();
-			if (myPosition.x + myRange > (*it)->getPosition().x)
+			if ((*it)->isColliderActive())
+			if (myPosition.x - myRange < (*it)->getPosition().x + (*it)->getCollider().right)
 			{
-				if (myPosition.x < (*it)->getPosition().x)
+				return *it;
+			}
+		}
+		else
+		{
+			auto it = m_actor.begin() + 1;
+			for (; it != m_actor.end(); ++it)
+			{
+				if ((*it)->isColliderActive())
+				if (myPosition.x - myRange < (*it)->getPosition().x + (*it)->getCollider().right)
 				{
 					return *it;
 				}
 			}
 		}
-		else for (auto it = m_actor.begin() + 1; it != m_actor.end(); ++it)
-		{
-			if ((*it)->isColliderActive())
-				if (myPosition.x - myRange < (*it)->getPosition().x)
-				{
-					if (myPosition.x > (*it)->getPosition().x)
-					{
-						return *it;
-					}
-				}
-		}
-		auto it = m_actor.begin();
-		if (myPosition.x + myRange > (*it)->getPosition().x)
-		{
-			if (myPosition.x < (*it)->getPosition().x)
-			{
-				return *it;
-			}
-		}
+
 	}
 	return m_placeHolder;
 }
@@ -387,7 +387,6 @@ void core::Renderer::forceClear()
 
 std::unique_ptr<base::Actor>& core::Renderer::getLastColliderActor(std::vector<std::unique_ptr<base::Actor>>& actor)
 {
-
 	if (actor.size() <= 1)
 		return *actor.begin();
 
@@ -550,12 +549,42 @@ void core::Renderer::addBullet(std::unique_ptr<base::Actor> actor)
 
 core::Renderer::Renderer()
 {
+	json file;
+	sf::Vector2u res = { 1366,768 };
+	LOG_INFO("Reading resolution from user options")
+	{
+		std::ifstream reader("Data/options.json");
+		if (!reader.good())
+		{
+			LOG_ERROR("Can not open options json file");
+		}
+		else {
+			reader >> file;
+			reader.close();
+
+			auto k = file["resolution"];
+			if (k != nullptr)
+			{
+				res.x = k.at(0);
+				res.y = k.at(1);
+			}
+			else
+				LOG_WARNING("Incomplete resolution");
+		}
+	}
+
+
 	LOG_INFO("Creating window...");
 	m_view = sf::View(sf::Vector2f(0, 0), sf::Vector2f(1920, 1080));
-	m_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920, 1080), "Age of War");
+	m_window = std::make_unique<sf::RenderWindow>(sf::VideoMode(res.x,res.y), "Age of War");
 	m_window->setFramerateLimit(60);
 	m_placeHolder = nullptr;
 	m_camSpeed = 0;
 	m_scope = { 0.f,0.f };
 	m_position = { 0.f,0.f };
+
+	sf::Image image;
+	if(image.loadFromFile("ic.png"))
+		m_window->setIcon(32, 32, image.getPixelsPtr());
+
 }

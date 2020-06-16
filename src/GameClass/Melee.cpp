@@ -99,13 +99,12 @@ void Melee::damage(int dmg)
 			ptr->setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/other/5.png"));
 			core::Renderer::getInstance().addObject(std::move(ptr), base::object_type::gui);
 		}
-		else if (m_team == base::team::player)
 		{
 			auto& k = core::Renderer::getInstance().find("Enemy");
 			if (k != nullptr)
 			{
 				auto ptr = static_cast<Enemy*>(k.get());
-				ptr->addIncome(m_income);
+				ptr->addIncome(m_income/2);
 			}
 		}
 		

@@ -15,7 +15,7 @@ Cannon::Cannon(int maxDMG, int minDMG, int range, float reloadTime,float bullets
 void Cannon::onUpdate()
 {
 	updateAnimator();
-	auto& k = core::Renderer::getInstance().isEnemyInRange(m_position, static_cast<float>(m_range), m_team);
+	auto& k = core::Renderer::getInstance().isEnemyInRange(m_position, m_range, m_team);
 	
 	if (k != nullptr)
 	{

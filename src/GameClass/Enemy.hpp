@@ -5,6 +5,8 @@
 
 #include "../Base/JsonFunctions.hpp"
 
+#include "../Logger/Logger.hpp"
+
 class Enemy : public base::Stronghold {
 public:
 	Enemy();

@@ -35,7 +35,7 @@ namespace core {
 			return m_window;
 		};
 
-		std::unique_ptr<base::Actor>& isEnemyInRange(const sf::Vector2f& myPosition, const float myRange, const base::team& myTeam);
+		std::unique_ptr<base::Actor>& isEnemyInRange(const sf::Vector2f& myPosition, const int myRange, const base::team& myTeam);
 
 		void updateCollision();
 

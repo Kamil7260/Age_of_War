@@ -11,7 +11,7 @@
 #include "UpgradeButton.hpp"
 
 Player::Player()
-	:m_enableSpawn(true), m_drawCannonPlaces(false), m_coinCount(250), m_wantSell(false), m_sellClickCount(0), m_baseUpgrade(1), m_expCount(1), m_upgradeCondition(1000), m_cannonPlaceCost(1000), m_enableInsertToQueue(true)
+	:m_enableSpawn(true), m_drawCannonPlaces(false), m_coinCount(250), m_wantSell(false), m_sellClickCount(0), m_baseUpgrade(1), m_expCount(1), m_upgradeCondition(750), m_cannonPlaceCost(700), m_enableInsertToQueue(true)
 {
 	m_cannons = { nullptr,nullptr,nullptr };
 	m_tag = "Player";
@@ -20,7 +20,7 @@ Player::Player()
 	m_sprites.at(0).setOrigin(275.f, 170.f);
 	m_myColider = { 111.f,111.f,111.f,111.f };
 
-	m_unitUpgradeCost = { 350,500,900 };
+	m_unitUpgradeCost = { 300,400,700 };
 
 	m_ages = { "I","II","III","IV","V" };
 	auto hp = std::make_unique<HpBar>(&m_hp, 24, 250);
@@ -364,7 +364,7 @@ void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
 		target.draw(m_sprites[k], states);
 	}
-	for (int k = 0; k < m_baseUpgrade; ++k)
+	for (int k = m_baseUpgrade -1; k >= 0; --k)
 	{
 		if (m_cannons[k] != nullptr)
 		{
@@ -404,11 +404,10 @@ void Player::spawnObject(const unsigned int type)
 
 void Player::addToQueue(const unsigned int type)
 {
-	if (m_mobTemplate.at(0).price > m_coinCount)
+	if (m_mobTemplate.at(type).price > m_coinCount)
 		return;
 
-	m_coinCount -=m_mobTemplate.at(0).price;
-
+	m_coinCount -=m_mobTemplate.at(type).price;
 	m_timer = 0.f;
 	m_enableSpawn = false;
 	auto& manager = core::Renderer::getInstance().find("QueueManager");
@@ -509,69 +508,66 @@ void Player::loadNextAge()
 			}
 		}
 	}
-	if (m_currentAge == m_ages.back())
-	{
-		auto& k = core::Renderer::getInstance().find("AgeUpgradeButton");
-		k->remove();
-		core::Renderer::getInstance().clearNoActive();
-	}
 	m_upgradeCondition *= 2;
 
 
 	auto& infoBlock = core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/5.png");
 	auto& font = core::ResourceManager<sf::Font>::getInstance().get("Assets/fonts/3.ttf");
 
-	auto button = std::make_unique<Button>(base::collider({ 0.f,68.f,0.f,68.f }));
-	button->setTag("AgeUpgradeButton");
-	button->dynamicDraw(false);
+	if (m_currentAge != m_ages.back())
+	{
+		auto button = std::make_unique<Button>(base::collider({ 0.f,68.f,0.f,68.f }));
+		button->setTag("AgeUpgradeButton");
+		button->dynamicDraw(false);
 
-	button->setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/1.png"));
+		button->setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/1.png"));
 
-	button->setPosition(sf::Vector2f(1300, 50));
+		button->setPosition(sf::Vector2f(1300, 50));
 
-	button->setClickEvent([&](bool isPressed)->void {
-		if (isPressed && m_enableSpawn) {
-			if (m_expCount < m_upgradeCondition)
-				return;
+		button->setClickEvent([&](bool isPressed)->void {
+			if (isPressed && m_enableSpawn) {
+				if (m_expCount < m_upgradeCondition)
+					return;
 
-			m_enableInsertToQueue = false;
-			m_timer = 0.f;
-			m_enableSpawn = false;
-			auto& manager = core::Renderer::getInstance().find("QueueManager");
-			if (manager != nullptr)
-			{
-				auto& b = core::Renderer::getInstance().find("AgeUpgradeButton");
-				b->remove();
-				core::Renderer::getInstance().clearNoActive();
-				auto queue = static_cast<QueueManager*>(manager.get());
-				Ikon ikon;
-				ikon.setTimePoint(15.f);
-				std::string path = "Assets/gui/1.png";
-				ikon.setTexture(*core::ResourceManager<sf::Texture>::getInstance().get(path));
-				queue->addIkon(ikon, [&]()->void {
-					m_enableInsertToQueue = true;
-					this->loadNextAge();
-					});
+				m_enableInsertToQueue = false;
+				m_timer = 0.f;
+				m_enableSpawn = false;
+				auto& manager = core::Renderer::getInstance().find("QueueManager");
+				if (manager != nullptr)
+				{
+					auto& b = core::Renderer::getInstance().find("AgeUpgradeButton");
+					b->remove();
+					core::Renderer::getInstance().clearNoActive();
+					auto queue = static_cast<QueueManager*>(manager.get());
+					Ikon ikon;
+					ikon.setTimePoint(15.f);
+					std::string path = "Assets/gui/1.png";
+					ikon.setTexture(*core::ResourceManager<sf::Texture>::getInstance().get(path));
+					queue->addIkon(ikon, [&]()->void {
+						m_enableInsertToQueue = true;
+						this->loadNextAge();
+						});
+				}
+				else {
+					LOG_ERROR("Can not find QueueManager");
+				}
 			}
-			else {
-				LOG_ERROR("Can not find QueueManager");
-			}
-		}
-		});
+			});
 
-	auto ptr = static_cast<Button*>(button.get());
-	auto& info = ptr->getInfo();
-	auto& k = m_cannonTemplate.at(1);
-	info.clear();
-	info.setPosition(sf::Vector2f(0.f, 300.f));
-	info.setTexture(*infoBlock);
-	info.setFont(*font);
-	info.setColor(sf::Color::Yellow);
-	info.setCharacterSize(15);
-	info.addValue(" ", "\nResearch new ages and \nlearn modern tech\n ");
-	info.addValue(&m_upgradeCondition, "Exp points required to upgrade\n  : ");
+		auto ptr = static_cast<Button*>(button.get());
+		auto& info = ptr->getInfo();
+		auto& k = m_cannonTemplate.at(1);
+		info.clear();
+		info.setPosition(sf::Vector2f(0.f, 300.f));
+		info.setTexture(*infoBlock);
+		info.setFont(*font);
+		info.setColor(sf::Color::Yellow);
+		info.setCharacterSize(15);
+		info.addValue(" ", "\nResearch new ages and \nlearn modern tech\n ");
+		info.addValue(&m_upgradeCondition, "Exp points required to upgrade\n  : ");
 
-	core::Renderer::getInstance().addObject(std::move(button), base::object_type::gui);
+		core::Renderer::getInstance().addObject(std::move(button), base::object_type::gui);
+	}
 
 	m_sprites.at(0).setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/base/" + m_currentAge + ".png"), true);
 	m_sprites.at(1).setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/base/" + m_currentAge + "1.png"), true);
@@ -583,7 +579,8 @@ void Player::loadNextAge()
 	m_calcMobTemplate.at(2) = m_mobTemplate.at(2) = base::loadUnitFromJson(2, m_currentAge);
 	m_cannonTemplate.at(0) = base::loadCannonFromJson(m_currentAge, 0);
 	m_cannonTemplate.at(1) = base::loadCannonFromJson(m_currentAge, 1);
-	m_cannonTemplate.at(2) = base::loadCannonFromJson(m_currentAge, 2);
+	if (m_currentAge != "II")
+		m_cannonTemplate.at(2) = base::loadCannonFromJson(m_currentAge, 2);
 
 	refreshStats();
 
@@ -800,53 +797,56 @@ void Player::loadNextAge()
 	}
 
 	auto bt5 = core::Renderer::getInstance().findAndRemove("Button");
-	if (bt5 == nullptr)
+	if (m_currentAge != "II")
 	{
-		bt5 = std::make_unique<Button>(base::collider({ 0.f,68.f,0.f,68.f }));
-		bt5->setTag("Button");
-	}
-	texture = core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/" + m_currentAge + "/6.png");
-	bt5->setPosition(sf::Vector2f(900.f, 50.f));
-	bt5->dynamicDraw(false);
-	if(texture != nullptr)
-	{
-		auto ptr = static_cast<Button*>(bt5.get());
-		auto& info = ptr->getInfo();
-		auto& k = m_cannonTemplate.at(2);
-		info.clear();
-		info.setPosition(sf::Vector2f(0.f, 300.f));
-		info.setTexture(*infoBlock);
-		info.setFont(*font);
-		info.setColor(sf::Color::Yellow);
-		info.setCharacterSize(20);
-		info.addValue(" ", k.displayName);
-		info.addValue(&k.minDMG, "Base dmg : ");
-		info.addValue(&k.maxDMG, "Critical dmg : ");
-		info.addValue(&k.range, "Range : ");
-		info.addValue(&k.reloadTime, "Reload : ");
-		info.addValue(&k.price, "Price : ");
+		if (bt5 == nullptr)
+		{
+			bt5 = std::make_unique<Button>(base::collider({ 0.f,68.f,0.f,68.f }));
+			bt5->setTag("Button");
+		}
+		texture = core::ResourceManager<sf::Texture>::getInstance().get("Assets/gui/" + m_currentAge + "/6.png");
+		bt5->setPosition(sf::Vector2f(900.f, 50.f));
+		bt5->dynamicDraw(false);
+		if (texture != nullptr)
+		{
+			auto ptr = static_cast<Button*>(bt5.get());
+			auto& info = ptr->getInfo();
+			auto& k = m_cannonTemplate.at(2);
+			info.clear();
+			info.setPosition(sf::Vector2f(0.f, 300.f));
+			info.setTexture(*infoBlock);
+			info.setFont(*font);
+			info.setColor(sf::Color::Yellow);
+			info.setCharacterSize(20);
+			info.addValue(" ", k.displayName);
+			info.addValue(&k.minDMG, "Base dmg : ");
+			info.addValue(&k.maxDMG, "Critical dmg : ");
+			info.addValue(&k.range, "Range : ");
+			info.addValue(&k.reloadTime, "Reload : ");
+			info.addValue(&k.price, "Price : ");
 
-		info.refresh();
-		ptr->setTexture(*texture);
-		ptr->setClickEvent([&,texture](bool isPressed)->void {
-			if (m_enableSpawn && isPressed)
-			{
-				m_drawCannonPlaces = true;
-				m_enableSpawn = false;
-				std::unique_ptr<CannonSpawner> ptr = std::make_unique<CannonSpawner>();
-				ptr->setCallbackOnRelease([&, texture]()->void {
-					auto& k = core::Renderer::getInstance().find("Player");
-					if (k != nullptr)
-					{
-						auto ptr = static_cast<Player*>(k.get());
-						ptr->spawnCannon(2);
-					}
-					});
-				ptr->setTexture(*texture);
-				core::Renderer::getInstance().addObject(std::move(ptr), base::object_type::gui);
-			}
-			});
-		core::Renderer::getInstance().addObject(std::move(bt5), base::object_type::gui);
+			info.refresh();
+			ptr->setTexture(*texture);
+			ptr->setClickEvent([&, texture](bool isPressed)->void {
+				if (m_enableSpawn && isPressed)
+				{
+					m_drawCannonPlaces = true;
+					m_enableSpawn = false;
+					std::unique_ptr<CannonSpawner> ptr = std::make_unique<CannonSpawner>();
+					ptr->setCallbackOnRelease([&, texture]()->void {
+						auto& k = core::Renderer::getInstance().find("Player");
+						if (k != nullptr)
+						{
+							auto ptr = static_cast<Player*>(k.get());
+							ptr->spawnCannon(2);
+						}
+						});
+					ptr->setTexture(*texture);
+					core::Renderer::getInstance().addObject(std::move(ptr), base::object_type::gui);
+				}
+				});
+			core::Renderer::getInstance().addObject(std::move(bt5), base::object_type::gui);
+		}
 	}
 }
 

@@ -35,6 +35,9 @@ void core::Application::run()
 		if (!reader.good())
 		{
 			LOG_ERROR("Can not open mobinfo json file");
+			m_atException = true;
+			m_breakLoop = true;
+			freeze();
 			return;
 		}
 		reader >> m_mobInfoJson;
@@ -47,6 +50,9 @@ void core::Application::run()
 		if (!reader.good())
 		{
 			LOG_ERROR("Can not open cannonInfo json file");
+			m_atException = true;
+			m_breakLoop = true;
+			freeze();
 			return;
 		}
 		reader >> m_cannonInfoJson;
@@ -64,6 +70,13 @@ void core::Application::run()
 		loader.join();
 		//loader.detach();
 	}
+
+	if (m_atException)
+	{
+		freeze();
+		return;
+	}
+
 	m_cursorTextures.at(0) = textureManager.get("Assets/gui/3.png");
 	m_cursorTextures.at(1) = textureManager.get("Assets/gui/6.png");
 	reset();
@@ -137,6 +150,8 @@ void core::Application::run()
 		if (m_breakLoop)
 		{
 			freeze();
+			if (m_atException)
+				return;
 			reset();
 		}
 	}
@@ -161,6 +176,12 @@ void core::Application::freezeScreen(const sf::Texture& at)
 	m_freezeTexture = at;
 }
 
+void core::Application::freezeScreen()
+{
+	m_breakLoop = true;
+	m_atException = true;
+}
+
 void core::Application::assetLoader(bool &isLoaded)
 {
 	auto &texture = ResourceManager<sf::Texture>::getInstance();
@@ -173,7 +194,8 @@ void core::Application::assetLoader(bool &isLoaded)
 			if (!reader.good())
 			{
 				LOG_ERROR("Can not open mobinfo json file");
-				return;
+				isLoaded = true;
+				m_atException = true;
 			}
 			reader >> clipInfo;
 			reader.close();
@@ -202,7 +224,10 @@ void core::Application::assetLoader(bool &isLoaded)
 			lpath = path;
 			lpath += std::to_string(k);
 			lpath += ".png";
-			texture.loadFromFile(lpath);
+			if (!texture.loadFromFile(lpath))
+			{
+				m_atException = true;
+			}
 			clip->addFrame(texture.get(lpath));
 
 		}
@@ -216,6 +241,8 @@ void core::Application::assetLoader(bool &isLoaded)
 		if (!reader.good())
 		{
 			LOG_ERROR("Can not open assetInfo json file");
+			isLoaded = true;
+			m_atException = true;
 			return;
 		}
 		reader >> assetInfo;
@@ -228,10 +255,16 @@ void core::Application::assetLoader(bool &isLoaded)
 		path = (*it)["path"];
 
 		if (type == "Texture") {
-			texture.loadFromFile(path);
+			if (!texture.loadFromFile(path))
+			{
+				m_atException = true;
+			}
 		}
 		else if (type == "Font") {
-			font.loadFromFile(path);
+			if (!font.loadFromFile(path))
+			{
+				m_atException = true;
+			}
 
 		}
 	}
@@ -241,16 +274,25 @@ void core::Application::assetLoader(bool &isLoaded)
 void core::Application::loadingScreen(bool& isLoaded,const std::unique_ptr<sf::RenderWindow>& window)
 {
 	std::array<sf::Texture,37> tex;
+	bool screenLoaded = true;
 	for (int k = 1; k <= 37; ++k)
 	{
-		tex.at(k-1).loadFromFile("Assets/loading/" + std::to_string(k) + ".jpg");
+		if (!tex.at(k - 1).loadFromFile("Assets/loading/" + std::to_string(k) + ".jpg"))
+		{
+			LOG_ERROR("Can not load loadingScreen");
+			screenLoaded = false;
+			break;
+		}
 	}
 
 	sf::Sprite sprite;
-	auto texk = static_cast<sf::Vector2f>(tex[0].getSize());
-	auto wink = static_cast<sf::Vector2f>(window->getSize());
+	if (screenLoaded)
+	{
+		auto texk = static_cast<sf::Vector2f>(tex[0].getSize());
+		auto wink = static_cast<sf::Vector2f>(window->getSize());
 
-	sprite.setScale(sf::Vector2f(wink.x / texk.x, wink.y / texk.y));
+		sprite.setScale(sf::Vector2f(wink.x / texk.x, wink.y / texk.y));
+	}
 	size_t currentFrame = 0;
 	sf::Clock clock;
 	float frameStartTime;
@@ -272,7 +314,7 @@ void core::Application::loadingScreen(bool& isLoaded,const std::unique_ptr<sf::R
 				}
 			}
 
-			if (currentTime > 0.05f)
+			if (currentTime > 0.05f && screenLoaded)
 			{
 				currentTime = 0.f;
 				++currentFrame;
@@ -285,7 +327,8 @@ void core::Application::loadingScreen(bool& isLoaded,const std::unique_ptr<sf::R
 			}
 
 			window->clear();
-			window->draw(sprite);
+			if(screenLoaded)
+				window->draw(sprite);
 			window->display();
 			deltaTime = clock.getElapsedTime().asSeconds() - frameStartTime;
 		}
@@ -294,6 +337,35 @@ void core::Application::loadingScreen(bool& isLoaded,const std::unique_ptr<sf::R
 
 void core::Application::reset()
 {
+	unsigned int income = 0;
+	{
+		LOG_INFO("Reading mode from user options")
+		{
+			json file;
+			std::ifstream reader("Data/options.json");
+			if (!reader.good())
+			{
+				LOG_ERROR("Can not open options json file");
+			}
+			else {
+				reader >> file;
+				reader.close();
+
+				auto k = file["mode"];
+				if (k != nullptr)
+				{
+					if (k == "test")
+					{
+						income = 9999999;
+					}
+				}
+				else
+					LOG_WARNING("Incomplete resolution");
+			}
+		}
+	}
+
+
 	auto& renderer = core::Renderer::getInstance();
 	renderer.resetPosition(sf::Vector2f(0.f, 0.f));
 	auto k = core::ResourceManager<sf::Texture>::getInstance().get("Assets/background/1.png");
@@ -323,7 +395,9 @@ void core::Application::reset()
 
 	std::unique_ptr<Player> player = std::make_unique<Player>();
 	player->setPosition(sf::Vector2f(140, 870));
+	player->income(income);
 	renderer.addObject(std::move(player), base::object_type::actor);
+
 
 	std::unique_ptr<Enemy> enemy = std::make_unique<Enemy>();
 	enemy->setPosition(sf::Vector2f(2900, 870));
@@ -337,7 +411,7 @@ void core::Application::freeze()
 	auto& window = core::Renderer::getInstance().getWindow();
 	sprite.setTexture(m_freezeTexture);
 	auto texk = static_cast<sf::Vector2f>(m_freezeTexture.getSize());
-	//auto wink = static_cast<sf::Vector2f>(window->getSize());
+	
 	auto& view = core::Renderer::getInstance().getView();
 	sprite.setScale(sf::Vector2f(1920.f / texk.x, 1080.f / texk.y));
 	sprite.setPosition(0.f, 0.f);
@@ -360,12 +434,15 @@ void core::Application::freeze()
 		view.setCenter(sf::Vector2f(960.f, 540.f));
 		window->clear();
 		window->setView(view);
-		window->draw(sprite);
-		window->draw(m_cursor);
+		if (!m_atException)
+		{
+			window->draw(sprite);
+			window->draw(m_cursor);
+		}
 		window->display();
 	}
 }
 
 core::Application::Application()
-	:m_deltaTime(0.f), m_breakLoop(false)
+	:m_deltaTime(0.f), m_breakLoop(false), m_atException(false)
 {}

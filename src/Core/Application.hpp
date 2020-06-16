@@ -38,6 +38,7 @@ public:
 	virtual void setCursor(const unsigned int type);
 
 	virtual void freezeScreen(const sf::Texture& at);
+	virtual void freezeScreen();
 
 	~Application() = default;
 	Application(const Application&) = delete;
@@ -62,5 +63,6 @@ private:
 	sf::Texture m_freezeTexture;
 	bool m_breakLoop;
 	sf::Vector2f m_windowSize;
+	bool m_atException;
 };
 }

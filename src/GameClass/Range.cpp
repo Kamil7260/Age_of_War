@@ -81,6 +81,15 @@ void Range::onUpdate()
 					auto ptr = static_cast<base::Mob*>(inRangeActor.get());
 					ptr->damage(attack_roll);
 				}
+				else if (inRangeActor->getTag() == "Player" || inRangeActor->getTag() == "Enemy")
+				{
+					std::random_device mch;
+					std::default_random_engine generator(mch());
+					std::uniform_int_distribution<int> distribution(m_attack, m_maxAttack);
+					int attack_roll = distribution(generator);
+					auto ptr = static_cast<base::Stronghold*>(inRangeActor.get());
+					ptr->damage(attack_roll);
+				}
 			}
 		}
 		else m_inRange = false;
@@ -144,13 +153,12 @@ void Range::damage(int dmg)
 			ptr->setTexture(*core::ResourceManager<sf::Texture>::getInstance().get("Assets/other/5.png"));
 			core::Renderer::getInstance().addObject(std::move(ptr), base::object_type::gui);
 		}
-		else if (m_team == base::team::player)
 		{
 			auto& k = core::Renderer::getInstance().find("Enemy");
 			if (k != nullptr)
 			{
 				auto ptr = static_cast<Enemy*>(k.get());
-				ptr->addIncome(m_income);
+				ptr->addIncome(m_income/2);
 			}
 		}
 		m_position = { 0.f,0.f };
